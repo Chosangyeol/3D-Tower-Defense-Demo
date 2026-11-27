@@ -1,4 +1,5 @@
 using TowerDefense.Enemies;
+using TowerDefense.Player;
 using UnityEngine;
 
 namespace TowerDefense.Core
@@ -10,6 +11,22 @@ namespace TowerDefense.Core
     {
         [SerializeField] private GameModeController modeController;
         [SerializeField] private WaveSpawner waveSpawner;
+        [SerializeField] private PlayerMana playerMana;
+
+        private void DrawMana()
+        {
+            const float width = 260f;
+            var area = new Rect((Screen.width - width) * 0.5f, Screen.height - 40f, width, 24f);
+            GUI.Box(area, GUIContent.none);
+
+            Color previous = GUI.color;
+            GUI.color = new Color(0.25f, 0.55f, 1f);
+            float fill = playerMana.Current / playerMana.Max;
+            GUI.DrawTexture(new Rect(area.x + 2f, area.y + 2f, (area.width - 4f) * fill, area.height - 4f), Texture2D.whiteTexture);
+            GUI.color = previous;
+
+            GUI.Label(new Rect(area.x + 8f, area.y + 2f, area.width, area.height), $"마나 {Mathf.FloorToInt(playerMana.Current)}/{playerMana.Max}");
+        }
 
         private string DescribeWave()
         {
@@ -27,7 +44,7 @@ namespace TowerDefense.Core
             bool build = modeController.CurrentMode == GameMode.Build;
             string text = build
                 ? "[배치 모드]\nWASD/화면 가장자리: 이동 · 휠: 줌 · Q/E: 회전\n좌클릭: 설치 · 우클릭: 제거 · 1~9: 타워 선택\nTab: 전투 모드"
-                : "[전투 모드]\nWASD: 이동 · Shift: 달리기 · Space: 점프 · 마우스: 시점\nTab: 배치 모드";
+                : "[전투 모드]\nWASD: 이동 · Shift: 달리기 · Space: 점프 · 마우스: 시점\n좌클릭: 마법 · Tab: 배치 모드";
 
             if (waveSpawner != null) text += "\n" + DescribeWave();
 
@@ -37,6 +54,7 @@ namespace TowerDefense.Core
             {
                 // 조준점
                 GUI.Label(new Rect(Screen.width * 0.5f - 4f, Screen.height * 0.5f - 11f, 20f, 20f), "+");
+                if (playerMana != null) DrawMana();
             }
         }
     }

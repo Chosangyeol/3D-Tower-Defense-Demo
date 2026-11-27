@@ -6,7 +6,7 @@ namespace TowerDefense.Player
 {
     /// <summary>
     /// 1인칭 이동·점프·시점. 전투 모드에서만 입력을 받고, 중력은 항상 적용한다.
-    /// 공격은 무기 종류가 정해진 뒤에 추가한다.
+    /// 공격은 PlayerSpellCaster가 맡는다.
     /// </summary>
     [RequireComponent(typeof(CharacterController))]
     public class FirstPersonController : MonoBehaviour

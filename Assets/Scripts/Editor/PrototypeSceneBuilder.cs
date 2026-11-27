@@ -149,6 +149,14 @@ namespace TowerDefense.EditorTools
             Assign(firstPerson, "modeController", modeController);
             Assign(firstPerson, "head", head.transform);
 
+            var mana = player.AddComponent<PlayerMana>();
+            var caster = player.AddComponent<PlayerSpellCaster>();
+            Material spellBody = CreateMaterial("Spell", "Universal Render Pipeline/Unlit", new Color(0.35f, 0.85f, 1f));
+            Assign(caster, "modeController", modeController);
+            Assign(caster, "head", head.transform);
+            Assign(caster, "projectilePrefab", CreateSpellPrefab(spellBody));
+            Assign(hud, "playerMana", mana);
+
             // 카메라
             var cameraObject = new GameObject("Main Camera") { tag = "MainCamera" };
             var mainCamera = cameraObject.AddComponent<Camera>();
@@ -277,6 +285,21 @@ namespace TowerDefense.EditorTools
             return prefab.GetComponent<Projectile>();
         }
 
+        private static SpellProjectile CreateSpellPrefab(Material material)
+        {
+            var root = new GameObject("SpellProjectile");
+            var projectile = root.AddComponent<SpellProjectile>();
+            GameObject body = CreateVisual(PrimitiveType.Sphere, "Body", root.transform,
+                Vector3.zero, Vector3.one * 0.25f, material);
+            body.GetComponent<MeshRenderer>().shadowCastingMode = ShadowCastingMode.Off;
+            Object.DestroyImmediate(body.GetComponent<Collider>());
+            Assign(projectile, "visual", body.transform);
+
+            GameObject prefab = PrefabUtility.SaveAsPrefabAsset(root, $"{AssetFolder}/{root.name}.prefab");
+            Object.DestroyImmediate(root);
+            return prefab.GetComponent<SpellProjectile>();
+        }
+
         private static TowerDefinition CreateTowerDefinition(Tower prefab, Projectile projectile)
         {
             string path = $"{AssetFolder}/BasicTower.asset";
@@ -309,6 +332,16 @@ namespace TowerDefense.EditorTools
             Object.DestroyImmediate(body.GetComponent<Collider>());
             Object.DestroyImmediate(nose.GetComponent<Collider>());
             Assign(enemy, "aimPoint", body.transform);
+
+            // 플레이어의 마법이 맞는 영역. 트리거라서 플레이어의 이동은 막지 않는다
+            var hitbox = root.AddComponent<CapsuleCollider>();
+            hitbox.isTrigger = true;
+            hitbox.center = new Vector3(0f, size.y, 0f);
+            hitbox.radius = size.x * 0.5f;
+            hitbox.height = size.y * 2f;
+            var rigidbody = root.AddComponent<Rigidbody>();
+            rigidbody.isKinematic = true;
+            rigidbody.useGravity = false;
 
             GameObject prefabObject = PrefabUtility.SaveAsPrefabAsset(root, $"{AssetFolder}/{assetName}.prefab");
             Object.DestroyImmediate(root);
