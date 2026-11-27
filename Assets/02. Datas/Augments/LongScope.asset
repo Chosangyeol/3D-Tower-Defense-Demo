@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a175c92759b436047ba458fd7ae121f5, type: 3}
+  m_Name: LongScope
+  m_EditorClassIdentifier: Assembly-CSharp::TowerDefense.Augments.AugmentDefinition
+  displayName: "\uB9DD\uC6D0 \uC870\uC900\uAE30"
+  description: "\uD0C0\uC6CC \uC0AC\uAC70\uB9AC +1"
+  tier: 0
+  maxStacks: 3
+  effects:
+  - {fileID: 11400000, guid: 27ba8793e617aa64e994b2c2de08e6d5, type: 2}

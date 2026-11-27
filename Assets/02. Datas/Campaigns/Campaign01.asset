@@ -57,3 +57,18 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 969886d33dfe46049ad1ee8824e512e0, type: 2}
   - {fileID: 11400000, guid: 8792648a18526fd43a5917142ceb07bc, type: 2}
   - {fileID: 11400000, guid: 5da0794ab1196c948973a2980ea23cda, type: 2}
+  augmentSources:
+  - {fileID: 11400000, guid: a69486b70287c5d44b982e9f93290b98, type: 2}
+  - {fileID: 11400000, guid: 438ac423a374d134bba855acfc91d1a0, type: 2}
+  augments:
+  - {fileID: 11400000, guid: 51ce31787c17fbe4facfb4b7f3f0e358, type: 2}
+  - {fileID: 11400000, guid: 2085c1a820459844981483fa3a5b3279, type: 2}
+  - {fileID: 11400000, guid: 3103aad9abde0fa44aa16904d1eb4db1, type: 2}
+  - {fileID: 11400000, guid: 26f2166703a76b041bb53dea4aa83872, type: 2}
+  - {fileID: 11400000, guid: 869430424c7ba244294159521d7ed962, type: 2}
+  - {fileID: 11400000, guid: bbab32c5385c09641868fc2b091b96ab, type: 2}
+  - {fileID: 11400000, guid: 323ffae786904f54d8ea2a8f90bb4b13, type: 2}
+  - {fileID: 11400000, guid: baae072205b004847a7aee408157ba93, type: 2}
+  - {fileID: 11400000, guid: 4e6d150cc60cf0b45879a86a2ee3d04d, type: 2}
+  augmentChoices: 3
+  augmentRerolls: 2

@@ -45,7 +45,8 @@ namespace TowerDefense.Magic
 
             nextCastTime = Time.time + modifiers.Get(Stat.SpellCastInterval, spell.CastInterval, spell);
             SpellProjectile projectile = Instantiate(spell.ProjectilePrefab, head.position, head.rotation);
-            projectile.Initialize(transform, spell, modifiers.Get(Stat.SpellDamage, spell.Damage, spell));
+            projectile.Initialize(transform, spell, modifiers.Get(Stat.SpellDamage, spell.Damage, spell),
+                modifiers.GetInt(Stat.SpellPierce, 0f, spell));
             return true;
         }
     }

@@ -1,3 +1,4 @@
+using TowerDefense.Augments;
 using TowerDefense.Combat;
 using TowerDefense.Economy;
 using TowerDefense.Enemies;
@@ -28,6 +29,8 @@ namespace TowerDefense.UI
         [SerializeField] private RunConstraints constraints;
         [SerializeField] private ConstraintPanel constraintPanel;
         [SerializeField] private PlayerGatherer gatherer;
+        [SerializeField] private AugmentSystem augments;
+        [SerializeField] private PlayerAltarUser altarUser;
 
         // 조준한 자원 노드의 안내와 채집 진행도
         private void DrawGathering()
@@ -40,15 +43,45 @@ namespace TowerDefense.UI
                 ? $"E 길게: {resource} 채집 (남은 양 {node.Remaining})"
                 : $"{resource} 고갈 · {Mathf.CeilToInt(node.TimeUntilRespawn)}초 뒤 재생";
 
-            var area = new Rect(Screen.width * 0.5f - 140f, Screen.height * 0.5f + 30f, 280f, 24f);
+            DrawAction(message, gatherer.Progress, node.Definition.Resource.Color);
+        }
+
+        // 조준한 제단의 비용 안내와 구매 진행도
+        private void DrawAltar()
+        {
+            AugmentAltar altar = altarUser.Target;
+            if (altar == null) return;
+
+            string cost = ResourceAmount.Describe(altar.GetCost());
+            string message = !altar.HasStock ? "제단: 얻을 수 있는 증강이 없습니다"
+                : altar.CanPurchase ? $"E 길게: 증강 구매 ({cost})"
+                : $"제단: 자원 부족 ({cost})";
+            DrawAction(message, altarUser.Progress, new Color(0.8f, 0.5f, 1f));
+        }
+
+        // 조준점 아래의 행동 안내와 진행 막대
+        private static void DrawAction(string message, float progress, Color barColor)
+        {
+            var area = new Rect(Screen.width * 0.5f - 160f, Screen.height * 0.5f + 30f, 320f, 24f);
             GUI.Box(area, message);
-            if (gatherer.Progress > 0f)
+            if (progress <= 0f) return;
+
+            Color previous = GUI.color;
+            GUI.color = barColor;
+            GUI.DrawTexture(new Rect(area.x, area.yMax + 2f, area.width * progress, 6f), Texture2D.whiteTexture);
+            GUI.color = previous;
+        }
+
+        private string DescribeAugments()
+        {
+            string text = "";
+            foreach (AugmentDefinition augment in augments.Acquired)
             {
-                Color previous = GUI.color;
-                GUI.color = node.Definition.Resource.Color;
-                GUI.DrawTexture(new Rect(area.x, area.yMax + 2f, area.width * gatherer.Progress, 6f), Texture2D.whiteTexture);
-                GUI.color = previous;
+                text += text.Length > 0 ? ", " : "증강: ";
+                int count = augments.GetStacks(augment);
+                text += count > 1 ? $"{augment.DisplayName} ×{count}" : augment.DisplayName;
             }
+            return text;
         }
 
         private string DescribeResources()
@@ -126,6 +159,7 @@ namespace TowerDefense.UI
                 var area = new Rect((Screen.width - width) * 0.5f, y, width, 40f);
                 GUI.Box(area, GUIContent.none);
                 string state = enemy.Health.DamageMultiplier < 1f ? "  [보호막]" : "";
+                if (enemy.IsSlowed) state += "  [감속]";
                 if (enemy.IsAttacking) state += "  [기지 공격 중]";
                 GUI.Label(new Rect(area.x + 8f, area.y + 2f, area.width, 20f),
                     $"{enemy.Definition.DisplayName}  {Mathf.CeilToInt(enemy.Health.Current)}/{enemy.Health.Max}{state}");
@@ -158,6 +192,8 @@ namespace TowerDefense.UI
                 text += $"\n선택: {tower.DisplayName} ({ResourceAmount.Describe(builder.GetCost(tower))})";
             }
 
+            if (augments.Acquired.Count > 0) text += "\n" + DescribeAugments();
+
             // 줄 수에 맞춰 상자 높이를 정한다
             float height = GUI.skin.box.CalcHeight(new GUIContent(text), 460f);
             GUI.Box(new Rect(10, 10, 460f, height + 4f), text);
@@ -176,6 +212,7 @@ namespace TowerDefense.UI
                 GUI.Label(new Rect(Screen.width * 0.5f - 4f, Screen.height * 0.5f - 11f, 20f, 20f), "+");
                 if (playerMana != null) DrawMana();
                 if (gatherer != null) DrawGathering();
+                if (altarUser != null) DrawAltar();
             }
         }
     }

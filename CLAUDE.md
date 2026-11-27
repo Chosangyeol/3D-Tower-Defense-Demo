@@ -16,7 +16,9 @@
 | 보스 | 10웨이브마다. 웨이브 데이터로 지정, 능력은 `EnemyAbility`로 확장. 소환 군주(10), 파쇄 거인(20), 강화판 최종 보스(30) |
 | 한 판의 구성 | 스테이지 없이 30웨이브. 최종 보스 처치로 클리어, 이후 플레이어가 제약을 골라 처음부터 재도전 |
 | 웨이브 | 구성은 직접 작성, 강도는 웨이브 배율 × 제약 |
-| 미정 | 영구 성장, 증강(무작위 선택 부가 기능)의 획득 방식 |
+| 증강 | 후보 3개 중 1개, 다시 뽑기 한 판 2번, 등급 일반·상위, 증강별 최대 중첩. 고르는 동안 게임 정지 |
+| 증강 획득 | 방식을 데이터로 넣고 빼며 시험. 지금은 정해진 웨이브(5·15·25)와 보스 처치, 제단 구매는 구현 후 꺼 둠 |
+| 미정 | 영구 성장, 증강의 최종 획득 방식 |
 | 플레이어 무기 | 마법. 프로토타입은 1개: 단일 대상 투사체, 마나 소모·회복 |
 | 웨이브 흐름 | 웨이브마다 배치 ↔ 전투 반복. 준비 시간 뒤 자동 시작 + 바로 시작 가능. 첫 웨이브 준비 시간은 넉넉하게. 시점은 수동 전환, 전투 중 설치·제거 가능 |
 | 게임 루프 | A안: 마을 = 전장. 한 맵에서 건설·채집·생산 → 배치 → 1인칭 전투 반복 |
@@ -71,6 +73,8 @@
   - 키는 `Assets/05. Input/GameControls.inputactions`에서 정의한다 (`Global`, `Build`, `Combat` 맵).
   - 설정 화면에서 키를 바꿀 수 있도록 바인딩 저장·불러오기를 `GameInput`이 맡는다.
 - 체력과 피해는 `Health` / `IDamageable`을 사용한다. 소속(`Team`)이 다른 대상에게만 피해를 준다.
+- 선택 화면처럼 게임을 멈출 때는 `GamePause`를 사용한다. 시간, 입력(포인터·클릭 제외), 커서를 함께 처리한다.
+  - 시간이 멈춰도 `Update`는 돌기 때문에, 시간과 관계없이 상태가 바뀌는 코드는 `Time.deltaTime`이 0일 때를 확인한다.
 
 ## 데이터 구조
 - 조정하는 수치는 컴포넌트에 넣지 않고 `02. Datas`의 ScriptableObject에 둔다.
@@ -88,6 +92,8 @@
 | 제약 | `ConstraintDefinition` | `RunConstraints`, 제약 화면 |
 | 업그레이드 | `UpgradeDefinition` | `ResearchState`, 연구 화면 |
 | 효과 | `GameEffect` | 연구·제약·증강이 함께 사용. `RunModifiers`에 적용 |
+| 증강 | `AugmentDefinition` | `AugmentSystem`. 후보 목록은 진행 데이터에 있다 |
+| 증강 획득 방식 | `AugmentSource` | `AugmentSystem`. 진행 데이터의 목록에 넣으면 켜진다. 새 방식은 `AugmentSource`와 `AugmentSourceRuntime`을 상속한다 |
 | 자원 | `ResourceDefinition` | `ResourceWallet` |
 | 자원 노드 | `ResourceNodeDefinition` | `ResourceNode`, `PlayerGatherer` |
 
@@ -95,6 +101,8 @@
   - 판 안의 모든 수치 변화(연구, 제약, 증강)는 `RunModifiers`에 더하고, 값을 쓰는 쪽은 `RunModifiers.Get`으로 읽는다.
   - 새로 조정 가능한 수치는 `Stat`에 **새 번호**로 추가한다. (기존 번호는 데이터에 저장되어 있어 바꾸지 않는다)
 - 연구는 타워 종류 전체에 적용한다. 특수 기능은 `GameEffect`를 상속해서 만든다.
+  - 다중 공격, 감속, 관통처럼 이미 있는 특수 기능은 `Stat`의 수치라서 `StatEffect` 데이터만으로 연구·제약·증강에 붙인다.
+  - 판을 시작할 때만 읽는 수치(`StartResources`, `BaseHealth`)는 증강과 연구로 바꿔도 적용되지 않는다.
 - 판과 판 사이에 남는 기록은 `RunRecord`를 통해서만 읽고 쓴다.
 - 개인 설정(시점 감도 등)은 게임 데이터에 넣지 않는다.
 - 비용과 보상은 `ResourceAmount` 목록으로 적고, 자원은 `ResourceWallet`을 통해서만 늘리고 줄인다.

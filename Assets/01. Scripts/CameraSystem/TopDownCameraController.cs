@@ -45,7 +45,8 @@ namespace TowerDefense.CameraSystem
 
         private void Update()
         {
-            if (modeController.CurrentMode != GameMode.Build) return;
+            // 가장자리 스크롤은 포인터만으로 움직이므로 선택 화면에서는 따로 막는다
+            if (modeController.CurrentMode != GameMode.Build || input.IsMenuOnly) return;
 
             float deltaTime = Mathf.Min(Time.unscaledDeltaTime, MaxDeltaTime);
             Rotate(deltaTime);

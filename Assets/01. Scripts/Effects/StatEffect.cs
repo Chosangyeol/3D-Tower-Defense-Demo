@@ -35,6 +35,9 @@ namespace TowerDefense.Effects
                 case Stat.TowerFireInterval:
                 case Stat.TowerProjectileSpeed:
                 case Stat.TowerCost:
+                case Stat.TowerExtraTargets:
+                case Stat.TowerSlowRatio:
+                case Stat.TowerSlowSeconds:
                     return target is TowerDefinition;
                 case Stat.EnemyCount:
                 case Stat.EnemyHealth:

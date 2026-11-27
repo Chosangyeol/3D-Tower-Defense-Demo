@@ -108,7 +108,8 @@ namespace TowerDefense.UI
         private void OnClick(InputAction.CallbackContext context)
         {
             startPressed = false;
-            if (!IsOpen) return;
+            // 증강 선택처럼 위에 다른 선택 화면이 있으면 클릭을 받지 않는다
+            if (!IsOpen || input.IsMenuOnly) return;
 
             Vector2 pointer = ReadPointer();
             for (int i = 0; i < All.Count; i++)

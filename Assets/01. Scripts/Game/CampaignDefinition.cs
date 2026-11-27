@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TowerDefense.Augments;
 using TowerDefense.Data;
 using TowerDefense.Waves;
 using UnityEngine;
@@ -23,7 +24,7 @@ namespace TowerDefense.Game
     }
 
     /// <summary>
-    /// 한 판의 진행: 웨이브 순서, 준비 시간, 웨이브가 갈수록 강해지는 정도, 선택할 수 있는 제약.
+    /// 한 판의 진행: 웨이브 순서, 준비 시간, 웨이브가 갈수록 강해지는 정도, 선택할 수 있는 제약, 증강.
     /// 마지막 웨이브를 막으면 클리어다.
     /// </summary>
     [GameDataCategory("진행", "Campaigns", 45)]
@@ -49,6 +50,20 @@ namespace TowerDefense.Game
         [Header("클리어한 뒤 선택할 수 있는 제약")]
         [SerializeField] private ConstraintDefinition[] constraints = new ConstraintDefinition[0];
 
+        [Header("증강")]
+        [Tooltip("여기에 넣은 획득 방식만 켜진다")]
+        [SerializeField] private AugmentSource[] augmentSources = new AugmentSource[0];
+        [Tooltip("후보로 나오는 증강")]
+        [SerializeField] private AugmentDefinition[] augments = new AugmentDefinition[0];
+        [Tooltip("한 번에 보여주는 후보 수")]
+        [SerializeField, Min(1)] private int augmentChoices = 3;
+        [Tooltip("한 판에서 후보를 다시 뽑을 수 있는 횟수")]
+        [SerializeField, Min(0)] private int augmentRerolls = 2;
+
+        public IReadOnlyList<AugmentSource> AugmentSources => augmentSources;
+        public IReadOnlyList<AugmentDefinition> Augments => augments;
+        public int AugmentChoices => augmentChoices;
+        public int AugmentRerolls => augmentRerolls;
         public float FirstWaveDelay => firstWaveDelay;
         public float WaveInterval => waveInterval;
         public IReadOnlyList<WaveDefinition> Waves => waves;

@@ -29,8 +29,9 @@ namespace TowerDefense.Placement
 
         private void Update()
         {
-            // 연구 화면 위의 클릭과 제약 화면이 열린 동안의 클릭은 뒤쪽 칸에 전달하지 않는다
-            bool overPanel = constraintPanel.IsOpen || researchPanel.IsPointerOver(input.Point.ReadValue<Vector2>());
+            // 연구 화면 위의 클릭, 제약 화면과 선택 화면이 열린 동안의 클릭은 뒤쪽 칸에 전달하지 않는다
+            bool overPanel = input.IsMenuOnly || constraintPanel.IsOpen
+                             || researchPanel.IsPointerOver(input.Point.ReadValue<Vector2>());
             if (modeController.CurrentMode != GameMode.Build || overPanel || !TryGetPointedCell(out Vector2Int cell))
             {
                 preview.Hide();

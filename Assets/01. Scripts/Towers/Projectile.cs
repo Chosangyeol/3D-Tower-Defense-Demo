@@ -11,12 +11,17 @@ namespace TowerDefense.Towers
         private Enemy target;
         private float damage;
         private float speed;
+        private float slowRatio;
+        private float slowSeconds;
 
-        public void Initialize(Enemy targetEnemy, float hitDamage, float moveSpeed)
+        /// <param name="stats">발사하는 순간의 타워 수치</param>
+        public void Initialize(Enemy targetEnemy, TowerStats stats)
         {
             target = targetEnemy;
-            damage = hitDamage;
-            speed = moveSpeed;
+            damage = stats.Damage;
+            speed = stats.ProjectileSpeed;
+            slowRatio = stats.SlowRatio;
+            slowSeconds = stats.SlowSeconds;
         }
 
         private void Update()
@@ -33,6 +38,7 @@ namespace TowerDefense.Towers
             if (Vector3.Distance(transform.position, destination) <= step)
             {
                 target.Health.TakeDamage(damage);
+                target.ApplySlow(slowRatio, slowSeconds);
                 Destroy(gameObject);
                 return;
             }

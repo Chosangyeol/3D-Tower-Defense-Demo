@@ -579,6 +579,9 @@ GameObject:
   - component: {fileID: 265141014}
   - component: {fileID: 265141016}
   - component: {fileID: 265141015}
+  - component: {fileID: 265141018}
+  - component: {fileID: 265141017}
+  - component: {fileID: 265141019}
   m_Layer: 0
   m_Name: GameSystems
   m_TagString: Untagged
@@ -628,6 +631,7 @@ MonoBehaviour:
   - {fileID: 288478769}
   - {fileID: 1216316833}
   - {fileID: 265141013}
+  - {fileID: 1216316834}
 --- !u!114 &265141005
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -643,6 +647,7 @@ MonoBehaviour:
   modeController: {fileID: 265141003}
   topDownCamera: {fileID: 779079867}
   firstPersonCamera: {fileID: 2147269472}
+  pause: {fileID: 265141018}
 --- !u!114 &265141006
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -667,6 +672,8 @@ MonoBehaviour:
   constraints: {fileID: 265141016}
   constraintPanel: {fileID: 265141015}
   gatherer: {fileID: 1216316833}
+  augments: {fileID: 265141017}
+  altarUser: {fileID: 1216316834}
 --- !u!4 &265141007
 Transform:
   m_ObjectHideFlags: 0
@@ -814,6 +821,51 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TowerDefense.Game.RunConstraints
   setup: {fileID: 265141010}
   modifiers: {fileID: 265141014}
+--- !u!114 &265141017
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 265141002}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 601753a458dae0e4fa1a1bf02ecfbbf6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TowerDefense.Augments.AugmentSystem
+  setup: {fileID: 265141010}
+  modifiers: {fileID: 265141014}
+  wallet: {fileID: 265141011}
+  waveSpawner: {fileID: 640471811}
+  match: {fileID: 265141004}
+  pause: {fileID: 265141018}
+--- !u!114 &265141018
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 265141002}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d23ba1bfb98c9ed4fbcb5ae3e4e4ef0c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TowerDefense.Game.GamePause
+  input: {fileID: 265141008}
+--- !u!114 &265141019
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 265141002}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5f25510edc5f364090fe2e77ac547e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TowerDefense.UI.AugmentPanel
+  input: {fileID: 265141008}
+  augments: {fileID: 265141017}
 --- !u!1 &281224162
 GameObject:
   m_ObjectHideFlags: 0
@@ -1890,6 +1942,7 @@ GameObject:
   - component: {fileID: 1216316830}
   - component: {fileID: 1216316829}
   - component: {fileID: 1216316833}
+  - component: {fileID: 1216316834}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -2007,6 +2060,87 @@ MonoBehaviour:
   wallet: {fileID: 265141011}
   modifiers: {fileID: 265141014}
   reach: 3.5
+--- !u!114 &1216316834
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1216316827}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e758d555c7d006140aeef8f2e50f856b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TowerDefense.Player.PlayerAltarUser
+  input: {fileID: 265141008}
+  modeController: {fileID: 265141003}
+  head: {fileID: 583177919}
+  reach: 3.5
+--- !u!1001 &1546775540
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4658309940564474778, guid: 42717a7d81a9c0146b006d668facac37, type: 3}
+      propertyPath: grid
+      value: 
+      objectReference: {fileID: 3070564}
+    - target: {fileID: 4658309940564474778, guid: 42717a7d81a9c0146b006d668facac37, type: 3}
+      propertyPath: augments
+      value: 
+      objectReference: {fileID: 265141017}
+    - target: {fileID: 8147796795082455808, guid: 42717a7d81a9c0146b006d668facac37, type: 3}
+      propertyPath: m_Name
+      value: AugmentAltar (10, 8)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8513650349217683515, guid: 42717a7d81a9c0146b006d668facac37, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8513650349217683515, guid: 42717a7d81a9c0146b006d668facac37, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8513650349217683515, guid: 42717a7d81a9c0146b006d668facac37, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8513650349217683515, guid: 42717a7d81a9c0146b006d668facac37, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8513650349217683515, guid: 42717a7d81a9c0146b006d668facac37, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8513650349217683515, guid: 42717a7d81a9c0146b006d668facac37, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8513650349217683515, guid: 42717a7d81a9c0146b006d668facac37, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8513650349217683515, guid: 42717a7d81a9c0146b006d668facac37, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8513650349217683515, guid: 42717a7d81a9c0146b006d668facac37, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8513650349217683515, guid: 42717a7d81a9c0146b006d668facac37, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 42717a7d81a9c0146b006d668facac37, type: 3}
 --- !u!1 &1602437871
 GameObject:
   m_ObjectHideFlags: 0
@@ -2346,3 +2480,4 @@ SceneRoots:
   - {fileID: 43171622}
   - {fileID: 288478767}
   - {fileID: 281224163}
+  - {fileID: 1546775540}

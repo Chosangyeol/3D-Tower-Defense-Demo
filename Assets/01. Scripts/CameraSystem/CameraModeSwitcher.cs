@@ -5,7 +5,7 @@ using UnityEngine;
 namespace TowerDefense.CameraSystem
 {
     /// <summary>
-    /// 모드에 따라 Cinemachine 카메라의 우선순위와 커서 상태를 바꾼다.
+    /// 모드에 따라 Cinemachine 카메라의 우선순위와 커서 상태를 바꾼다. 게임이 멈춘 동안에는 커서를 푼다.
     /// 전환 블렌드는 CinemachineBrain의 Default Blend 설정을 따른다.
     /// </summary>
     public class CameraModeSwitcher : MonoBehaviour
@@ -16,10 +16,12 @@ namespace TowerDefense.CameraSystem
         [SerializeField] private GameModeController modeController;
         [SerializeField] private CinemachineCamera topDownCamera;
         [SerializeField] private CinemachineCamera firstPersonCamera;
+        [SerializeField] private GamePause pause;
 
         private void OnEnable()
         {
             modeController.ModeChanged += Apply;
+            pause.Changed += OnPauseChanged;
         }
 
         private void Start()
@@ -30,6 +32,7 @@ namespace TowerDefense.CameraSystem
         private void OnDisable()
         {
             modeController.ModeChanged -= Apply;
+            pause.Changed -= OnPauseChanged;
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
         }
@@ -48,9 +51,14 @@ namespace TowerDefense.CameraSystem
             ApplyCursor(mode);
         }
 
-        private static void ApplyCursor(GameMode mode)
+        private void OnPauseChanged(bool paused)
         {
-            bool combat = mode == GameMode.Combat;
+            ApplyCursor(modeController.CurrentMode);
+        }
+
+        private void ApplyCursor(GameMode mode)
+        {
+            bool combat = mode == GameMode.Combat && !pause.IsPaused;
             Cursor.lockState = combat ? CursorLockMode.Locked : CursorLockMode.None;
             Cursor.visible = !combat;
         }

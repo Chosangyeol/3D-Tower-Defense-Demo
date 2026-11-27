@@ -23,6 +23,9 @@ namespace TowerDefense.Controls
         private InputActionMap combatMap;
         private readonly InputAction[] slots = new InputAction[SlotCount];
 
+        /// <summary>선택 화면처럼 포인터와 클릭만 받는 상태인지 여부.</summary>
+        public bool IsMenuOnly { get; private set; }
+
         /// <summary>키 설정 화면에서 바인딩을 바꿀 때 사용한다.</summary>
         public InputActionAsset Actions => actions;
 
@@ -109,6 +112,20 @@ namespace TowerDefense.Controls
             combatMap.Disable();
         }
 
+        /// <summary>켜면 Point와 Click을 뺀 모든 액션을 끈다. 끄면 지금 모드의 액션을 다시 켠다.</summary>
+        public void SetMenuOnly(bool menuOnly)
+        {
+            if (IsMenuOnly == menuOnly) return;
+
+            IsMenuOnly = menuOnly;
+            foreach (InputAction action in new[] { ToggleMode, StartWave, Restart, Constraints })
+            {
+                if (menuOnly) action.Disable();
+                else action.Enable();
+            }
+            ApplyMode(modeController.CurrentMode);
+        }
+
         /// <summary>지금의 키 설정을 저장한다.</summary>
         public void SaveBindings()
         {
@@ -134,8 +151,12 @@ namespace TowerDefense.Controls
 
         private void ApplyMode(GameMode mode)
         {
-            bool build = mode == GameMode.Build;
-            if (build)
+            if (IsMenuOnly)
+            {
+                buildMap.Disable();
+                combatMap.Disable();
+            }
+            else if (mode == GameMode.Build)
             {
                 combatMap.Disable();
                 buildMap.Enable();

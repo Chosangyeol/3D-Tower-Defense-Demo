@@ -36,6 +36,9 @@ namespace TowerDefense.Player
 
         private void Update()
         {
+            // 게임이 멈춘 동안에는 채집 진행도를 그대로 둔다
+            if (Time.deltaTime <= 0f) return;
+
             ResourceNode found = modeController.CurrentMode == GameMode.Combat ? FindTarget() : null;
             if (found != Target)
             {

@@ -7,7 +7,7 @@ using UnityEngine;
 namespace TowerDefense.Towers
 {
     /// <summary>
-    /// 설치된 타워. 사거리 안에서 가장 앞선 적을 골라 포탑을 돌리고 투사체를 쏜다.
+    /// 설치된 타워. 사거리 안에서 가장 앞선 적을 골라 포탑을 돌리고 투사체를 쏜다. 효과에 따라 여러 적을 함께 쏜다.
     /// 배치·전투 모드와 관계없이 동작한다. 적의 능력으로 잠시 멈출 수 있다.
     /// </summary>
     public class Tower : MonoBehaviour
@@ -18,6 +18,8 @@ namespace TowerDefense.Towers
 
         [SerializeField] private Transform turret;
         [SerializeField] private Transform muzzle;
+
+        private readonly List<Enemy> targets = new List<Enemy>();
 
         private float cooldown;
         private RunModifiers modifiers;
@@ -83,7 +85,7 @@ namespace TowerDefense.Towers
 
         private void Update()
         {
-            if (Definition == null) return;
+            if (Definition == null || Time.deltaTime <= 0f) return;
 
             if (IsDisabled)
             {
@@ -95,20 +97,22 @@ namespace TowerDefense.Towers
             }
 
             cooldown = Mathf.Max(cooldown - Time.deltaTime, 0f);
-            Target = FindTarget();
+            TowerStats stats = Stats;
+            FindTargets(stats.Range, 1 + stats.ExtraTargets);
+            Target = targets.Count > 0 ? targets[0] : null;
             if (Target == null) return;
 
             Aim(Target.AimPosition);
             if (cooldown > 0f) return;
 
-            Fire(Target);
-            cooldown = Stats.FireInterval;
+            foreach (Enemy enemy in targets) Fire(enemy, stats);
+            cooldown = stats.FireInterval;
         }
 
-        private Enemy FindTarget()
+        // 사거리 안의 적을 앞선 순서로 최대 수만큼 고른다
+        private void FindTargets(float range, int maxCount)
         {
-            Enemy best = null;
-            float range = Stats.Range;
+            targets.Clear();
             float rangeSquared = range * range;
 
             foreach (Enemy enemy in Enemy.Active)
@@ -120,9 +124,13 @@ namespace TowerDefense.Towers
                 offset.y = 0f;
                 if (offset.sqrMagnitude > rangeSquared) continue;
 
-                if (best == null || enemy.DistanceTravelled > best.DistanceTravelled) best = enemy;
+                int index = 0;
+                while (index < targets.Count && targets[index].DistanceTravelled >= enemy.DistanceTravelled) index++;
+                if (index >= maxCount) continue;
+
+                targets.Insert(index, enemy);
+                if (targets.Count > maxCount) targets.RemoveAt(maxCount);
             }
-            return best;
         }
 
         private void Aim(Vector3 position)
@@ -134,14 +142,13 @@ namespace TowerDefense.Towers
             if (direction.sqrMagnitude > 0.0001f) turret.rotation = Quaternion.LookRotation(direction);
         }
 
-        private void Fire(Enemy target)
+        private void Fire(Enemy target, TowerStats stats)
         {
             if (Definition.ProjectilePrefab == null) return;
 
             Vector3 origin = muzzle != null ? muzzle.position : transform.position;
             Projectile projectile = Instantiate(Definition.ProjectilePrefab, origin, Quaternion.identity);
-            TowerStats stats = Stats;
-            projectile.Initialize(target, stats.Damage, stats.ProjectileSpeed);
+            projectile.Initialize(target, stats);
         }
     }
 }

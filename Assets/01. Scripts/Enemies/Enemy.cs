@@ -19,6 +19,11 @@ namespace TowerDefense.Enemies
     [RequireComponent(typeof(Health))]
     public class Enemy : MonoBehaviour
     {
+        // 감속이 아무리 강해도 완전히 멈추지는 않는다
+        private const float MaxSlowRatio = 0.9f;
+
+        private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
+        private static readonly Color SlowedColor = new Color(0.55f, 0.85f, 1f);
         private static readonly List<Enemy> active = new List<Enemy>();
 
         [SerializeField] private Transform aimPoint;
@@ -33,6 +38,8 @@ namespace TowerDefense.Enemies
         private float stopDistance;
         private float attackCooldown;
         private float speedBonus;
+        private float slowRatio;
+        private float slowRemaining;
         private bool finished;
 
         /// <summary>씬에 있는 적 목록. 타겟을 고를 때 사용한다.</summary>
@@ -46,8 +53,10 @@ namespace TowerDefense.Enemies
         /// <summary>기지 앞에 도착해서 공격 중인지 여부.</summary>
         public bool IsAttacking { get; private set; }
         public bool IsAlive => path != null && !finished && Health.IsAlive;
-        /// <summary>능력의 속도 변화를 반영한 이동 속도.</summary>
-        public float MoveSpeed => Stats.MoveSpeed * Mathf.Max(1f + speedBonus, 0f);
+        public bool IsSlowed => slowRemaining > 0f;
+        /// <summary>능력의 속도 변화와 감속을 반영한 이동 속도.</summary>
+        public float MoveSpeed =>
+            Stats.MoveSpeed * Mathf.Max(1f + speedBonus, 0f) * (IsSlowed ? 1f - slowRatio : 1f);
         /// <summary>투사체가 향하는 위치.</summary>
         public Vector3 AimPosition => aimPoint != null ? aimPoint.position : transform.position;
 
@@ -86,6 +95,27 @@ namespace TowerDefense.Enemies
             speedBonus += percent;
         }
 
+        /// <summary>
+        /// 정해진 시간 동안 이동 속도를 줄인다. 감속은 겹쳐 쌓이지 않고 가장 강한 것을 따르며,
+        /// 같은 세기면 남은 시간을 늘린다. 공격 속도에는 영향이 없다.
+        /// </summary>
+        public void ApplySlow(float ratio, float seconds)
+        {
+            if (!IsAlive || ratio <= 0f || seconds <= 0f) return;
+
+            ratio = Mathf.Min(ratio, MaxSlowRatio);
+            if (!IsSlowed || ratio > slowRatio)
+            {
+                if (!IsSlowed) Tint(true);
+                slowRatio = ratio;
+                slowRemaining = seconds;
+            }
+            else if (Mathf.Approximately(ratio, slowRatio))
+            {
+                slowRemaining = Mathf.Max(slowRemaining, seconds);
+            }
+        }
+
         public void RequestSummon(EnemyDefinition summoned, int count)
         {
             if (IsAlive && summoned != null && count > 0) SummonRequested?.Invoke(this, summoned, count);
@@ -112,6 +142,7 @@ namespace TowerDefense.Enemies
             if (!IsAlive) return;
 
             UpdateAbilities(Time.deltaTime);
+            UpdateSlow(Time.deltaTime);
             if (IsAttacking) Attack(Time.deltaTime);
             else Move(MoveSpeed * Time.deltaTime);
         }
@@ -128,6 +159,29 @@ namespace TowerDefense.Enemies
             foreach (EnemyAbilityRuntime ability in abilities)
             {
                 ability.Update(healthRatio, deltaTime);
+            }
+        }
+
+        private void UpdateSlow(float deltaTime)
+        {
+            if (!IsSlowed) return;
+
+            slowRemaining -= deltaTime;
+            if (!IsSlowed) Tint(false);
+        }
+
+        // 감속된 적은 파랗게 보여준다. 머티리얼 에셋은 바꾸지 않는다
+        private void Tint(bool slowed)
+        {
+            MaterialPropertyBlock block = null;
+            if (slowed)
+            {
+                block = new MaterialPropertyBlock();
+                block.SetColor(BaseColorId, SlowedColor);
+            }
+            foreach (Renderer part in GetComponentsInChildren<Renderer>())
+            {
+                part.SetPropertyBlock(block);
             }
         }
 

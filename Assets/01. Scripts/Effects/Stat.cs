@@ -12,6 +12,9 @@ namespace TowerDefense.Effects
         [InspectorName("타워/발사 간격")] TowerFireInterval = 2,
         [InspectorName("타워/투사체 속도")] TowerProjectileSpeed = 3,
         [InspectorName("타워/설치 비용")] TowerCost = 4,
+        [InspectorName("타워/추가 공격 대상 수")] TowerExtraTargets = 5,
+        [InspectorName("타워/명중 시 감속 비율")] TowerSlowRatio = 6,
+        [InspectorName("타워/감속 시간")] TowerSlowSeconds = 7,
 
         [InspectorName("플레이어/이동 속도")] PlayerMoveSpeed = 10,
         [InspectorName("플레이어/최대 마나")] PlayerMaxMana = 11,
@@ -20,6 +23,7 @@ namespace TowerDefense.Effects
         [InspectorName("마법/피해")] SpellDamage = 20,
         [InspectorName("마법/마나 소모")] SpellManaCost = 21,
         [InspectorName("마법/시전 간격")] SpellCastInterval = 22,
+        [InspectorName("마법/추가 관통 수")] SpellPierce = 23,
 
         [InspectorName("적/수 (보스 제외)")] EnemyCount = 30,
         [InspectorName("적/체력")] EnemyHealth = 31,
