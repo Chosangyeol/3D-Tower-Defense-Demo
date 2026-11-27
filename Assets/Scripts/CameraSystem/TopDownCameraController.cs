@@ -29,6 +29,13 @@ namespace TowerDefense.CameraSystem
         [Header("회전")]
         [SerializeField] private float rotateSpeed = 90f;
 
+        // 마우스가 화면 안쪽에 한 번 들어온 뒤에만 가장자리 스크롤을 켠다.
+        // 플레이 시작 직후의 마우스 위치 (0,0)을 가장자리로 오인하지 않기 위해서다
+        private bool edgeArmed;
+
+        // 시작·끊김 직후의 큰 프레임 시간으로 카메라가 튀지 않게 한다
+        private const float MaxDeltaTime = 0.05f;
+
         [Header("입력")]
         [SerializeField] private InputAction moveAction = CreateMoveAction();
         [SerializeField] private InputAction rotateAction = CreateRotateAction();
@@ -36,6 +43,7 @@ namespace TowerDefense.CameraSystem
 
         private void OnEnable()
         {
+            edgeArmed = false;
             moveAction.Enable();
             rotateAction.Enable();
             zoomAction.Enable();
@@ -53,7 +61,7 @@ namespace TowerDefense.CameraSystem
         {
             if (modeController.CurrentMode != GameMode.Build) return;
 
-            float deltaTime = Time.unscaledDeltaTime;
+            float deltaTime = Mathf.Min(Time.unscaledDeltaTime, MaxDeltaTime);
             Rotate(deltaTime);
             Pan(deltaTime);
             Zoom();
@@ -82,17 +90,22 @@ namespace TowerDefense.CameraSystem
 
         private Vector2 ReadEdgeInput()
         {
-            if (Mouse.current == null || !Application.isFocused) return Vector2.zero;
-
-            Vector2 mouse = Mouse.current.position.ReadValue();
-            if (mouse.x < 0f || mouse.y < 0f || mouse.x > Screen.width || mouse.y > Screen.height) return Vector2.zero;
+            Vector2 mouse = Mouse.current != null ? Mouse.current.position.ReadValue() : new Vector2(-1f, -1f);
+            bool outside = mouse.x < 0f || mouse.y < 0f || mouse.x > Screen.width || mouse.y > Screen.height;
+            if (outside || !Application.isFocused)
+            {
+                edgeArmed = false;
+                return Vector2.zero;
+            }
 
             Vector2 result = Vector2.zero;
             if (mouse.x <= edgeSize) result.x = -1f;
             else if (mouse.x >= Screen.width - edgeSize) result.x = 1f;
             if (mouse.y <= edgeSize) result.y = -1f;
             else if (mouse.y >= Screen.height - edgeSize) result.y = 1f;
-            return result;
+
+            if (result == Vector2.zero) edgeArmed = true;
+            return edgeArmed ? result : Vector2.zero;
         }
 
         private void Zoom()
