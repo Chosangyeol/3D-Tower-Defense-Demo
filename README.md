@@ -85,6 +85,6 @@ docs/
 2. 저장소 클론 (Git LFS 필요)
    ```bash
    git lfs install
-   git clone <repository-url>
+   git clone https://github.com/Chosangyeol/3D-Tower-Defense-Demo.git
    ```
 3. Unity Hub → **Add project from disk** → 클론한 폴더 선택
