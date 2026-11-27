@@ -1,3 +1,4 @@
+using TowerDefense.Effects;
 using TowerDefense.Player;
 using UnityEngine;
 
@@ -9,8 +10,9 @@ namespace TowerDefense.Magic
     public class PlayerMana : MonoBehaviour
     {
         [SerializeField] private PlayerStatsDefinition stats;
+        [SerializeField] private RunModifiers modifiers;
 
-        public float Max => stats.MaxMana;
+        public float Max => modifiers.Get(Stat.PlayerMaxMana, stats.MaxMana);
         public float Current { get; private set; }
 
         private void Awake()
@@ -20,7 +22,8 @@ namespace TowerDefense.Magic
 
         private void Update()
         {
-            Current = Mathf.Min(Current + stats.ManaRegenPerSecond * Time.deltaTime, Max);
+            float regen = modifiers.Get(Stat.PlayerManaRegen, stats.ManaRegenPerSecond);
+            Current = Mathf.Min(Current + regen * Time.deltaTime, Max);
         }
 
         /// <summary>마나가 충분하면 소모하고 true를 돌려준다.</summary>

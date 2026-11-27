@@ -7,7 +7,7 @@ using UnityEngine.Rendering;
 namespace TowerDefense.Enemies
 {
     /// <summary>
-    /// 적이 따라가는 고정 경로. 꺾이는 지점은 스테이지 데이터의 그리드 칸 좌표를 쓴다. (가로·세로 직선만)
+    /// 적이 따라가는 고정 경로. 꺾이는 지점은 맵 데이터의 그리드 칸 좌표를 쓴다. (가로·세로 직선만)
     /// 경로가 지나는 칸은 건설 금지로 만들고, 바닥에 길을 표시한다.
     /// </summary>
     [DefaultExecutionOrder(-50)]
@@ -15,7 +15,7 @@ namespace TowerDefense.Enemies
     public class EnemyPath : MonoBehaviour
     {
         [SerializeField] private BuildGrid grid;
-        [SerializeField] private StageController stageController;
+        [SerializeField] private GameSetup setup;
         [SerializeField] private float heightOffset = 0.01f;
         [SerializeField, Range(0.1f, 1f)] private float tileFill = 0.9f;
         [Tooltip("경로 끝에 놓인 기지의 반지름. 적은 이 앞에서 멈춘다")]
@@ -38,8 +38,8 @@ namespace TowerDefense.Enemies
         }
 
         private IReadOnlyList<Vector2Int> Waypoints =>
-            stageController != null && stageController.Stage != null
-                ? stageController.Stage.PathWaypoints
+            setup != null && setup.Map != null
+                ? setup.Map.PathWaypoints
                 : System.Array.Empty<Vector2Int>();
 
         public Vector3 GetPoint(int index)

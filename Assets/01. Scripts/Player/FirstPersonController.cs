@@ -1,4 +1,5 @@
 using TowerDefense.Controls;
+using TowerDefense.Effects;
 using TowerDefense.Game;
 using UnityEngine;
 
@@ -15,6 +16,7 @@ namespace TowerDefense.Player
         [SerializeField] private GameModeController modeController;
         [SerializeField] private Transform head;
         [SerializeField] private PlayerStatsDefinition stats;
+        [SerializeField] private RunModifiers modifiers;
 
         [Header("시점")]
         [SerializeField] private float lookSensitivity = 0.1f;
@@ -51,7 +53,8 @@ namespace TowerDefense.Player
         private void Move(bool active)
         {
             Vector2 direction = active ? Vector2.ClampMagnitude(input.Move.ReadValue<Vector2>(), 1f) : Vector2.zero;
-            float speed = input.Sprint.IsPressed() ? stats.SprintSpeed : stats.WalkSpeed;
+            float baseSpeed = input.Sprint.IsPressed() ? stats.SprintSpeed : stats.WalkSpeed;
+            float speed = modifiers.Get(Stat.PlayerMoveSpeed, baseSpeed);
             Vector3 velocity = transform.rotation * new Vector3(direction.x, 0f, direction.y) * speed;
 
             if (controller.isGrounded)

@@ -15,17 +15,11 @@ MonoBehaviour:
   displayName: "\uC6E8\uC774\uBE0C 3"
   groups:
   - enemy: {fileID: 11400000, guid: 695226d8cb9e1d9408c77b0d8aac0f04, type: 2}
-    count: 8
-    interval: 0.8
-  - enemy: {fileID: 11400000, guid: 6f17dc790334790439bb2252ef462795, type: 2}
-    count: 3
-    interval: 2
+    count: 7
+    interval: 1.12
   - enemy: {fileID: 11400000, guid: dd4b9787204602b4e972a1c3bfe2bb0b, type: 2}
-    count: 6
+    count: 3
     interval: 0.6
-  - enemy: {fileID: 11400000, guid: fad11dd0a4559b04c92b94d2e823f07d, type: 2}
-    count: 1
-    interval: 1
   clearReward:
   - resource: {fileID: 11400000, guid: 0d516713d6bb672449210a3b4b90e298, type: 2}
     amount: 40

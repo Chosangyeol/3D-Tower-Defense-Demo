@@ -1,21 +1,20 @@
 using System;
 using System.Collections.Generic;
-using TowerDefense.Combat;
 using TowerDefense.Economy;
-using TowerDefense.Towers;
+using TowerDefense.Effects;
 using UnityEngine;
 
 namespace TowerDefense.Upgrades
 {
     /// <summary>
-    /// 이번 판에서 완료한 연구. 타워 종류별 최종 공격 정보를 계산해서 설치된 타워와 새 타워가 함께 쓴다.
+    /// 이번 판에서 완료한 연구. 완료하면 효과를 RunModifiers에 더해 설치된 타워와 새 타워에 함께 적용한다.
     /// </summary>
     public class ResearchState : MonoBehaviour
     {
         [SerializeField] private ResourceWallet wallet;
+        [SerializeField] private RunModifiers modifiers;
 
         private readonly List<UpgradeDefinition> completed = new List<UpgradeDefinition>();
-        private readonly Dictionary<TowerDefinition, AttackSpec> specs = new Dictionary<TowerDefinition, AttackSpec>();
 
         /// <summary>연구를 완료할 때 호출된다.</summary>
         public event Action<UpgradeDefinition> Completed;
@@ -51,27 +50,9 @@ namespace TowerDefense.Upgrades
             if (!CanComplete(upgrade)) return false;
 
             completed.Add(upgrade);
-            specs.Clear();
+            modifiers.Apply(upgrade.Effects, upgrade.Target);
             Completed?.Invoke(upgrade);
             return true;
-        }
-
-        public AttackSpec GetSpec(TowerDefinition tower)
-        {
-            if (specs.TryGetValue(tower, out AttackSpec spec)) return spec;
-
-            spec = tower.CreateSpec();
-            foreach (UpgradeDefinition upgrade in completed)
-            {
-                if (upgrade.Target != tower) continue;
-
-                foreach (UpgradeEffect effect in upgrade.Effects)
-                {
-                    if (effect != null) effect.Apply(spec);
-                }
-            }
-            specs.Add(tower, spec);
-            return spec;
         }
     }
 }

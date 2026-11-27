@@ -13,7 +13,10 @@
 | 인원 | 싱글 전용 (멀티플레이 제외) |
 | 적 경로 | 고정 경로 (메이즈 방식 아님). 경로 칸에는 타워 설치 불가 |
 | 적의 기지 공격 | 모든 적은 기지 앞에 겹쳐 서서 기지가 무너질 때까지 공격. 웨이브는 모두 처치해야 끝남 |
-| 보스 | 웨이브 데이터로 지정. 능력은 `EnemyAbility` 데이터로 확장. 소환 군주, 파쇄 거인 |
+| 보스 | 10웨이브마다. 웨이브 데이터로 지정, 능력은 `EnemyAbility`로 확장. 소환 군주(10), 파쇄 거인(20), 강화판 최종 보스(30) |
+| 한 판의 구성 | 스테이지 없이 30웨이브. 최종 보스 처치로 클리어, 이후 플레이어가 제약을 골라 처음부터 재도전 |
+| 웨이브 | 구성은 직접 작성, 강도는 웨이브 배율 × 제약 |
+| 미정 | 영구 성장, 증강(무작위 선택 부가 기능)의 획득 방식 |
 | 플레이어 무기 | 마법. 프로토타입은 1개: 단일 대상 투사체, 마나 소모·회복 |
 | 웨이브 흐름 | 웨이브마다 배치 ↔ 전투 반복. 준비 시간 뒤 자동 시작 + 바로 시작 가능. 첫 웨이브 준비 시간은 넉넉하게. 시점은 수동 전환, 전투 중 설치·제거 가능 |
 | 게임 루프 | A안: 마을 = 전장. 한 맵에서 건설·채집·생산 → 배치 → 1인칭 전투 반복 |
@@ -79,14 +82,20 @@
 | 적 능력 | `EnemyAbility` | `Enemy`. 새 능력은 `EnemyAbility`와 `EnemyAbilityRuntime`을 상속하고, 실행 상태는 Runtime에 둔다 |
 | 마법 | `SpellDefinition` | `PlayerSpellCaster` |
 | 플레이어 능력치 | `PlayerStatsDefinition` | 이동, 마나 |
-| 웨이브 | `WaveDefinition` | 스테이지 |
-| 스테이지 | `StageDefinition` | `StageController`를 통해 웨이브, 경로, 기지 |
-| 업그레이드 / 효과 | `UpgradeDefinition` / `UpgradeEffect` | `ResearchState`, 연구 화면 (목록은 스테이지 데이터) |
+| 웨이브 | `WaveDefinition` | 진행 데이터 |
+| 진행 | `CampaignDefinition` | `GameSetup`을 통해 웨이브 순서, 준비 시간, 웨이브 배율, 제약 목록 |
+| 맵 | `MapDefinition` | `GameSetup`을 통해 경로, 기지, 시작 자원, 연구 목록 |
+| 제약 | `ConstraintDefinition` | `RunConstraints`, 제약 화면 |
+| 업그레이드 | `UpgradeDefinition` | `ResearchState`, 연구 화면 |
+| 효과 | `GameEffect` | 연구·제약·증강이 함께 사용. `RunModifiers`에 적용 |
 | 자원 | `ResourceDefinition` | `ResourceWallet` |
 | 자원 노드 | `ResourceNodeDefinition` | `ResourceNode`, `PlayerGatherer` |
 
-- 실행 중에는 데이터 에셋의 값을 바꾸지 않는다. 강화·연구 결과는 `AttackSpec`처럼 따로 계산해서 보관한다.
-- 연구는 타워 종류 전체에 적용한다. 특수 기능은 `UpgradeEffect`를 상속하고 `AttackSpec`에 항목을 추가한다.
+- 실행 중에는 데이터 에셋의 값을 바꾸지 않는다.
+  - 판 안의 모든 수치 변화(연구, 제약, 증강)는 `RunModifiers`에 더하고, 값을 쓰는 쪽은 `RunModifiers.Get`으로 읽는다.
+  - 새로 조정 가능한 수치는 `Stat`에 **새 번호**로 추가한다. (기존 번호는 데이터에 저장되어 있어 바꾸지 않는다)
+- 연구는 타워 종류 전체에 적용한다. 특수 기능은 `GameEffect`를 상속해서 만든다.
+- 판과 판 사이에 남는 기록은 `RunRecord`를 통해서만 읽고 쓴다.
 - 개인 설정(시점 감도 등)은 게임 데이터에 넣지 않는다.
 - 비용과 보상은 `ResourceAmount` 목록으로 적고, 자원은 `ResourceWallet`을 통해서만 늘리고 줄인다.
 - `Resources`는 Unity의 특수 폴더 이름이라 폴더 이름으로 쓰지 않는다. (자원 코드는 `Economy`, 데이터는 `ResourceTypes`)

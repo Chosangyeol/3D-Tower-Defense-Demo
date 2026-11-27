@@ -1,5 +1,6 @@
 using TowerDefense.Controls;
 using TowerDefense.Economy;
+using TowerDefense.Effects;
 using TowerDefense.Game;
 using UnityEngine;
 
@@ -14,6 +15,7 @@ namespace TowerDefense.Player
         [SerializeField] private GameModeController modeController;
         [SerializeField] private Transform head;
         [SerializeField] private ResourceWallet wallet;
+        [SerializeField] private RunModifiers modifiers;
         [SerializeField, Min(0.5f)] private float reach = 3.5f;
 
         private float elapsed;
@@ -21,8 +23,10 @@ namespace TowerDefense.Player
         /// <summary>조준 중인 자원 노드. 없으면 null.</summary>
         public ResourceNode Target { get; private set; }
         /// <summary>지금 채집의 진행도 (0~1).</summary>
-        public float Progress =>
-            Target != null ? Mathf.Clamp01(elapsed / Target.Definition.GatherSeconds) : 0f;
+        public float Progress => Target != null ? Mathf.Clamp01(elapsed / GatherSeconds) : 0f;
+
+        private float GatherSeconds =>
+            modifiers.Get(Stat.GatherSeconds, Target.Definition.GatherSeconds, Target.Definition);
 
         private void OnDisable()
         {
@@ -46,10 +50,11 @@ namespace TowerDefense.Player
             }
 
             elapsed += Time.deltaTime;
-            if (elapsed < Target.Definition.GatherSeconds) return;
+            if (elapsed < GatherSeconds) return;
 
             elapsed = 0f;
-            wallet.Add(Target.Definition.Resource, Target.Gather());
+            int gathered = modifiers.GetInt(Stat.GatherAmount, Target.Gather(), Target.Definition);
+            wallet.Add(Target.Definition.Resource, gathered);
         }
 
         private ResourceNode FindTarget()

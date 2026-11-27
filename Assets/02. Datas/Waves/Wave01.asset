@@ -16,7 +16,7 @@ MonoBehaviour:
   groups:
   - enemy: {fileID: 11400000, guid: 695226d8cb9e1d9408c77b0d8aac0f04, type: 2}
     count: 6
-    interval: 1.2
+    interval: 1.18
   clearReward:
   - resource: {fileID: 11400000, guid: 0d516713d6bb672449210a3b4b90e298, type: 2}
     amount: 40

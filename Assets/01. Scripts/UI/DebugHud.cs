@@ -23,6 +23,10 @@ namespace TowerDefense.UI
         [SerializeField] private MatchController match;
         [SerializeField] private ResourceWallet wallet;
         [SerializeField] private TowerSelection selection;
+        [SerializeField] private TowerBuilder builder;
+        [SerializeField] private GameSetup setup;
+        [SerializeField] private RunConstraints constraints;
+        [SerializeField] private ConstraintPanel constraintPanel;
         [SerializeField] private PlayerGatherer gatherer;
 
         // 조준한 자원 노드의 안내와 채집 진행도
@@ -60,11 +64,16 @@ namespace TowerDefense.UI
 
         private void DrawResult()
         {
-            var area = new Rect(Screen.width * 0.5f - 150f, Screen.height * 0.5f - 60f, 300f, 120f);
+            // 아래쪽의 제약 화면과 겹치지 않도록 위에 놓는다
+            var area = new Rect(Screen.width * 0.5f - 170f, 110f, 340f, 160f);
             bool victory = match.Result == MatchResult.Victory;
+            CampaignDefinition campaign = setup.Campaign;
             string message = victory
-                ? $"승리!\n모든 웨이브를 막았습니다\n남은 기지 체력 {baseHealth.Current}/{baseHealth.Max}"
-                : "패배\n기지가 파괴되었습니다";
+                ? $"클리어!\n남은 기지 체력 {baseHealth.Current}/{baseHealth.Max} · 난이도 {constraints.Score}"
+                : $"패배 · 웨이브 {waveSpawner.StartedWaves}\n기지가 파괴되었습니다";
+            message += $"\n최고 웨이브 {RunRecord.BestWave(campaign)} · 클리어 {RunRecord.ClearCount(campaign)}회"
+                       + $" · 최고 난이도 {RunRecord.BestScore(campaign)}";
+            if (victory && RunRecord.ClearCount(campaign) == 1) message += "\n제약이 해금되었습니다";
             GUI.Box(area, message);
 
             if (GUI.Button(new Rect(area.x + 70f, area.yMax - 42f, 160f, 30f), "다시 시작 (R)"))
@@ -140,11 +149,13 @@ namespace TowerDefense.UI
                 : "[전투 모드]\nWASD: 이동 · Shift: 달리기 · Space: 점프 · 마우스: 시점\n좌클릭: 마법 · E: 채집 · Tab: 배치 모드";
 
             if (waveSpawner != null) text += "\n" + DescribeWave();
+            if (constraints.Active.Count > 0) text += $"\n제약 {constraints.Active.Count}개 · 난이도 {constraints.Score}";
+            if (waveSpawner.StartedWaves == 0 && constraintPanel.CanOpen) text += "\nC: 제약 선택";
             if (wallet != null) text += "\n" + DescribeResources();
             if (build && selection != null && selection.Selected != null)
             {
                 TowerDefinition tower = selection.Selected;
-                text += $"\n선택: {tower.DisplayName} ({ResourceAmount.Describe(tower.Cost)})";
+                text += $"\n선택: {tower.DisplayName} ({ResourceAmount.Describe(builder.GetCost(tower))})";
             }
 
             // 줄 수에 맞춰 상자 높이를 정한다

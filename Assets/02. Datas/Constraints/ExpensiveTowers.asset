@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc86bb7c5d1153845b7d9886858c30cf, type: 3}
+  m_Name: ExpensiveTowers
+  m_EditorClassIdentifier: Assembly-CSharp::TowerDefense.Game.ConstraintDefinition
+  displayName: "\uBE44\uC2FC \uAC74\uC124"
+  description: "\uD0C0\uC6CC \uC124\uCE58 \uBE44\uC6A9 +30%"
+  score: 2
+  effects:
+  - {fileID: 11400000, guid: 90249c08ef3f2924ab0dd8464cfd2968, type: 2}

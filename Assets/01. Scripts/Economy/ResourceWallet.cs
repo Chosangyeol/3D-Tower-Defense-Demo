@@ -1,17 +1,19 @@
 using System;
 using System.Collections.Generic;
+using TowerDefense.Effects;
 using TowerDefense.Game;
 using UnityEngine;
 
 namespace TowerDefense.Economy
 {
     /// <summary>
-    /// 공용 창고. 보유한 자원을 관리한다. 시작 자원은 스테이지 데이터를 따른다.
+    /// 공용 창고. 보유한 자원을 관리한다. 시작 자원은 맵 데이터를 따른다.
     /// </summary>
     [DefaultExecutionOrder(-120)]
     public class ResourceWallet : MonoBehaviour
     {
-        [SerializeField] private StageController stageController;
+        [SerializeField] private GameSetup setup;
+        [SerializeField] private RunModifiers modifiers;
 
         private readonly Dictionary<ResourceDefinition, int> amounts = new Dictionary<ResourceDefinition, int>();
         private readonly List<ResourceDefinition> kinds = new List<ResourceDefinition>();
@@ -24,7 +26,7 @@ namespace TowerDefense.Economy
 
         private void Awake()
         {
-            foreach (ResourceAmount start in stageController.Stage.StartResources)
+            foreach (ResourceAmount start in modifiers.Scale(setup.Map.StartResources, Stat.StartResources))
             {
                 Add(start.resource, start.amount);
             }

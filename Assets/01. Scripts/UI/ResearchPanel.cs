@@ -22,13 +22,13 @@ namespace TowerDefense.UI
 
         [SerializeField] private GameInput input;
         [SerializeField] private GameModeController modeController;
-        [SerializeField] private StageController stageController;
+        [SerializeField] private GameSetup setup;
         [SerializeField] private ResearchState research;
         [SerializeField] private ResourceWallet wallet;
 
         public bool IsOpen { get; private set; }
 
-        private IReadOnlyList<UpgradeDefinition> Upgrades => stageController.Stage.Upgrades;
+        private IReadOnlyList<UpgradeDefinition> Upgrades => setup.Map.Upgrades;
 
         private Rect PanelRect =>
             new Rect(Screen.width - Width - Margin, Margin, Width, HeaderHeight + EntryHeight * Upgrades.Count + 8f);

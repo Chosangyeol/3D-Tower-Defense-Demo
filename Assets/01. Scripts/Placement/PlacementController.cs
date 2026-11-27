@@ -20,6 +20,7 @@ namespace TowerDefense.Placement
         [SerializeField] private TowerBuilder builder;
         [SerializeField] private PlacementPreview preview;
         [SerializeField] private ResearchPanel researchPanel;
+        [SerializeField] private ConstraintPanel constraintPanel;
 
         private void OnDisable()
         {
@@ -28,8 +29,8 @@ namespace TowerDefense.Placement
 
         private void Update()
         {
-            // 연구 화면 위의 클릭이 뒤쪽 칸에 전달되지 않게 한다
-            bool overPanel = researchPanel.IsPointerOver(input.Point.ReadValue<Vector2>());
+            // 연구 화면 위의 클릭과 제약 화면이 열린 동안의 클릭은 뒤쪽 칸에 전달하지 않는다
+            bool overPanel = constraintPanel.IsOpen || researchPanel.IsPointerOver(input.Point.ReadValue<Vector2>());
             if (modeController.CurrentMode != GameMode.Build || overPanel || !TryGetPointedCell(out Vector2Int cell))
             {
                 preview.Hide();
@@ -38,7 +39,7 @@ namespace TowerDefense.Placement
 
             if (builder.TryGetTower(cell, out Tower tower) && tower.Definition != null)
             {
-                preview.ShowRange(grid.CellToWorld(cell), tower.Spec.Range);
+                preview.ShowRange(grid.CellToWorld(cell), tower.Stats.Range);
                 if (input.Remove.WasPressedThisFrame()) builder.TryRemove(cell);
                 return;
             }
@@ -51,7 +52,7 @@ namespace TowerDefense.Placement
             }
 
             bool buildable = builder.CanPlace(cell) && builder.CanAfford(definition);
-            preview.ShowGhost(definition, grid.CellToWorld(cell), buildable, builder.GetSpec(definition).Range);
+            preview.ShowGhost(definition, grid.CellToWorld(cell), buildable, builder.GetStats(definition).Range);
             if (input.Place.WasPressedThisFrame()) builder.TryPlace(definition, cell);
         }
 

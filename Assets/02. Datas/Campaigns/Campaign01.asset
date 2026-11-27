@@ -1,0 +1,59 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1968833d2e99dd44095a9eae4a60ef46, type: 3}
+  m_Name: Campaign01
+  m_EditorClassIdentifier: Assembly-CSharp::TowerDefense.Game.CampaignDefinition
+  displayName: "\uAE30\uBCF8 \uC9C4\uD589"
+  firstWaveDelay: 180
+  waveInterval: 60
+  countPerWave: 0.01
+  healthPerWave: 0.05
+  attackPerWave: 0.01
+  rewardPerWave: 0.02
+  waves:
+  - {fileID: 11400000, guid: 25679506c301d5b4baed8c1cc186af5a, type: 2}
+  - {fileID: 11400000, guid: 0ab269164a1f8ae429f5bd9c9bc57258, type: 2}
+  - {fileID: 11400000, guid: c999bd4c9fda1a941990748fa1b26a2a, type: 2}
+  - {fileID: 11400000, guid: e96f22cb4ca393e43bb0f65340961e4f, type: 2}
+  - {fileID: 11400000, guid: d48b5a475b9884240ab1efbe4600788c, type: 2}
+  - {fileID: 11400000, guid: 6fc04e34c570723479b31aa5de219f4a, type: 2}
+  - {fileID: 11400000, guid: 6f9c172c143b10f428c4fa8058f4d3f4, type: 2}
+  - {fileID: 11400000, guid: 55ca36ef1f61d0e4a96a532c1924badc, type: 2}
+  - {fileID: 11400000, guid: eb0c2816d2712994e94af8ef63722125, type: 2}
+  - {fileID: 11400000, guid: eab5377ad6193af44afb5a86c1280c39, type: 2}
+  - {fileID: 11400000, guid: 71c15ac2ef7521349bbab18001e4bdbe, type: 2}
+  - {fileID: 11400000, guid: 5df5d17e488a3a64aa032e31f3220f61, type: 2}
+  - {fileID: 11400000, guid: 3882dcd75689c6e4f863f6e8386e18cc, type: 2}
+  - {fileID: 11400000, guid: 5a1bf8b7a5e28434887e5bac829c25d5, type: 2}
+  - {fileID: 11400000, guid: deb0ccfb958abaa46a6b1f1b59315e43, type: 2}
+  - {fileID: 11400000, guid: 2ba68f5d83601a6488ca3b82a57ef432, type: 2}
+  - {fileID: 11400000, guid: 3f8104f0cdfda6945a8031084d21b311, type: 2}
+  - {fileID: 11400000, guid: d726bdd17f36d664f8f90a1102517251, type: 2}
+  - {fileID: 11400000, guid: c406a9d5464bf85459c853c36c38623a, type: 2}
+  - {fileID: 11400000, guid: 52bd54ec41a5f1947a2f504d80fc0c43, type: 2}
+  - {fileID: 11400000, guid: dc307ea98b1b14e47b886977645ef8dd, type: 2}
+  - {fileID: 11400000, guid: e9ebdf2d1bb468c44893b06fc1e827e2, type: 2}
+  - {fileID: 11400000, guid: c4f5b7a3a8a959642bb6fa02b68f4eb6, type: 2}
+  - {fileID: 11400000, guid: ab533f65c97d090438e874e492811476, type: 2}
+  - {fileID: 11400000, guid: 509213dd94e55e14abaea491a21dee35, type: 2}
+  - {fileID: 11400000, guid: 60b5406cdc7a2b0408161dc4f7fca8cd, type: 2}
+  - {fileID: 11400000, guid: 1dc4fd70df1f4764c9509266a757b6d2, type: 2}
+  - {fileID: 11400000, guid: d7055fe10a8b44c4085089dd5835f488, type: 2}
+  - {fileID: 11400000, guid: 1416b708b1a9cce4ca0b9a9c56c7e7b0, type: 2}
+  - {fileID: 11400000, guid: 3354e98f24caa974b8dd1dfd9f8cb0d4, type: 2}
+  constraints:
+  - {fileID: 11400000, guid: 5842f92f3c550f641b4e9cdfb86f6ec5, type: 2}
+  - {fileID: 11400000, guid: 0cb339109f6221d46b1a64359051fd8e, type: 2}
+  - {fileID: 11400000, guid: 67e20beef7e14024ca29bc85e51d164d, type: 2}
+  - {fileID: 11400000, guid: 969886d33dfe46049ad1ee8824e512e0, type: 2}
+  - {fileID: 11400000, guid: 8792648a18526fd43a5917142ceb07bc, type: 2}
+  - {fileID: 11400000, guid: 5da0794ab1196c948973a2980ea23cda, type: 2}

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using TowerDefense.Combat;
+using TowerDefense.Economy;
+using TowerDefense.Effects;
 using TowerDefense.Enemies;
-using TowerDefense.Upgrades;
 using UnityEngine;
 
 namespace TowerDefense.Towers
@@ -20,8 +20,7 @@ namespace TowerDefense.Towers
         [SerializeField] private Transform muzzle;
 
         private float cooldown;
-        private ResearchState research;
-        private AttackSpec baseSpec;
+        private RunModifiers modifiers;
         private float disabledRemaining;
 
         /// <summary>씬에 설치된 타워 목록. 배치 미리보기는 포함하지 않는다.</summary>
@@ -33,15 +32,18 @@ namespace TowerDefense.Towers
         public Vector2Int Cell { get; private set; }
         public Enemy Target { get; private set; }
 
-        /// <summary>연구가 적용된 지금의 공격 정보.</summary>
-        public AttackSpec Spec =>
-            research != null ? research.GetSpec(Definition) : baseSpec ?? (baseSpec = Definition.CreateSpec());
+        /// <summary>설치할 때 낸 비용. 환급은 이 값을 기준으로 한다.</summary>
+        public IReadOnlyList<ResourceAmount> PaidCost { get; private set; }
+        /// <summary>이번 판의 효과를 적용한 지금의 공격 수치.</summary>
+        public TowerStats Stats => TowerStats.From(Definition, modifiers);
 
-        public void Initialize(TowerDefinition definition, Vector2Int cell, ResearchState researchState)
+        public void Initialize(TowerDefinition definition, Vector2Int cell, RunModifiers runModifiers,
+            IReadOnlyList<ResourceAmount> paidCost)
         {
             Definition = definition;
             Cell = cell;
-            research = researchState;
+            modifiers = runModifiers;
+            PaidCost = paidCost;
         }
 
         /// <summary>정해진 시간 동안 공격을 멈춘다. 이미 멈춰 있으면 더 긴 쪽을 따른다.</summary>
@@ -100,13 +102,13 @@ namespace TowerDefense.Towers
             if (cooldown > 0f) return;
 
             Fire(Target);
-            cooldown = Spec.FireInterval;
+            cooldown = Stats.FireInterval;
         }
 
         private Enemy FindTarget()
         {
             Enemy best = null;
-            float range = Spec.Range;
+            float range = Stats.Range;
             float rangeSquared = range * range;
 
             foreach (Enemy enemy in Enemy.Active)
@@ -138,7 +140,8 @@ namespace TowerDefense.Towers
 
             Vector3 origin = muzzle != null ? muzzle.position : transform.position;
             Projectile projectile = Instantiate(Definition.ProjectilePrefab, origin, Quaternion.identity);
-            projectile.Initialize(target, Spec.Damage, Spec.ProjectileSpeed);
+            TowerStats stats = Stats;
+            projectile.Initialize(target, stats.Damage, stats.ProjectileSpeed);
         }
     }
 }

@@ -1,10 +1,9 @@
 using System.Collections.Generic;
-using TowerDefense.Combat;
 using TowerDefense.Economy;
+using TowerDefense.Effects;
 using TowerDefense.Game;
 using TowerDefense.Grid;
 using TowerDefense.Towers;
-using TowerDefense.Upgrades;
 using TowerDefense.Waves;
 using UnityEngine;
 
@@ -18,28 +17,34 @@ namespace TowerDefense.Placement
     {
         [SerializeField] private BuildGrid grid;
         [SerializeField] private Transform player;
-        [SerializeField] private ResearchState research;
         [SerializeField] private ResourceWallet wallet;
         [SerializeField] private WaveSpawner waveSpawner;
-        [SerializeField] private StageController stageController;
+        [SerializeField] private GameSetup setup;
+        [SerializeField] private RunModifiers modifiers;
 
-        /// <summary>지금 설치하면 적용될 공격 정보.</summary>
-        public AttackSpec GetSpec(TowerDefinition definition)
+        /// <summary>지금 설치하면 적용될 공격 수치.</summary>
+        public TowerStats GetStats(TowerDefinition definition)
         {
-            return research.GetSpec(definition);
+            return TowerStats.From(definition, modifiers);
+        }
+
+        /// <summary>지금 설치할 때 내야 하는 비용.</summary>
+        public List<ResourceAmount> GetCost(TowerDefinition definition)
+        {
+            return modifiers.Scale(definition.Cost, Stat.TowerCost, 1f, definition);
         }
 
         public bool CanAfford(TowerDefinition definition)
         {
-            return definition != null && wallet.CanAfford(definition.Cost);
+            return definition != null && wallet.CanAfford(GetCost(definition));
         }
 
         /// <summary>지금 제거하면 돌려받는 자원.</summary>
-        public List<ResourceAmount> GetRefund(TowerDefinition definition)
+        public List<ResourceAmount> GetRefund(Tower tower)
         {
-            float rate = waveSpawner.IsWaveRunning ? stageController.Stage.CombatRefundRate : 1f;
+            float rate = waveSpawner.IsWaveRunning ? setup.Map.CombatRefundRate : 1f;
             var refund = new List<ResourceAmount>();
-            foreach (ResourceAmount item in definition.Cost)
+            foreach (ResourceAmount item in tower.PaidCost)
             {
                 // 소수점은 버린다. 0.0001은 실수 계산 오차로 1이 깎이는 것을 막는다
                 refund.Add(new ResourceAmount(item.resource, Mathf.FloorToInt(item.amount * rate + 0.0001f)));
@@ -59,11 +64,12 @@ namespace TowerDefense.Placement
         public bool TryPlace(TowerDefinition definition, Vector2Int cell)
         {
             if (definition == null || definition.Prefab == null || !CanPlace(cell)) return false;
-            if (!wallet.TrySpend(definition.Cost)) return false;
+            List<ResourceAmount> cost = GetCost(definition);
+            if (!wallet.TrySpend(cost)) return false;
 
             Tower tower = Instantiate(definition.Prefab, grid.CellToWorld(cell), Quaternion.identity, transform);
             tower.name = $"{definition.name} {cell}";
-            tower.Initialize(definition, cell, research);
+            tower.Initialize(definition, cell, modifiers, cost);
             grid.TryOccupy(cell, tower.gameObject);
             return true;
         }
@@ -72,7 +78,7 @@ namespace TowerDefense.Placement
         {
             if (!TryGetTower(cell, out Tower tower)) return false;
 
-            if (tower.Definition != null) wallet.Add(GetRefund(tower.Definition));
+            if (tower.Definition != null) wallet.Add(GetRefund(tower));
             grid.Release(cell);
             Destroy(tower.gameObject);
             return true;

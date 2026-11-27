@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using TowerDefense.Combat;
 using TowerDefense.Controls;
+using TowerDefense.Effects;
 using TowerDefense.Enemies;
 using TowerDefense.Game;
 using UnityEngine;
@@ -10,22 +11,24 @@ using UnityEngine.InputSystem;
 namespace TowerDefense.Waves
 {
     /// <summary>
-    /// 스테이지 데이터의 웨이브를 하나씩 내보낸다. 모두 내보냈고 부하를 포함한 적을 모두 처치하면 웨이브가 끝난다.
+    /// 진행 데이터의 웨이브를 하나씩 내보낸다. 모두 내보냈고 부하를 포함한 적을 모두 처치하면 웨이브가 끝난다.
     /// 준비 시간이 지나면 다음 웨이브가 자동으로 시작되고, 단축키로 바로 시작할 수도 있다.
     /// </summary>
     public class WaveSpawner : MonoBehaviour
     {
         [SerializeField] private GameInput input;
-        [SerializeField] private StageController stageController;
+        [SerializeField] private GameSetup setup;
+        [SerializeField] private RunModifiers modifiers;
         [SerializeField] private EnemyPath path;
         [Tooltip("적이 도착해서 공격할 기지")]
         [SerializeField] private Health goal;
 
         private bool spawning;
+        private WaveScale scale;
 
-        private StageDefinition Stage => stageController.Stage;
+        private CampaignDefinition Campaign => setup.Campaign;
 
-        public int WaveCount => Stage.Waves.Count;
+        public int WaveCount => Campaign.Waves.Count;
         /// <summary>지금까지 시작한 웨이브 수.</summary>
         public int StartedWaves { get; private set; }
         public int AliveCount { get; private set; }
@@ -44,7 +47,7 @@ namespace TowerDefense.Waves
 
         private void Awake()
         {
-            TimeUntilNextWave = Stage.FirstWaveDelay;
+            TimeUntilNextWave = modifiers.Get(Stat.PrepSeconds, Campaign.FirstWaveDelay);
         }
 
         private void Update()
@@ -69,8 +72,9 @@ namespace TowerDefense.Waves
         {
             if (IsWaveRunning || StartedWaves >= WaveCount) return false;
 
-            WaveDefinition wave = Stage.Waves[StartedWaves];
+            WaveDefinition wave = Campaign.Waves[StartedWaves];
             StartedWaves++;
+            scale = Campaign.GetScale(StartedWaves);
             IsWaveRunning = true;
             spawning = true;
             TimeUntilNextWave = 0f;
@@ -98,7 +102,8 @@ namespace TowerDefense.Waves
                     continue;
                 }
 
-                for (int i = 0; i < group.count; i++)
+                int count = GetCount(group);
+                for (int i = 0; i < count; i++)
                 {
                     SpawnEnemy(group.enemy);
                     yield return new WaitForSeconds(group.interval);
@@ -112,11 +117,28 @@ namespace TowerDefense.Waves
             CheckCleared();
         }
 
+        // 보스의 수는 배율과 효과로 늘리지 않는다
+        private int GetCount(SpawnGroup group)
+        {
+            return group.enemy.IsBoss
+                ? group.count
+                : modifiers.GetInt(Stat.EnemyCount, group.count * scale.Count, group.enemy);
+        }
+
+        private EnemyStats CreateStats(EnemyDefinition definition)
+        {
+            return new EnemyStats(
+                modifiers.Get(Stat.EnemyHealth, definition.MaxHealth * scale.Health, definition),
+                modifiers.Get(Stat.EnemyMoveSpeed, definition.MoveSpeed, definition),
+                modifiers.GetInt(Stat.EnemyAttackDamage, definition.AttackDamage * scale.Attack, definition),
+                scale.Reward);
+        }
+
         private void SpawnEnemy(EnemyDefinition definition, float startDistance = 0f)
         {
             Enemy enemy = Instantiate(definition.Prefab, transform);
             enemy.name = definition.name;
-            enemy.Initialize(definition, path, goal, startDistance);
+            enemy.Initialize(definition, CreateStats(definition), path, goal, startDistance);
             enemy.Finished += OnEnemyFinished;
             enemy.SummonRequested += OnSummonRequested;
             AliveCount++;
@@ -152,7 +174,7 @@ namespace TowerDefense.Waves
             if (!IsWaveRunning || spawning || AliveCount > 0) return;
 
             IsWaveRunning = false;
-            if (IsPreparing) TimeUntilNextWave = Stage.WaveInterval;
+            if (IsPreparing) TimeUntilNextWave = modifiers.Get(Stat.PrepSeconds, Campaign.WaveInterval);
             WaveCleared?.Invoke(StartedWaves);
         }
     }

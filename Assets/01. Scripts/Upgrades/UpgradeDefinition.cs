@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using TowerDefense.Data;
 using TowerDefense.Economy;
+using TowerDefense.Effects;
 using TowerDefense.Towers;
 using UnityEngine;
 
@@ -18,12 +19,12 @@ namespace TowerDefense.Upgrades
         [SerializeField] private ResourceAmount[] cost = new ResourceAmount[0];
         [Tooltip("먼저 완료해야 하는 연구")]
         [SerializeField] private UpgradeDefinition[] prerequisites = new UpgradeDefinition[0];
-        [SerializeField] private UpgradeEffect[] effects = new UpgradeEffect[0];
+        [SerializeField] private GameEffect[] effects = new GameEffect[0];
 
         public string Description => description;
         public TowerDefinition Target => target;
         public IReadOnlyList<ResourceAmount> Cost => cost;
         public IReadOnlyList<UpgradeDefinition> Prerequisites => prerequisites;
-        public IReadOnlyList<UpgradeEffect> Effects => effects;
+        public IReadOnlyList<GameEffect> Effects => effects;
     }
 }

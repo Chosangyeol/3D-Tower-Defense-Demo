@@ -31,6 +31,8 @@ namespace TowerDefense.Controls
         public InputAction StartWave { get; private set; }
         public InputAction Restart { get; private set; }
         public InputAction Point { get; private set; }
+        public InputAction Click { get; private set; }
+        public InputAction Constraints { get; private set; }
 
         // 배치 모드
         public InputAction Pan { get; private set; }
@@ -64,6 +66,8 @@ namespace TowerDefense.Controls
             StartWave = globalMap.FindAction("StartWave", true);
             Restart = globalMap.FindAction("Restart", true);
             Point = globalMap.FindAction("Point", true);
+            Click = globalMap.FindAction("Click", true);
+            Constraints = globalMap.FindAction("Constraints", true);
 
             Pan = buildMap.FindAction("Pan", true);
             Rotate = buildMap.FindAction("Rotate", true);

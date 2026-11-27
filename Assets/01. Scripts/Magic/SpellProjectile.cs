@@ -17,13 +17,15 @@ namespace TowerDefense.Magic
 
         private Transform caster;
         private SpellDefinition spell;
+        private float damage;
         private float travelled;
         private float age;
 
-        public void Initialize(Transform casterRoot, SpellDefinition definition)
+        public void Initialize(Transform casterRoot, SpellDefinition definition, float hitDamage)
         {
             caster = casterRoot;
             spell = definition;
+            damage = hitDamage;
             UpdateVisual();
         }
 
@@ -38,7 +40,7 @@ namespace TowerDefense.Magic
             if (TryFindHit(step, out Collider hit))
             {
                 IDamageable target = hit.GetComponentInParent<IDamageable>();
-                if (target != null && target.Team == Team.Invaders) target.TakeDamage(spell.Damage);
+                if (target != null && target.Team == Team.Invaders) target.TakeDamage(damage);
                 Destroy(gameObject);
                 return;
             }

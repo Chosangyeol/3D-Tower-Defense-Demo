@@ -576,6 +576,9 @@ GameObject:
   - component: {fileID: 265141011}
   - component: {fileID: 265141012}
   - component: {fileID: 265141013}
+  - component: {fileID: 265141014}
+  - component: {fileID: 265141016}
+  - component: {fileID: 265141015}
   m_Layer: 0
   m_Name: GameSystems
   m_TagString: Untagged
@@ -610,6 +613,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TowerDefense.Core.MatchController
   input: {fileID: 265141008}
+  setup: {fileID: 265141010}
+  constraints: {fileID: 265141016}
   waveSpawner: {fileID: 640471811}
   baseHealth: {fileID: 1981162859}
   disableOnEnd:
@@ -657,6 +662,10 @@ MonoBehaviour:
   match: {fileID: 265141004}
   wallet: {fileID: 265141011}
   selection: {fileID: 288478769}
+  builder: {fileID: 288478770}
+  setup: {fileID: 265141010}
+  constraints: {fileID: 265141016}
+  constraintPanel: {fileID: 265141015}
   gatherer: {fileID: 1216316833}
 --- !u!4 &265141007
 Transform:
@@ -700,6 +709,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TowerDefense.Upgrades.ResearchState
   wallet: {fileID: 265141011}
+  modifiers: {fileID: 265141014}
 --- !u!114 &265141010
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -712,7 +722,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18ec34dd57d68ba4eb50f54b536b76e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TowerDefense.Game.StageController
-  stage: {fileID: 11400000, guid: 3d23add24b5281e44ba6cb695d0a891a, type: 2}
+  map: {fileID: 11400000, guid: 3d23add24b5281e44ba6cb695d0a891a, type: 2}
+  campaign: {fileID: 11400000, guid: a1209be278af5014888300f0a8dc6361, type: 2}
 --- !u!114 &265141011
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -725,7 +736,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3b6cc223813035489cc798e9b9f5f4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TowerDefense.Economy.ResourceWallet
-  stageController: {fileID: 265141010}
+  setup: {fileID: 265141010}
+  modifiers: {fileID: 265141014}
 --- !u!114 &265141012
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -740,7 +752,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TowerDefense.Economy.RewardDispenser
   wallet: {fileID: 265141011}
   waveSpawner: {fileID: 640471811}
-  stageController: {fileID: 265141010}
+  setup: {fileID: 265141010}
+  modifiers: {fileID: 265141014}
 --- !u!114 &265141013
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -755,9 +768,52 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TowerDefense.UI.ResearchPanel
   input: {fileID: 265141008}
   modeController: {fileID: 265141003}
-  stageController: {fileID: 265141010}
+  setup: {fileID: 265141010}
   research: {fileID: 265141009}
   wallet: {fileID: 265141011}
+--- !u!114 &265141014
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 265141002}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52ea6928ee1a04e4cb7043f63edc8f3e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TowerDefense.Effects.RunModifiers
+--- !u!114 &265141015
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 265141002}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31869b24f28995f449a1a13aaa08c621, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TowerDefense.UI.ConstraintPanel
+  input: {fileID: 265141008}
+  setup: {fileID: 265141010}
+  constraints: {fileID: 265141016}
+  match: {fileID: 265141004}
+  waveSpawner: {fileID: 640471811}
+--- !u!114 &265141016
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 265141002}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e5d1386ed57e964a8f6ca1e8c421656, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TowerDefense.Game.RunConstraints
+  setup: {fileID: 265141010}
+  modifiers: {fileID: 265141014}
 --- !u!1 &281224162
 GameObject:
   m_ObjectHideFlags: 0
@@ -835,6 +891,7 @@ MonoBehaviour:
   builder: {fileID: 288478770}
   preview: {fileID: 288478768}
   researchPanel: {fileID: 265141013}
+  constraintPanel: {fileID: 265141015}
 --- !u!4 &288478767
 Transform:
   m_ObjectHideFlags: 0
@@ -894,10 +951,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TowerDefense.Placement.TowerBuilder
   grid: {fileID: 3070564}
   player: {fileID: 1216316828}
-  research: {fileID: 265141009}
   wallet: {fileID: 265141011}
   waveSpawner: {fileID: 640471811}
-  stageController: {fileID: 265141010}
+  setup: {fileID: 265141010}
+  modifiers: {fileID: 265141014}
 --- !u!1 &405721700
 GameObject:
   m_ObjectHideFlags: 0
@@ -1174,7 +1231,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TowerDefense.Enemies.WaveSpawner
   input: {fileID: 265141008}
-  stageController: {fileID: 265141010}
+  setup: {fileID: 265141010}
+  modifiers: {fileID: 265141014}
   path: {fileID: 868717938}
   goal: {fileID: 1981162859}
 --- !u!4 &640471812
@@ -1299,7 +1357,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TowerDefense.Enemies.EnemyPath
   grid: {fileID: 3070564}
-  stageController: {fileID: 265141010}
+  setup: {fileID: 265141010}
   heightOffset: 0.01
   tileFill: 0.9
   goalRadius: 0.9
@@ -1872,6 +1930,7 @@ MonoBehaviour:
   modeController: {fileID: 265141003}
   head: {fileID: 583177919}
   spell: {fileID: 11400000, guid: 9d5ab45672aba4146896b447802d76d4, type: 2}
+  modifiers: {fileID: 265141014}
 --- !u!114 &1216316830
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1885,6 +1944,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TowerDefense.Player.PlayerMana
   stats: {fileID: 11400000, guid: 3aaef1ed9f7193a4a9a2224cc67052f7, type: 2}
+  modifiers: {fileID: 265141014}
 --- !u!114 &1216316831
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1901,6 +1961,7 @@ MonoBehaviour:
   modeController: {fileID: 265141003}
   head: {fileID: 583177919}
   stats: {fileID: 11400000, guid: 3aaef1ed9f7193a4a9a2224cc67052f7, type: 2}
+  modifiers: {fileID: 265141014}
   lookSensitivity: 0.1
   maxPitch: 85
 --- !u!143 &1216316832
@@ -1944,6 +2005,7 @@ MonoBehaviour:
   modeController: {fileID: 265141003}
   head: {fileID: 583177919}
   wallet: {fileID: 265141011}
+  modifiers: {fileID: 265141014}
   reach: 3.5
 --- !u!1 &1602437871
 GameObject:
@@ -2102,7 +2164,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64253efc0d39f314baae04ece002fc27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TowerDefense.Core.BaseHealth
-  stageController: {fileID: 265141010}
+  setup: {fileID: 265141010}
+  modifiers: {fileID: 265141014}
   path: {fileID: 868717938}
 --- !u!23 &1981162856
 MeshRenderer:

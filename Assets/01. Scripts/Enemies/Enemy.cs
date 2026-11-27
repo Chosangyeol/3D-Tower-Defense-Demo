@@ -14,7 +14,7 @@ namespace TowerDefense.Enemies
 
     /// <summary>
     /// 경로를 따라 기지 앞까지 이동한 뒤, 기지가 무너질 때까지 공격하는 적.
-    /// 체력은 같은 오브젝트의 Health가 관리하고, 0이 되면 사라진다. 능력은 적 데이터를 따른다.
+    /// 체력은 같은 오브젝트의 Health가 관리하고, 0이 되면 사라진다. 능력은 적 데이터를, 수치는 출발할 때 받은 값을 따른다.
     /// </summary>
     [RequireComponent(typeof(Health))]
     public class Enemy : MonoBehaviour
@@ -39,6 +39,7 @@ namespace TowerDefense.Enemies
         public static IReadOnlyList<Enemy> Active => active;
 
         public EnemyDefinition Definition { get; private set; }
+        public EnemyStats Stats { get; private set; }
         public Health Health { get; private set; }
         /// <summary>경로를 따라 이동한 거리. 클수록 기지에 가깝다.</summary>
         public float DistanceTravelled { get; private set; }
@@ -46,7 +47,7 @@ namespace TowerDefense.Enemies
         public bool IsAttacking { get; private set; }
         public bool IsAlive => path != null && !finished && Health.IsAlive;
         /// <summary>능력의 속도 변화를 반영한 이동 속도.</summary>
-        public float MoveSpeed => Definition.MoveSpeed * Mathf.Max(1f + speedBonus, 0f);
+        public float MoveSpeed => Stats.MoveSpeed * Mathf.Max(1f + speedBonus, 0f);
         /// <summary>투사체가 향하는 위치.</summary>
         public Vector3 AimPosition => aimPoint != null ? aimPoint.position : transform.position;
 
@@ -55,13 +56,15 @@ namespace TowerDefense.Enemies
         /// <summary>능력이 부하를 부를 때 호출된다. (부른 적, 부하의 데이터, 수)</summary>
         public event Action<Enemy, EnemyDefinition, int> SummonRequested;
 
+        /// <param name="stats">웨이브 배율과 효과를 적용한 수치</param>
         /// <param name="goalTarget">도착해서 공격할 대상 (기지)</param>
         /// <param name="startDistance">경로의 시작점에서 이만큼 나아간 곳에서 출발한다</param>
-        public void Initialize(EnemyDefinition definition, EnemyPath enemyPath, IDamageable goalTarget,
-            float startDistance = 0f)
+        public void Initialize(EnemyDefinition definition, EnemyStats stats, EnemyPath enemyPath,
+            IDamageable goalTarget, float startDistance = 0f)
         {
             Definition = definition;
-            Health.Initialize(definition.MaxHealth);
+            Stats = stats;
+            Health.Initialize(stats.MaxHealth);
             path = enemyPath;
             goal = goalTarget;
             stopDistance = Mathf.Max(path.Length - path.GoalRadius - bodyRadius, 0f);
@@ -165,7 +168,7 @@ namespace TowerDefense.Enemies
             attackCooldown -= deltaTime;
             while (attackCooldown <= 0f && goal.IsAlive)
             {
-                goal.TakeDamage(Definition.AttackDamage);
+                goal.TakeDamage(Stats.AttackDamage);
                 attackCooldown += Definition.AttackInterval;
             }
         }

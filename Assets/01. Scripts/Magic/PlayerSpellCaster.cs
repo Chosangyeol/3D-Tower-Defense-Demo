@@ -1,4 +1,5 @@
 using TowerDefense.Controls;
+using TowerDefense.Effects;
 using TowerDefense.Game;
 using UnityEngine;
 
@@ -14,6 +15,7 @@ namespace TowerDefense.Magic
         [SerializeField] private GameModeController modeController;
         [SerializeField] private Transform head;
         [SerializeField] private SpellDefinition spell;
+        [SerializeField] private RunModifiers modifiers;
 
         private PlayerMana mana;
         private float nextCastTime;
@@ -38,11 +40,12 @@ namespace TowerDefense.Magic
         public bool TryCast()
         {
             if (spell == null || spell.ProjectilePrefab == null) return false;
-            if (Time.time < nextCastTime || !mana.TrySpend(spell.ManaCost)) return false;
+            float cost = modifiers.Get(Stat.SpellManaCost, spell.ManaCost, spell);
+            if (Time.time < nextCastTime || !mana.TrySpend(cost)) return false;
 
-            nextCastTime = Time.time + spell.CastInterval;
+            nextCastTime = Time.time + modifiers.Get(Stat.SpellCastInterval, spell.CastInterval, spell);
             SpellProjectile projectile = Instantiate(spell.ProjectilePrefab, head.position, head.rotation);
-            projectile.Initialize(transform, spell);
+            projectile.Initialize(transform, spell, modifiers.Get(Stat.SpellDamage, spell.Damage, spell));
             return true;
         }
     }

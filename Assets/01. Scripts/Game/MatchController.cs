@@ -1,3 +1,4 @@
+using System;
 using TowerDefense.Combat;
 using TowerDefense.Controls;
 using TowerDefense.Waves;
@@ -10,21 +11,26 @@ namespace TowerDefense.Game
     public enum MatchResult
     {
         InProgress,
-        Victory, // 모든 웨이브를 막아냄
+        Victory, // 마지막 웨이브까지 막아냄 (클리어)
         Defeat   // 기지 체력 0
     }
 
     /// <summary>
-    /// 한 판의 승패를 판정한다. 끝나면 게임을 멈추고, 지정한 컴포넌트를 꺼서 조작을 막는다.
+    /// 한 판의 승패를 판정하고 기록한다. 끝나면 게임을 멈추고, 지정한 컴포넌트를 꺼서 조작을 막는다.
     /// </summary>
     public class MatchController : MonoBehaviour
     {
         [SerializeField] private GameInput input;
+        [SerializeField] private GameSetup setup;
+        [SerializeField] private RunConstraints constraints;
         [SerializeField] private WaveSpawner waveSpawner;
         [SerializeField] private Health baseHealth;
         [SerializeField] private Behaviour[] disableOnEnd = new Behaviour[0];
 
         public MatchResult Result { get; private set; }
+
+        /// <summary>승패가 정해지고 기록을 남긴 뒤에 호출된다.</summary>
+        public event Action<MatchResult> Ended;
 
         private void OnEnable()
         {
@@ -68,6 +74,7 @@ namespace TowerDefense.Game
             if (Result != MatchResult.InProgress) return;
 
             Result = result;
+            RunRecord.Register(setup.Campaign, result == MatchResult.Victory, waveSpawner.StartedWaves, constraints.Score);
             foreach (Behaviour behaviour in disableOnEnd)
             {
                 if (behaviour != null) behaviour.enabled = false;
@@ -75,6 +82,7 @@ namespace TowerDefense.Game
             Time.timeScale = 0f;
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
+            Ended?.Invoke(result);
         }
 
         private void OnRestart(InputAction.CallbackContext context)
