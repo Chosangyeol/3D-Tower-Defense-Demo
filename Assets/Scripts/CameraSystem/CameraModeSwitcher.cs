@@ -1,0 +1,57 @@
+using TowerDefense.Core;
+using Unity.Cinemachine;
+using UnityEngine;
+
+namespace TowerDefense.CameraSystem
+{
+    /// <summary>
+    /// 모드에 따라 Cinemachine 카메라의 우선순위와 커서 상태를 바꾼다.
+    /// 전환 블렌드는 CinemachineBrain의 Default Blend 설정을 따른다.
+    /// </summary>
+    public class CameraModeSwitcher : MonoBehaviour
+    {
+        private const int ActivePriority = 20;
+        private const int InactivePriority = 0;
+
+        [SerializeField] private GameModeController modeController;
+        [SerializeField] private CinemachineCamera topDownCamera;
+        [SerializeField] private CinemachineCamera firstPersonCamera;
+
+        private void OnEnable()
+        {
+            modeController.ModeChanged += Apply;
+        }
+
+        private void Start()
+        {
+            Apply(modeController.CurrentMode);
+        }
+
+        private void OnDisable()
+        {
+            modeController.ModeChanged -= Apply;
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
+
+        private void OnApplicationFocus(bool hasFocus)
+        {
+            if (hasFocus && modeController != null) ApplyCursor(modeController.CurrentMode);
+        }
+
+        private void Apply(GameMode mode)
+        {
+            bool build = mode == GameMode.Build;
+            topDownCamera.Priority = build ? ActivePriority : InactivePriority;
+            firstPersonCamera.Priority = build ? InactivePriority : ActivePriority;
+            ApplyCursor(mode);
+        }
+
+        private static void ApplyCursor(GameMode mode)
+        {
+            bool combat = mode == GameMode.Combat;
+            Cursor.lockState = combat ? CursorLockMode.Locked : CursorLockMode.None;
+            Cursor.visible = !combat;
+        }
+    }
+}
