@@ -64,6 +64,23 @@
   - 설정 화면에서 키를 바꿀 수 있도록 바인딩 저장·불러오기를 `GameInput`이 맡는다.
 - 체력과 피해는 `Health` / `IDamageable`을 사용한다. 소속(`Team`)이 다른 대상에게만 피해를 준다.
 
+## 데이터 구조
+- 조정하는 수치는 컴포넌트에 넣지 않고 `02. Datas`의 ScriptableObject에 둔다.
+
+| 데이터 | 클래스 | 읽는 곳 |
+|--------|--------|---------|
+| 타워 | `TowerDefinition` | `Tower`, 배치 |
+| 적 | `EnemyDefinition` | `Enemy`, 기지 피해 |
+| 마법 | `SpellDefinition` | `PlayerSpellCaster` |
+| 플레이어 능력치 | `PlayerStatsDefinition` | 이동, 마나 |
+| 웨이브 | `WaveDefinition` | 스테이지 |
+| 스테이지 | `StageDefinition` | `StageController`를 통해 웨이브, 경로, 기지 |
+| 업그레이드 / 효과 | `UpgradeDefinition` / `UpgradeEffect` | `ResearchState` |
+
+- 실행 중에는 데이터 에셋의 값을 바꾸지 않는다. 강화·연구 결과는 `AttackSpec`처럼 따로 계산해서 보관한다.
+- 연구는 타워 종류 전체에 적용한다. 특수 기능은 `UpgradeEffect`를 상속하고 `AttackSpec`에 항목을 추가한다.
+- 개인 설정(시점 감도 등)은 게임 데이터에 넣지 않는다.
+
 ## Git
 - 커밋 메시지는 한국어로 작성한다.
 - 작업 전 `git pull`, 작업 후 commit·push. 여러 PC에서 작업한다.

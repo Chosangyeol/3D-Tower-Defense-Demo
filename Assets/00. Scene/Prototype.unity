@@ -571,6 +571,8 @@ GameObject:
   - component: {fileID: 265141005}
   - component: {fileID: 265141004}
   - component: {fileID: 265141008}
+  - component: {fileID: 265141010}
+  - component: {fileID: 265141009}
   m_Layer: 0
   m_Name: GameSystems
   m_TagString: Untagged
@@ -677,6 +679,31 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TowerDefense.Controls.GameInput
   actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   modeController: {fileID: 265141003}
+--- !u!114 &265141009
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 265141002}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ba1daa8322700f4c953f617fef91911, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TowerDefense.Upgrades.ResearchState
+--- !u!114 &265141010
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 265141002}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18ec34dd57d68ba4eb50f54b536b76e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TowerDefense.Game.StageController
+  stage: {fileID: 11400000, guid: 3d23add24b5281e44ba6cb695d0a891a, type: 2}
 --- !u!1 &288478765
 GameObject:
   m_ObjectHideFlags: 0
@@ -775,6 +802,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TowerDefense.Placement.TowerBuilder
   grid: {fileID: 3070564}
   player: {fileID: 1216316828}
+  research: {fileID: 265141009}
 --- !u!1 &405721700
 GameObject:
   m_ObjectHideFlags: 0
@@ -985,31 +1013,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TowerDefense.Enemies.WaveSpawner
   input: {fileID: 265141008}
+  stageController: {fileID: 265141010}
   path: {fileID: 868717938}
-  waves:
-  - groups:
-    - enemy: {fileID: 11400000, guid: 695226d8cb9e1d9408c77b0d8aac0f04, type: 2}
-      count: 6
-      interval: 1.2
-  - groups:
-    - enemy: {fileID: 11400000, guid: 695226d8cb9e1d9408c77b0d8aac0f04, type: 2}
-      count: 6
-      interval: 1
-    - enemy: {fileID: 11400000, guid: dd4b9787204602b4e972a1c3bfe2bb0b, type: 2}
-      count: 5
-      interval: 0.7
-  - groups:
-    - enemy: {fileID: 11400000, guid: 695226d8cb9e1d9408c77b0d8aac0f04, type: 2}
-      count: 8
-      interval: 0.8
-    - enemy: {fileID: 11400000, guid: 6f17dc790334790439bb2252ef462795, type: 2}
-      count: 3
-      interval: 2
-    - enemy: {fileID: 11400000, guid: dd4b9787204602b4e972a1c3bfe2bb0b, type: 2}
-      count: 6
-      interval: 0.6
-  firstWaveDelay: 180
-  waveInterval: 60
 --- !u!4 &640471812
 Transform:
   m_ObjectHideFlags: 0
@@ -1132,13 +1137,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TowerDefense.Enemies.EnemyPath
   grid: {fileID: 3070564}
-  waypoints:
-  - {x: 0, y: 16}
-  - {x: 15, y: 16}
-  - {x: 15, y: 11}
-  - {x: 4, y: 11}
-  - {x: 4, y: 3}
-  - {x: 19, y: 3}
+  stageController: {fileID: 265141010}
   heightOffset: 0.01
   tileFill: 0.9
 --- !u!23 &868717939
@@ -1378,11 +1377,7 @@ MonoBehaviour:
   input: {fileID: 265141008}
   modeController: {fileID: 265141003}
   head: {fileID: 583177919}
-  projectilePrefab: {fileID: 7165894158762150711, guid: bd12a7039ea91cc45a9d615744a219bd, type: 3}
-  manaCost: 10
-  damage: 20
-  castInterval: 0.35
-  projectileSpeed: 35
+  spell: {fileID: 11400000, guid: 9d5ab45672aba4146896b447802d76d4, type: 2}
 --- !u!114 &1216316830
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1395,8 +1390,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a234336bf640648418a64c4253209ee5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TowerDefense.Player.PlayerMana
-  max: 100
-  regenPerSecond: 12
+  stats: {fileID: 11400000, guid: 3aaef1ed9f7193a4a9a2224cc67052f7, type: 2}
 --- !u!114 &1216316831
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1412,10 +1406,7 @@ MonoBehaviour:
   input: {fileID: 265141008}
   modeController: {fileID: 265141003}
   head: {fileID: 583177919}
-  walkSpeed: 5
-  sprintSpeed: 8
-  jumpHeight: 1.2
-  gravity: -20
+  stats: {fileID: 11400000, guid: 3aaef1ed9f7193a4a9a2224cc67052f7, type: 2}
   lookSensitivity: 0.1
   maxPitch: 85
 --- !u!143 &1216316832
@@ -1600,8 +1591,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64253efc0d39f314baae04ece002fc27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TowerDefense.Core.BaseHealth
+  stageController: {fileID: 265141010}
+  path: {fileID: 868717938}
   waveSpawner: {fileID: 640471811}
-  damagePerEnemy: 1
 --- !u!23 &1981162856
 MeshRenderer:
   m_ObjectHideFlags: 0

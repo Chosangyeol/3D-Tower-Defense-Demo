@@ -1,5 +1,7 @@
+using TowerDefense.Combat;
 using TowerDefense.Grid;
 using TowerDefense.Towers;
+using TowerDefense.Upgrades;
 using UnityEngine;
 
 namespace TowerDefense.Placement
@@ -11,6 +13,13 @@ namespace TowerDefense.Placement
     {
         [SerializeField] private BuildGrid grid;
         [SerializeField] private Transform player;
+        [SerializeField] private ResearchState research;
+
+        /// <summary>지금 설치하면 적용될 공격 정보.</summary>
+        public AttackSpec GetSpec(TowerDefinition definition)
+        {
+            return research.GetSpec(definition);
+        }
 
         /// <summary>설치 가능한 칸인지 확인한다.</summary>
         public bool CanPlace(Vector2Int cell)
@@ -27,7 +36,7 @@ namespace TowerDefense.Placement
 
             Tower tower = Instantiate(definition.Prefab, grid.CellToWorld(cell), Quaternion.identity, transform);
             tower.name = $"{definition.name} {cell}";
-            tower.Initialize(definition, cell);
+            tower.Initialize(definition, cell, research);
             grid.TryOccupy(cell, tower.gameObject);
             return true;
         }

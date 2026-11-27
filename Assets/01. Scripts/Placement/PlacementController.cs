@@ -34,7 +34,7 @@ namespace TowerDefense.Placement
 
             if (builder.TryGetTower(cell, out Tower tower) && tower.Definition != null)
             {
-                preview.ShowRange(grid.CellToWorld(cell), tower.Definition.Range);
+                preview.ShowRange(grid.CellToWorld(cell), tower.Spec.Range);
                 if (input.Remove.WasPressedThisFrame()) builder.TryRemove(cell);
                 return;
             }
@@ -46,7 +46,7 @@ namespace TowerDefense.Placement
                 return;
             }
 
-            preview.ShowGhost(definition, grid.CellToWorld(cell), builder.CanPlace(cell));
+            preview.ShowGhost(definition, grid.CellToWorld(cell), builder.CanPlace(cell), builder.GetSpec(definition).Range);
             if (input.Place.WasPressedThisFrame()) builder.TryPlace(definition, cell);
         }
 

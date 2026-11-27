@@ -14,12 +14,7 @@ namespace TowerDefense.Player
         [SerializeField] private GameInput input;
         [SerializeField] private GameModeController modeController;
         [SerializeField] private Transform head;
-
-        [Header("이동")]
-        [SerializeField] private float walkSpeed = 5f;
-        [SerializeField] private float sprintSpeed = 8f;
-        [SerializeField] private float jumpHeight = 1.2f;
-        [SerializeField] private float gravity = -20f;
+        [SerializeField] private PlayerStatsDefinition stats;
 
         [Header("시점")]
         [SerializeField] private float lookSensitivity = 0.1f;
@@ -56,7 +51,7 @@ namespace TowerDefense.Player
         private void Move(bool active)
         {
             Vector2 direction = active ? Vector2.ClampMagnitude(input.Move.ReadValue<Vector2>(), 1f) : Vector2.zero;
-            float speed = input.Sprint.IsPressed() ? sprintSpeed : walkSpeed;
+            float speed = input.Sprint.IsPressed() ? stats.SprintSpeed : stats.WalkSpeed;
             Vector3 velocity = transform.rotation * new Vector3(direction.x, 0f, direction.y) * speed;
 
             if (controller.isGrounded)
@@ -65,11 +60,11 @@ namespace TowerDefense.Player
                 verticalVelocity = -2f;
                 if (active && input.Jump.WasPressedThisFrame())
                 {
-                    verticalVelocity = Mathf.Sqrt(-2f * gravity * jumpHeight);
+                    verticalVelocity = Mathf.Sqrt(Mathf.Max(-2f * stats.Gravity * stats.JumpHeight, 0f));
                 }
             }
 
-            verticalVelocity += gravity * Time.deltaTime;
+            verticalVelocity += stats.Gravity * Time.deltaTime;
             velocity.y = verticalVelocity;
             controller.Move(velocity * Time.deltaTime);
         }

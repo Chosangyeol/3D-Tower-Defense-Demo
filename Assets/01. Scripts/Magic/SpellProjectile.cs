@@ -10,46 +10,42 @@ namespace TowerDefense.Magic
     public class SpellProjectile : MonoBehaviour
     {
         [SerializeField] private Transform visual;
-        [SerializeField, Min(0.01f)] private float radius = 0.2f;
-        [SerializeField, Min(1f)] private float maxDistance = 60f;
         [SerializeField] private Vector3 visualStartOffset = new Vector3(0.35f, -0.3f, 1.1f);
         [SerializeField, Min(0.01f)] private float visualBlendTime = 0.2f;
 
         private static readonly RaycastHit[] hits = new RaycastHit[16];
 
         private Transform caster;
-        private float damage;
-        private float speed;
+        private SpellDefinition spell;
         private float travelled;
         private float age;
 
-        public void Initialize(Transform casterRoot, float hitDamage, float moveSpeed)
+        public void Initialize(Transform casterRoot, SpellDefinition definition)
         {
             caster = casterRoot;
-            damage = hitDamage;
-            speed = moveSpeed;
+            spell = definition;
             UpdateVisual();
         }
 
         private void Update()
         {
-            if (speed <= 0f) return;
+            if (spell == null) return;
 
             age += Time.deltaTime;
-            float step = Mathf.Min(speed * Time.deltaTime, maxDistance - travelled);
+            float step = Mathf.Min(spell.ProjectileSpeed * Time.deltaTime, spell.MaxDistance - travelled);
 
             // 이번 프레임에 지나는 구간 전체를 검사해서, 빠른 속도에서도 통과하지 않는다
             if (TryFindHit(step, out Collider hit))
             {
                 IDamageable target = hit.GetComponentInParent<IDamageable>();
-                if (target != null && target.Team == Team.Invaders) target.TakeDamage(damage);
+                if (target != null && target.Team == Team.Invaders) target.TakeDamage(spell.Damage);
                 Destroy(gameObject);
                 return;
             }
 
             transform.position += transform.forward * step;
             travelled += step;
-            if (travelled >= maxDistance)
+            if (travelled >= spell.MaxDistance)
             {
                 Destroy(gameObject);
                 return;
@@ -61,7 +57,7 @@ namespace TowerDefense.Magic
         {
             nearest = null;
             float nearestDistance = float.MaxValue;
-            int count = Physics.SphereCastNonAlloc(transform.position, radius, transform.forward, hits, distance,
+            int count = Physics.SphereCastNonAlloc(transform.position, spell.HitRadius, transform.forward, hits, distance,
                 Physics.AllLayers, QueryTriggerInteraction.Collide);
 
             for (int i = 0; i < count; i++)

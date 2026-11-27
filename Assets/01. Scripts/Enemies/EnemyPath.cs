@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TowerDefense.Game;
 using TowerDefense.Grid;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -6,7 +7,7 @@ using UnityEngine.Rendering;
 namespace TowerDefense.Enemies
 {
     /// <summary>
-    /// 적이 따라가는 고정 경로. 꺾이는 지점을 그리드 칸 좌표로 지정한다. (가로·세로 직선만)
+    /// 적이 따라가는 고정 경로. 꺾이는 지점은 스테이지 데이터의 그리드 칸 좌표를 쓴다. (가로·세로 직선만)
     /// 경로가 지나는 칸은 건설 금지로 만들고, 바닥에 길을 표시한다.
     /// </summary>
     [DefaultExecutionOrder(-50)]
@@ -14,17 +15,22 @@ namespace TowerDefense.Enemies
     public class EnemyPath : MonoBehaviour
     {
         [SerializeField] private BuildGrid grid;
-        [SerializeField] private Vector2Int[] waypoints = new Vector2Int[0];
+        [SerializeField] private StageController stageController;
         [SerializeField] private float heightOffset = 0.01f;
         [SerializeField, Range(0.1f, 1f)] private float tileFill = 0.9f;
 
         private Mesh mesh;
 
-        public int PointCount => waypoints.Length;
+        public int PointCount => Waypoints.Count;
+
+        private IReadOnlyList<Vector2Int> Waypoints =>
+            stageController != null && stageController.Stage != null
+                ? stageController.Stage.PathWaypoints
+                : System.Array.Empty<Vector2Int>();
 
         public Vector3 GetPoint(int index)
         {
-            return grid.CellToWorld(waypoints[index]);
+            return grid.CellToWorld(Waypoints[index]);
         }
 
         /// <summary>경로가 지나는 모든 칸. 시작점부터 순서대로이며 중복은 없다.</summary>
@@ -32,12 +38,13 @@ namespace TowerDefense.Enemies
         {
             var cells = new List<Vector2Int>();
             var visited = new HashSet<Vector2Int>();
+            IReadOnlyList<Vector2Int> waypoints = Waypoints;
 
-            for (int i = 0; i < waypoints.Length; i++)
+            for (int i = 0; i < waypoints.Count; i++)
             {
                 Vector2Int cell = waypoints[i];
                 if (visited.Add(cell)) cells.Add(cell);
-                if (i == waypoints.Length - 1) break;
+                if (i == waypoints.Count - 1) break;
 
                 Vector2Int next = waypoints[i + 1];
                 if (cell.x != next.x && cell.y != next.y)
@@ -58,7 +65,7 @@ namespace TowerDefense.Enemies
 
         private void Awake()
         {
-            if (waypoints.Length < 2) Debug.LogError("경로 지점이 2개 이상 필요합니다.", this);
+            if (PointCount < 2) Debug.LogError("경로 지점이 2개 이상 필요합니다.", this);
 
             List<Vector2Int> cells = GetCells();
             foreach (Vector2Int cell in cells)
@@ -114,7 +121,7 @@ namespace TowerDefense.Enemies
             if (grid == null) return;
 
             Gizmos.color = new Color(1f, 0.5f, 0.1f);
-            for (int i = 0; i + 1 < waypoints.Length; i++)
+            for (int i = 0; i + 1 < PointCount; i++)
             {
                 Gizmos.DrawLine(GetPoint(i) + Vector3.up * 0.2f, GetPoint(i + 1) + Vector3.up * 0.2f);
             }

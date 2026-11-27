@@ -13,18 +13,12 @@ namespace TowerDefense.Magic
         [SerializeField] private GameInput input;
         [SerializeField] private GameModeController modeController;
         [SerializeField] private Transform head;
-        [SerializeField] private SpellProjectile projectilePrefab;
-
-        [Header("수치 (플레이 테스트 후 조정)")]
-        [SerializeField, Min(0f)] private float manaCost = 10f;
-        [SerializeField, Min(0f)] private float damage = 20f;
-        [SerializeField, Min(0.05f)] private float castInterval = 0.35f;
-        [SerializeField, Min(1f)] private float projectileSpeed = 35f;
+        [SerializeField] private SpellDefinition spell;
 
         private PlayerMana mana;
         private float nextCastTime;
 
-        public float ManaCost => manaCost;
+        public SpellDefinition Spell => spell;
 
         private void Awake()
         {
@@ -43,11 +37,12 @@ namespace TowerDefense.Magic
         /// <summary>시전 간격이 지났고 마나가 충분하면 조준 방향으로 투사체를 쏜다.</summary>
         public bool TryCast()
         {
-            if (projectilePrefab == null || Time.time < nextCastTime || !mana.TrySpend(manaCost)) return false;
+            if (spell == null || spell.ProjectilePrefab == null) return false;
+            if (Time.time < nextCastTime || !mana.TrySpend(spell.ManaCost)) return false;
 
-            nextCastTime = Time.time + castInterval;
-            SpellProjectile projectile = Instantiate(projectilePrefab, head.position, head.rotation);
-            projectile.Initialize(transform, damage, projectileSpeed);
+            nextCastTime = Time.time + spell.CastInterval;
+            SpellProjectile projectile = Instantiate(spell.ProjectilePrefab, head.position, head.rotation);
+            projectile.Initialize(transform, spell);
             return true;
         }
     }

@@ -1,3 +1,4 @@
+using TowerDefense.Combat;
 using TowerDefense.Data;
 using UnityEngine;
 
@@ -25,5 +26,11 @@ namespace TowerDefense.Towers
         public float Damage => damage;
         public float FireInterval => fireInterval;
         public float ProjectileSpeed => projectileSpeed;
+
+        /// <summary>업그레이드를 적용하기 전의 공격 정보를 만든다.</summary>
+        public AttackSpec CreateSpec()
+        {
+            return new AttackSpec(damage, range, fireInterval, projectileSpeed);
+        }
     }
 }

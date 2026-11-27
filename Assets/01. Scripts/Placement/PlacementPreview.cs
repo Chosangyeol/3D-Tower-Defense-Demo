@@ -18,13 +18,13 @@ namespace TowerDefense.Placement
         private Renderer[] ghostRenderers;
 
         /// <summary>빈 칸에 고스트와 사거리를 보여준다.</summary>
-        public void ShowGhost(TowerDefinition definition, Vector3 position, bool canPlace)
+        public void ShowGhost(TowerDefinition definition, Vector3 position, bool canPlace, float range)
         {
             EnsureGhost(definition);
             ghost.transform.position = position;
             ghost.gameObject.SetActive(true);
             SetGhostMaterial(canPlace ? validMaterial : invalidMaterial);
-            rangeIndicator.Show(position, definition.Range);
+            rangeIndicator.Show(position, range);
         }
 
         /// <summary>설치된 타워의 사거리만 보여준다.</summary>

@@ -1,4 +1,6 @@
+using TowerDefense.Combat;
 using TowerDefense.Enemies;
+using TowerDefense.Upgrades;
 using UnityEngine;
 
 namespace TowerDefense.Towers
@@ -13,15 +15,22 @@ namespace TowerDefense.Towers
         [SerializeField] private Transform muzzle;
 
         private float cooldown;
+        private ResearchState research;
+        private AttackSpec baseSpec;
 
         public TowerDefinition Definition { get; private set; }
         public Vector2Int Cell { get; private set; }
         public Enemy Target { get; private set; }
 
-        public void Initialize(TowerDefinition definition, Vector2Int cell)
+        /// <summary>연구가 적용된 지금의 공격 정보.</summary>
+        public AttackSpec Spec =>
+            research != null ? research.GetSpec(Definition) : baseSpec ?? (baseSpec = Definition.CreateSpec());
+
+        public void Initialize(TowerDefinition definition, Vector2Int cell, ResearchState researchState)
         {
             Definition = definition;
             Cell = cell;
+            research = researchState;
         }
 
         private void Update()
@@ -36,13 +45,14 @@ namespace TowerDefense.Towers
             if (cooldown > 0f) return;
 
             Fire(Target);
-            cooldown = Definition.FireInterval;
+            cooldown = Spec.FireInterval;
         }
 
         private Enemy FindTarget()
         {
             Enemy best = null;
-            float rangeSquared = Definition.Range * Definition.Range;
+            float range = Spec.Range;
+            float rangeSquared = range * range;
 
             foreach (Enemy enemy in Enemy.Active)
             {
@@ -73,7 +83,7 @@ namespace TowerDefense.Towers
 
             Vector3 origin = muzzle != null ? muzzle.position : transform.position;
             Projectile projectile = Instantiate(Definition.ProjectilePrefab, origin, Quaternion.identity);
-            projectile.Initialize(target, Definition.Damage, Definition.ProjectileSpeed);
+            projectile.Initialize(target, Spec.Damage, Spec.ProjectileSpeed);
         }
     }
 }

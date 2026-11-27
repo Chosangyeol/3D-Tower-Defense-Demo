@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78d78b5ab78024143966877907fbc193, type: 3}
+  m_Name: Stage01
+  m_EditorClassIdentifier: Assembly-CSharp::TowerDefense.Game.StageDefinition
+  displayName: "\uC2A4\uD14C\uC774\uC9C0 1"
+  baseHealth: 10
+  firstWaveDelay: 180
+  waveInterval: 60
+  waves:
+  - {fileID: 11400000, guid: 25679506c301d5b4baed8c1cc186af5a, type: 2}
+  - {fileID: 11400000, guid: 0ab269164a1f8ae429f5bd9c9bc57258, type: 2}
+  - {fileID: 11400000, guid: c999bd4c9fda1a941990748fa1b26a2a, type: 2}
+  pathWaypoints:
+  - {x: 0, y: 16}
+  - {x: 15, y: 16}
+  - {x: 15, y: 11}
+  - {x: 4, y: 11}
+  - {x: 4, y: 3}
+  - {x: 19, y: 3}
