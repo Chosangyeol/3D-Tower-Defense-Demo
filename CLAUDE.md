@@ -36,6 +36,29 @@
   - Unity 에디터가 켜져 있고 MCP for Unity 창에서 서버가 연결된 상태여야 동작한다.
   - `.mcp.json` 등 PC별 경로가 들어간 설정은 커밋하지 않는다.
 
+## 프로젝트 구조
+- `Assets/` 최상위 폴더는 번호를 붙인다. 새 폴더는 다음 번호를 쓴다.
+
+| 폴더 | 내용 |
+|------|------|
+| `00. Scene` | 씬 |
+| `01. Scripts` | 코드. 기능별 하위 폴더 |
+| `02. Datas` | ScriptableObject 데이터. 종류별 하위 폴더 |
+| `03. Prefabs` | 프리팹. 종류별 하위 폴더 |
+| `04. Materials` | 머티리얼. 용도별 하위 폴더 |
+| `05. Input` | 입력 설정 |
+| `06. Settings` | 렌더 파이프라인 설정 |
+
+- 하위 분류가 더 필요하면 추가한다.
+- 코드의 네임스페이스는 `TowerDefense.<기능 폴더>` (`Input` 폴더만 `TowerDefense.Controls`).
+- 씬과 프리팹은 에디터에서 직접 관리한다. 씬 생성 메뉴는 폐기했으며 다시 만들지 않는다.
+
+## 코드 규칙
+- 입력은 `GameInput` 한 곳에서만 받는다. 컴포넌트에서 키·마우스를 직접 읽거나 `InputAction`을 새로 만들지 않는다.
+  - 키는 `Assets/05. Input/GameControls.inputactions`에서 정의한다 (`Global`, `Build`, `Combat` 맵).
+  - 설정 화면에서 키를 바꿀 수 있도록 바인딩 저장·불러오기를 `GameInput`이 맡는다.
+- 체력과 피해는 `Health` / `IDamageable`을 사용한다. 소속(`Team`)이 다른 대상에게만 피해를 준다.
+
 ## Git
 - 커밋 메시지는 한국어로 작성한다.
 - 작업 전 `git pull`, 작업 후 commit·push. 여러 PC에서 작업한다.
