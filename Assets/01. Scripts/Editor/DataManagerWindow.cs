@@ -58,6 +58,8 @@ namespace TowerDefense.EditorTools
         {
             var toolbar = new Toolbar();
             toolbar.Add(new ToolbarButton(Reload) { text = "새로고침" });
+            toolbar.Add(new ToolbarButton(ExportCsv) { text = "CSV 내보내기" });
+            toolbar.Add(new ToolbarButton(ImportCsv) { text = "CSV 가져오기" });
             toolbar.Add(new ToolbarSpacer { style = { flexGrow = 1f } });
             toolbar.Add(new ToolbarButton(AssetDatabase.SaveAssets) { text = "저장" });
             rootVisualElement.Add(toolbar);
@@ -72,6 +74,46 @@ namespace TowerDefense.EditorTools
             rootVisualElement.Add(outer);
 
             Reload();
+        }
+
+        // 선택한 종류의 데이터를 CSV로 저장한다
+        private void ExportCsv()
+        {
+            GameDataCategory category = Category;
+            if (category == null) return;
+
+            string path = EditorUtility.SaveFilePanel("CSV 내보내기", GetCsvFolder(), category.Folder, "csv");
+            if (string.IsNullOrEmpty(path)) return;
+
+            try
+            {
+                DataCsvService.ExportToFile(category, path);
+                ShowNotification(new GUIContent("내보냈습니다"));
+            }
+            catch (System.IO.IOException e)
+            {
+                EditorUtility.DisplayDialog("내보내기 실패", "파일이 다른 프로그램에서 열려 있는지 확인하세요.\n" + e.Message, "확인");
+            }
+        }
+
+        // 선택한 종류의 CSV를 읽어 미리보기 창을 연다
+        private void ImportCsv()
+        {
+            GameDataCategory category = Category;
+            if (category == null) return;
+
+            string path = EditorUtility.OpenFilePanel($"CSV 가져오기 ({category.Label})", GetCsvFolder(), "csv");
+            if (string.IsNullOrEmpty(path)) return;
+
+            CsvImportWindow.Show(DataCsvService.PlanFromFile(category, path));
+        }
+
+        // 프로젝트 폴더의 DataCSV를 기본 위치로 쓴다
+        private static string GetCsvFolder()
+        {
+            string folder = System.IO.Path.GetFullPath(System.IO.Path.Combine(Application.dataPath, "..", "DataCSV"));
+            System.IO.Directory.CreateDirectory(folder);
+            return folder;
         }
 
         private VisualElement CreateCategoryPane()

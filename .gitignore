@@ -62,3 +62,6 @@ Thumbs.db
 
 # ===== MCP (PC별 경로 포함) =====
 .mcp.json
+
+# ===== 데이터 CSV (원본은 ScriptableObject) =====
+/DataCSV/
