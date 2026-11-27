@@ -17,7 +17,7 @@ namespace TowerDefense.Core
             string state = waveSpawner.IsWaveRunning ? $"남은 적 {waveSpawner.AliveCount}"
                 : waveSpawner.IsAllCleared ? "모든 웨이브 종료"
                 : "Enter: 다음 웨이브 시작";
-            return $"{progress} · {state} · 기지 도달 {waveSpawner.ReachedGoalCount}";
+            return $"{progress} · {state} · 처치 {waveSpawner.KilledCount} · 기지 도달 {waveSpawner.ReachedGoalCount}";
         }
 
         private void OnGUI()

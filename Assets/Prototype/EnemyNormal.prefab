@@ -226,3 +226,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c6f7aefc7afddb4e8677f95582f3ef6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TowerDefense.Enemies.Enemy
+  aimPoint: {fileID: 579334712831952101}

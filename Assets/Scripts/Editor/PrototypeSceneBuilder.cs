@@ -68,8 +68,11 @@ namespace TowerDefense.EditorTools
             Material valid = CreateMaterial("GhostValid", unlit, new Color(0.2f, 0.9f, 0.3f, 0.45f), true);
             Material invalid = CreateMaterial("GhostInvalid", unlit, new Color(0.95f, 0.2f, 0.2f, 0.45f), true);
 
+            Material projectileBody = CreateMaterial("Projectile", unlit, new Color(1f, 0.95f, 0.5f));
+
             Tower towerPrefab = CreateTowerPrefab(towerBody);
-            TowerDefinition basicTower = CreateTowerDefinition(towerPrefab);
+            Projectile projectilePrefab = CreateProjectilePrefab(projectileBody);
+            TowerDefinition basicTower = CreateTowerDefinition(towerPrefab, projectilePrefab);
 
             Material pathTile = CreateMaterial("Path", lit, new Color(0.55f, 0.45f, 0.3f));
             Material baseBody = CreateMaterial("Base", lit, new Color(0.9f, 0.75f, 0.2f));
@@ -78,9 +81,9 @@ namespace TowerDefense.EditorTools
             Material tankBody = CreateMaterial("EnemyTank", lit, new Color(0.5f, 0.15f, 0.35f));
 
             // 수치는 플레이 테스트 후 조정한다
-            EnemyDefinition normal = CreateEnemy("EnemyNormal", "일반", 3f, new Vector3(0.9f, 0.7f, 0.9f), normalBody);
-            EnemyDefinition fast = CreateEnemy("EnemyFast", "빠른 적", 5.5f, new Vector3(0.6f, 0.5f, 0.6f), fastBody);
-            EnemyDefinition tank = CreateEnemy("EnemyTank", "탱커", 1.8f, new Vector3(1.4f, 1f, 1.4f), tankBody);
+            EnemyDefinition normal = CreateEnemy("EnemyNormal", "일반", 3f, 50f, new Vector3(0.9f, 0.7f, 0.9f), normalBody);
+            EnemyDefinition fast = CreateEnemy("EnemyFast", "빠른 적", 5.5f, 30f, new Vector3(0.6f, 0.5f, 0.6f), fastBody);
+            EnemyDefinition tank = CreateEnemy("EnemyTank", "탱커", 1.8f, 160f, new Vector3(1.4f, 1f, 1.4f), tankBody);
 
             CreateLight();
 
@@ -238,19 +241,43 @@ namespace TowerDefense.EditorTools
                 new Vector3(0f, 0.5f, 0f), new Vector3(1.6f, 1f, 1.6f), material);
             GameObject column = CreateVisual(PrimitiveType.Cylinder, "Column", root.transform,
                 new Vector3(0f, 1.45f, 0f), new Vector3(0.8f, 0.45f, 0.8f), material);
-            GameObject barrel = CreateVisual(PrimitiveType.Cube, "Barrel", root.transform,
-                new Vector3(0f, 1.9f, 0.45f), new Vector3(0.3f, 0.3f, 1.2f), material);
+            // 조준할 때 회전하는 부분
+            var turret = new GameObject("Turret");
+            turret.transform.SetParent(root.transform, false);
+            turret.transform.localPosition = new Vector3(0f, 1.9f, 0f);
+            GameObject barrel = CreateVisual(PrimitiveType.Cube, "Barrel", turret.transform,
+                new Vector3(0f, 0f, 0.45f), new Vector3(0.3f, 0.3f, 1.2f), material);
+            var muzzle = new GameObject("Muzzle");
+            muzzle.transform.SetParent(turret.transform, false);
+            muzzle.transform.localPosition = new Vector3(0f, 0f, 1.1f);
             foreach (GameObject part in new[] { baseBlock, column, barrel })
             {
                 Object.DestroyImmediate(part.GetComponent<Collider>());
             }
+            Tower tower = root.GetComponent<Tower>();
+            Assign(tower, "turret", turret.transform);
+            Assign(tower, "muzzle", muzzle.transform);
 
             GameObject prefab = PrefabUtility.SaveAsPrefabAsset(root, $"{AssetFolder}/{root.name}.prefab");
             Object.DestroyImmediate(root);
             return prefab.GetComponent<Tower>();
         }
 
-        private static TowerDefinition CreateTowerDefinition(Tower prefab)
+        private static Projectile CreateProjectilePrefab(Material material)
+        {
+            var root = new GameObject("Projectile");
+            root.AddComponent<Projectile>();
+            GameObject body = CreateVisual(PrimitiveType.Sphere, "Body", root.transform,
+                Vector3.zero, Vector3.one * 0.3f, material);
+            body.GetComponent<MeshRenderer>().shadowCastingMode = ShadowCastingMode.Off;
+            Object.DestroyImmediate(body.GetComponent<Collider>());
+
+            GameObject prefab = PrefabUtility.SaveAsPrefabAsset(root, $"{AssetFolder}/{root.name}.prefab");
+            Object.DestroyImmediate(root);
+            return prefab.GetComponent<Projectile>();
+        }
+
+        private static TowerDefinition CreateTowerDefinition(Tower prefab, Projectile projectile)
         {
             string path = $"{AssetFolder}/BasicTower.asset";
             var definition = AssetDatabase.LoadAssetAtPath<TowerDefinition>(path);
@@ -263,15 +290,16 @@ namespace TowerDefense.EditorTools
                 serialized.ApplyModifiedPropertiesWithoutUndo();
             }
             Assign(definition, "prefab", prefab);
+            Assign(definition, "projectilePrefab", projectile);
             EditorUtility.SetDirty(definition);
             return definition;
         }
 
         private static EnemyDefinition CreateEnemy(string assetName, string displayName, float speed,
-            Vector3 size, Material material)
+            float health, Vector3 size, Material material)
         {
             var root = new GameObject(assetName);
-            root.AddComponent<Enemy>();
+            var enemy = root.AddComponent<Enemy>();
             // 캡슐의 높이는 2라서, 바닥에 닿도록 y 스케일만큼 올린다
             GameObject body = CreateVisual(PrimitiveType.Capsule, "Body", root.transform,
                 new Vector3(0f, size.y, 0f), size, material);
@@ -280,6 +308,7 @@ namespace TowerDefense.EditorTools
                 new Vector3(0f, size.y * 1.3f, size.z * 0.5f), size * 0.3f, material);
             Object.DestroyImmediate(body.GetComponent<Collider>());
             Object.DestroyImmediate(nose.GetComponent<Collider>());
+            Assign(enemy, "aimPoint", body.transform);
 
             GameObject prefabObject = PrefabUtility.SaveAsPrefabAsset(root, $"{AssetFolder}/{assetName}.prefab");
             Object.DestroyImmediate(root);
@@ -293,6 +322,7 @@ namespace TowerDefense.EditorTools
                 var serialized = new SerializedObject(definition);
                 serialized.FindProperty("displayName").stringValue = displayName;
                 serialized.FindProperty("moveSpeed").floatValue = speed;
+                serialized.FindProperty("maxHealth").floatValue = health;
                 serialized.ApplyModifiedPropertiesWithoutUndo();
             }
             Assign(definition, "prefab", prefabObject.GetComponent<Enemy>());

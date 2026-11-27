@@ -15,3 +15,7 @@ MonoBehaviour:
   displayName: "\uAE30\uBCF8 \uD3EC\uD0D1"
   prefab: {fileID: 2451113975357622870, guid: 49adefacfabc20843a767971f23b009d, type: 3}
   range: 6
+  projectilePrefab: {fileID: 7883328898075307666, guid: 1a934389da3e835439e37ec621794973, type: 3}
+  damage: 10
+  fireInterval: 0.5
+  projectileSpeed: 25

@@ -1,34 +1,79 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace TowerDefense.Enemies
 {
+    /// <summary>적이 사라진 이유.</summary>
+    public enum EnemyOutcome
+    {
+        Killed,      // 처치됨
+        ReachedGoal, // 기지에 도달
+        Removed      // 그 밖의 제거 (씬 종료 등)
+    }
+
     /// <summary>
-    /// 경로를 따라 기지까지 이동하는 적.
+    /// 경로를 따라 기지까지 이동하는 적. 체력이 0이 되면 사라진다.
     /// </summary>
     public class Enemy : MonoBehaviour
     {
+        private static readonly List<Enemy> active = new List<Enemy>();
+
+        [SerializeField] private Transform aimPoint;
+
         private EnemyPath path;
         private int targetIndex;
         private bool finished;
 
-        public EnemyDefinition Definition { get; private set; }
+        /// <summary>씬에 있는 적 목록. 타겟을 고를 때 사용한다.</summary>
+        public static IReadOnlyList<Enemy> Active => active;
 
-        /// <summary>적이 사라질 때 한 번 호출된다. 두 번째 값은 기지에 도달했는지 여부.</summary>
-        public event Action<Enemy, bool> Finished;
+        public EnemyDefinition Definition { get; private set; }
+        public float Health { get; private set; }
+        /// <summary>경로를 따라 이동한 거리. 클수록 기지에 가깝다.</summary>
+        public float DistanceTravelled { get; private set; }
+        public bool IsAlive => path != null && !finished;
+        /// <summary>투사체가 향하는 위치.</summary>
+        public Vector3 AimPosition => aimPoint != null ? aimPoint.position : transform.position;
+
+        /// <summary>적이 사라질 때 한 번 호출된다.</summary>
+        public event Action<Enemy, EnemyOutcome> Finished;
 
         public void Initialize(EnemyDefinition definition, EnemyPath enemyPath)
         {
             Definition = definition;
+            Health = definition.MaxHealth;
             path = enemyPath;
             targetIndex = 1;
             transform.position = path.GetPoint(0);
             FaceTarget();
         }
 
+        public void TakeDamage(float amount)
+        {
+            if (!IsAlive || amount <= 0f) return;
+
+            Health -= amount;
+            if (Health > 0f) return;
+
+            Health = 0f;
+            Finish(EnemyOutcome.Killed);
+            Destroy(gameObject);
+        }
+
+        private void OnEnable()
+        {
+            active.Add(this);
+        }
+
+        private void OnDisable()
+        {
+            active.Remove(this);
+        }
+
         private void Update()
         {
-            if (path == null || finished) return;
+            if (!IsAlive) return;
 
             float remaining = Definition.MoveSpeed * Time.deltaTime;
             while (remaining > 0f)
@@ -38,16 +83,18 @@ namespace TowerDefense.Enemies
                 if (distance > remaining)
                 {
                     transform.position = Vector3.MoveTowards(transform.position, target, remaining);
+                    DistanceTravelled += remaining;
                     return;
                 }
 
                 // 꺾이는 지점에서 남은 이동량을 다음 구간에 이어서 쓴다
                 transform.position = target;
+                DistanceTravelled += distance;
                 remaining -= distance;
                 targetIndex++;
                 if (targetIndex >= path.PointCount)
                 {
-                    Finish(true);
+                    Finish(EnemyOutcome.ReachedGoal);
                     Destroy(gameObject);
                     return;
                 }
@@ -57,7 +104,7 @@ namespace TowerDefense.Enemies
 
         private void OnDestroy()
         {
-            Finish(false);
+            Finish(EnemyOutcome.Removed);
         }
 
         private void FaceTarget()
@@ -66,12 +113,12 @@ namespace TowerDefense.Enemies
             if (direction.sqrMagnitude > 0.0001f) transform.rotation = Quaternion.LookRotation(direction);
         }
 
-        private void Finish(bool reachedGoal)
+        private void Finish(EnemyOutcome outcome)
         {
             if (finished) return;
 
             finished = true;
-            Finished?.Invoke(this, reachedGoal);
+            Finished?.Invoke(this, outcome);
         }
     }
 }

@@ -39,6 +39,8 @@ namespace TowerDefense.Enemies
         public int AliveCount { get; private set; }
         /// <summary>기지에 도달한 적 수.</summary>
         public int ReachedGoalCount { get; private set; }
+        /// <summary>처치한 적 수.</summary>
+        public int KilledCount { get; private set; }
         public bool IsWaveRunning { get; private set; }
         public bool IsAllCleared => StartedWaves >= waves.Length && !IsWaveRunning;
 
@@ -106,11 +108,15 @@ namespace TowerDefense.Enemies
             AliveCount++;
         }
 
-        private void OnEnemyFinished(Enemy enemy, bool reachedGoal)
+        private void OnEnemyFinished(Enemy enemy, EnemyOutcome outcome)
         {
             enemy.Finished -= OnEnemyFinished;
             AliveCount--;
-            if (reachedGoal)
+            if (outcome == EnemyOutcome.Killed)
+            {
+                KilledCount++;
+            }
+            else if (outcome == EnemyOutcome.ReachedGoal)
             {
                 ReachedGoalCount++;
                 EnemyReachedGoal?.Invoke(enemy);

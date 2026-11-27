@@ -15,3 +15,4 @@ MonoBehaviour:
   displayName: "\uBE60\uB978 \uC801"
   prefab: {fileID: 7171418150762035272, guid: e9bf44ba376bd2b488a82716114a3c24, type: 3}
   moveSpeed: 5.5
+  maxHealth: 30
