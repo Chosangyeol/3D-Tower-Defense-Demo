@@ -36,7 +36,8 @@ namespace TowerDefense.CameraSystem
 
         private void OnApplicationFocus(bool hasFocus)
         {
-            if (hasFocus && modeController != null) ApplyCursor(modeController.CurrentMode);
+            // 게임이 끝나 이 컴포넌트가 꺼진 뒤에는 커서를 다시 잠그지 않는다
+            if (hasFocus && isActiveAndEnabled && modeController != null) ApplyCursor(modeController.CurrentMode);
         }
 
         private void Apply(GameMode mode)

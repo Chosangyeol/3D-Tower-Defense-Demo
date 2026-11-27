@@ -12,6 +12,23 @@ namespace TowerDefense.Core
         [SerializeField] private GameModeController modeController;
         [SerializeField] private WaveSpawner waveSpawner;
         [SerializeField] private PlayerMana playerMana;
+        [SerializeField] private BaseHealth baseHealth;
+        [SerializeField] private MatchController match;
+
+        private void DrawResult()
+        {
+            var area = new Rect(Screen.width * 0.5f - 150f, Screen.height * 0.5f - 60f, 300f, 120f);
+            bool victory = match.Result == MatchResult.Victory;
+            string message = victory
+                ? $"승리!\n모든 웨이브를 막았습니다\n남은 기지 체력 {baseHealth.Current}/{baseHealth.Max}"
+                : "패배\n기지가 파괴되었습니다";
+            GUI.Box(area, message);
+
+            if (GUI.Button(new Rect(area.x + 70f, area.yMax - 42f, 160f, 30f), "다시 시작 (R)"))
+            {
+                match.Restart();
+            }
+        }
 
         private void DrawMana()
         {
@@ -34,7 +51,8 @@ namespace TowerDefense.Core
             string state = waveSpawner.IsWaveRunning ? $"남은 적 {waveSpawner.AliveCount}"
                 : waveSpawner.IsAllCleared ? "모든 웨이브 종료"
                 : "Enter: 다음 웨이브 시작";
-            return $"{progress} · {state} · 처치 {waveSpawner.KilledCount} · 기지 도달 {waveSpawner.ReachedGoalCount}";
+            string health = baseHealth != null ? $" · 기지 체력 {baseHealth.Current}/{baseHealth.Max}" : "";
+            return $"{progress} · {state} · 처치 {waveSpawner.KilledCount}{health}";
         }
 
         private void OnGUI()
@@ -49,6 +67,12 @@ namespace TowerDefense.Core
             if (waveSpawner != null) text += "\n" + DescribeWave();
 
             GUI.Box(new Rect(10, 10, 430, 100), text);
+
+            if (match != null && match.Result != MatchResult.InProgress)
+            {
+                DrawResult();
+                return;
+            }
 
             if (!build)
             {

@@ -115,7 +115,7 @@ namespace TowerDefense.EditorTools
             Assign(enemyPath, "grid", grid);
             AssignCells(enemyPath, "waypoints", PathWaypoints);
 
-            // 기지는 경로의 마지막 칸에 둔다. (체력은 승패 판정을 만들 때 추가)
+            // 기지는 경로의 마지막 칸에 둔다
             GameObject goal = CreateVisual(PrimitiveType.Cube, "Base", null,
                 grid.CellToWorld(PathWaypoints[PathWaypoints.Length - 1]) + Vector3.up * 1.5f,
                 new Vector3(1.8f, 3f, 1.8f), baseBody);
@@ -125,6 +125,9 @@ namespace TowerDefense.EditorTools
             var spawner = spawnerObject.AddComponent<WaveSpawner>();
             Assign(spawner, "path", enemyPath);
             Assign(hud, "waveSpawner", spawner);
+            var baseHealth = goal.AddComponent<BaseHealth>();
+            Assign(baseHealth, "waveSpawner", spawner);
+            Assign(hud, "baseHealth", baseHealth);
             AssignWaves(spawner,
                 new[] { Group(normal, 6, 1.2f) },
                 new[] { Group(normal, 6, 1f), Group(fast, 5, 0.7f) },
@@ -201,6 +204,13 @@ namespace TowerDefense.EditorTools
             Assign(placer, "validMaterial", valid);
             Assign(placer, "invalidMaterial", invalid);
             AssignArray(placer, "towers", basicTower);
+
+            // 승패 판정. 끝나면 조작을 맡은 컴포넌트를 끈다
+            var match = systems.AddComponent<MatchController>();
+            Assign(match, "waveSpawner", spawner);
+            Assign(match, "baseHealth", baseHealth);
+            AssignArray(match, "disableOnEnd", modeController, switcher, topDown, firstPerson, caster, spawner, placer);
+            Assign(hud, "match", match);
 
             EditorSceneManager.SaveScene(scene, ScenePath);
             AddToBuildSettings(ScenePath);
@@ -290,7 +300,7 @@ namespace TowerDefense.EditorTools
             var root = new GameObject("SpellProjectile");
             var projectile = root.AddComponent<SpellProjectile>();
             GameObject body = CreateVisual(PrimitiveType.Sphere, "Body", root.transform,
-                Vector3.zero, Vector3.one * 0.25f, material);
+                Vector3.zero, Vector3.one * 0.15f, material);
             body.GetComponent<MeshRenderer>().shadowCastingMode = ShadowCastingMode.Off;
             Object.DestroyImmediate(body.GetComponent<Collider>());
             Assign(projectile, "visual", body.transform);

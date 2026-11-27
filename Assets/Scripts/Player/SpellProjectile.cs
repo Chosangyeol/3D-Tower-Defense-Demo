@@ -12,7 +12,7 @@ namespace TowerDefense.Player
         [SerializeField] private Transform visual;
         [SerializeField, Min(0.01f)] private float radius = 0.2f;
         [SerializeField, Min(1f)] private float maxDistance = 60f;
-        [SerializeField] private Vector3 visualStartOffset = new Vector3(0.25f, -0.25f, 0.6f);
+        [SerializeField] private Vector3 visualStartOffset = new Vector3(0.35f, -0.3f, 1.1f);
         [SerializeField, Min(0.01f)] private float visualBlendTime = 0.2f;
 
         private static readonly RaycastHit[] hits = new RaycastHit[16];
