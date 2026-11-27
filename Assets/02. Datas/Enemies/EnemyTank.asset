@@ -16,7 +16,10 @@ MonoBehaviour:
   prefab: {fileID: 7880928110123943316, guid: a517ae3f9b8b96b48af78c7bef81e641, type: 3}
   moveSpeed: 1.8
   maxHealth: 160
-  baseDamage: 1
+  attackDamage: 12
+  attackInterval: 3
+  isBoss: 0
+  abilities: []
   reward:
   - resource: {fileID: 11400000, guid: f5dfe8f2920b394449e19444f225adbf, type: 2}
     amount: 5

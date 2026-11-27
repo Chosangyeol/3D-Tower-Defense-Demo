@@ -18,10 +18,24 @@ namespace TowerDefense.Enemies
         [SerializeField] private StageController stageController;
         [SerializeField] private float heightOffset = 0.01f;
         [SerializeField, Range(0.1f, 1f)] private float tileFill = 0.9f;
+        [Tooltip("경로 끝에 놓인 기지의 반지름. 적은 이 앞에서 멈춘다")]
+        [SerializeField, Min(0f)] private float goalRadius = 0.9f;
 
         private Mesh mesh;
 
         public int PointCount => Waypoints.Count;
+        public float GoalRadius => goalRadius;
+
+        /// <summary>시작점부터 끝점까지의 길이.</summary>
+        public float Length
+        {
+            get
+            {
+                float length = 0f;
+                for (int i = 1; i < PointCount; i++) length += Vector3.Distance(GetPoint(i - 1), GetPoint(i));
+                return length;
+            }
+        }
 
         private IReadOnlyList<Vector2Int> Waypoints =>
             stageController != null && stageController.Stage != null

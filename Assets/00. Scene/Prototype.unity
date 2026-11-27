@@ -1176,6 +1176,7 @@ MonoBehaviour:
   input: {fileID: 265141008}
   stageController: {fileID: 265141010}
   path: {fileID: 868717938}
+  goal: {fileID: 1981162859}
 --- !u!4 &640471812
 Transform:
   m_ObjectHideFlags: 0
@@ -1301,6 +1302,7 @@ MonoBehaviour:
   stageController: {fileID: 265141010}
   heightOffset: 0.01
   tileFill: 0.9
+  goalRadius: 0.9
 --- !u!23 &868717939
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -2102,7 +2104,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TowerDefense.Core.BaseHealth
   stageController: {fileID: 265141010}
   path: {fileID: 868717938}
-  waveSpawner: {fileID: 640471811}
 --- !u!23 &1981162856
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -2188,7 +2189,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TowerDefense.Combat.Health
   team: 0
-  max: 10
+  max: 100
 --- !u!1 &2147269470
 GameObject:
   m_ObjectHideFlags: 0

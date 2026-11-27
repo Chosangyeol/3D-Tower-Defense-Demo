@@ -1,5 +1,6 @@
 using TowerDefense.Combat;
 using TowerDefense.Economy;
+using TowerDefense.Enemies;
 using TowerDefense.Game;
 using TowerDefense.Magic;
 using TowerDefense.Placement;
@@ -104,6 +105,31 @@ namespace TowerDefense.UI
             return text;
         }
 
+        // 살아 있는 보스의 이름과 체력 막대를 화면 위 가운데에 보여준다
+        private void DrawBosses()
+        {
+            float width = Mathf.Min(520f, Screen.width * 0.4f);
+            float y = 10f;
+            foreach (Enemy enemy in Enemy.Active)
+            {
+                if (!enemy.IsAlive || !enemy.Definition.IsBoss) continue;
+
+                var area = new Rect((Screen.width - width) * 0.5f, y, width, 40f);
+                GUI.Box(area, GUIContent.none);
+                string state = enemy.Health.DamageMultiplier < 1f ? "  [보호막]" : "";
+                if (enemy.IsAttacking) state += "  [기지 공격 중]";
+                GUI.Label(new Rect(area.x + 8f, area.y + 2f, area.width, 20f),
+                    $"{enemy.Definition.DisplayName}  {Mathf.CeilToInt(enemy.Health.Current)}/{enemy.Health.Max}{state}");
+
+                Color previous = GUI.color;
+                GUI.color = new Color(0.85f, 0.2f, 0.25f);
+                float fill = enemy.Health.Current / enemy.Health.Max;
+                GUI.DrawTexture(new Rect(area.x + 4f, area.y + 24f, (area.width - 8f) * fill, 12f), Texture2D.whiteTexture);
+                GUI.color = previous;
+                y += 46f;
+            }
+        }
+
         private void OnGUI()
         {
             if (modeController == null) return;
@@ -124,6 +150,8 @@ namespace TowerDefense.UI
             // 줄 수에 맞춰 상자 높이를 정한다
             float height = GUI.skin.box.CalcHeight(new GUIContent(text), 460f);
             GUI.Box(new Rect(10, 10, 460f, height + 4f), text);
+
+            DrawBosses();
 
             if (match != null && match.Result != MatchResult.InProgress)
             {

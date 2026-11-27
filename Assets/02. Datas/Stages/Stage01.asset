@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Stage01
   m_EditorClassIdentifier: Assembly-CSharp::TowerDefense.Game.StageDefinition
   displayName: "\uC2A4\uD14C\uC774\uC9C0 1"
-  baseHealth: 10
+  baseHealth: 100
   startResources:
   - resource: {fileID: 11400000, guid: 0d516713d6bb672449210a3b4b90e298, type: 2}
     amount: 100
@@ -28,6 +28,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 25679506c301d5b4baed8c1cc186af5a, type: 2}
   - {fileID: 11400000, guid: 0ab269164a1f8ae429f5bd9c9bc57258, type: 2}
   - {fileID: 11400000, guid: c999bd4c9fda1a941990748fa1b26a2a, type: 2}
+  - {fileID: 11400000, guid: e96f22cb4ca393e43bb0f65340961e4f, type: 2}
+  - {fileID: 11400000, guid: d48b5a475b9884240ab1efbe4600788c, type: 2}
   upgrades:
   - {fileID: 11400000, guid: 4cd3b5db17859ad4ab595e8b4491be3d, type: 2}
   - {fileID: 11400000, guid: 520125de7a99dac48bf50e7c1af49491, type: 2}

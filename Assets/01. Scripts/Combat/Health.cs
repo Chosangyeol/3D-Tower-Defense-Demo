@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace TowerDefense.Combat
@@ -12,10 +13,22 @@ namespace TowerDefense.Combat
         [SerializeField] private Team team;
         [SerializeField, Min(1f)] private float max = 10f;
 
+        private readonly List<float> damageReductions = new List<float>();
+
         public Team Team => team;
         public float Max => max;
         public float Current { get; private set; }
         public bool IsAlive => Current > 0f;
+        /// <summary>받는 피해에 곱하는 값. 보호막 등이 없으면 1.</summary>
+        public float DamageMultiplier
+        {
+            get
+            {
+                float multiplier = 1f;
+                foreach (float reduction in damageReductions) multiplier *= 1f - reduction;
+                return multiplier;
+            }
+        }
 
         /// <summary>체력이 0이 되는 순간 한 번 호출된다.</summary>
         public event Action<Health> Died;
@@ -32,11 +45,22 @@ namespace TowerDefense.Combat
             Current = max;
         }
 
+        /// <summary>받는 피해를 비율만큼 줄인다. 여러 개는 곱해서 적용한다.</summary>
+        public void AddDamageReduction(float reduction)
+        {
+            damageReductions.Add(Mathf.Clamp01(reduction));
+        }
+
+        public void RemoveDamageReduction(float reduction)
+        {
+            damageReductions.Remove(Mathf.Clamp01(reduction));
+        }
+
         public void TakeDamage(float amount)
         {
             if (!IsAlive || amount <= 0f) return;
 
-            Current = Mathf.Max(Current - amount, 0f);
+            Current = Mathf.Max(Current - amount * DamageMultiplier, 0f);
             if (!IsAlive) Died?.Invoke(this);
         }
     }

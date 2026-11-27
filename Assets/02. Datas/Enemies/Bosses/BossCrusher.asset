@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67816972cc141c44daf0f5c5002b43d0, type: 3}
+  m_Name: BossCrusher
+  m_EditorClassIdentifier: Assembly-CSharp::TowerDefense.Enemies.EnemyDefinition
+  displayName: "\uD30C\uC1C4 \uAC70\uC778"
+  prefab: {fileID: 7910573565935490250, guid: 5778fcadf3fd8c94489e1850786b9a6e, type: 3}
+  moveSpeed: 1.2
+  maxHealth: 2000
+  attackDamage: 30
+  attackInterval: 3
+  isBoss: 1
+  abilities:
+  - {fileID: 11400000, guid: 5dba6a21276729648ae238fb50836ecb, type: 2}
+  - {fileID: 11400000, guid: a2c7f709eb0edab47ade86d59a4b226b, type: 2}
+  - {fileID: 11400000, guid: fac5cb5a04d7f7249b80bc66ab1322bd, type: 2}
+  reward:
+  - resource: {fileID: 11400000, guid: 0d516713d6bb672449210a3b4b90e298, type: 2}
+    amount: 100
+  - resource: {fileID: 11400000, guid: f5dfe8f2920b394449e19444f225adbf, type: 2}
+    amount: 80

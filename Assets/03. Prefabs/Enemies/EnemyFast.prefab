@@ -50,6 +50,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TowerDefense.Enemies.Enemy
   aimPoint: {fileID: 8720963747678439106}
+  bodyRadius: 0.3
 --- !u!136 &7405059529104492258
 CapsuleCollider:
   m_ObjectHideFlags: 0

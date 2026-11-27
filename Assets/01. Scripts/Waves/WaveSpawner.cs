@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using TowerDefense.Combat;
 using TowerDefense.Controls;
 using TowerDefense.Enemies;
 using TowerDefense.Game;
@@ -9,7 +10,7 @@ using UnityEngine.InputSystem;
 namespace TowerDefense.Waves
 {
     /// <summary>
-    /// 스테이지 데이터의 웨이브를 하나씩 내보낸다. 모두 내보냈고 남은 적이 없으면 웨이브가 끝난다.
+    /// 스테이지 데이터의 웨이브를 하나씩 내보낸다. 모두 내보냈고 부하를 포함한 적을 모두 처치하면 웨이브가 끝난다.
     /// 준비 시간이 지나면 다음 웨이브가 자동으로 시작되고, 단축키로 바로 시작할 수도 있다.
     /// </summary>
     public class WaveSpawner : MonoBehaviour
@@ -17,6 +18,8 @@ namespace TowerDefense.Waves
         [SerializeField] private GameInput input;
         [SerializeField] private StageController stageController;
         [SerializeField] private EnemyPath path;
+        [Tooltip("적이 도착해서 공격할 기지")]
+        [SerializeField] private Health goal;
 
         private bool spawning;
 
@@ -26,8 +29,6 @@ namespace TowerDefense.Waves
         /// <summary>지금까지 시작한 웨이브 수.</summary>
         public int StartedWaves { get; private set; }
         public int AliveCount { get; private set; }
-        /// <summary>기지에 도달한 적 수.</summary>
-        public int ReachedGoalCount { get; private set; }
         /// <summary>처치한 적 수.</summary>
         public int KilledCount { get; private set; }
         public bool IsWaveRunning { get; private set; }
@@ -39,7 +40,6 @@ namespace TowerDefense.Waves
 
         public event Action<int> WaveStarted;
         public event Action<int> WaveCleared;
-        public event Action<Enemy> EnemyReachedGoal;
         public event Action<Enemy> EnemyKilled;
 
         private void Awake()
@@ -112,28 +112,37 @@ namespace TowerDefense.Waves
             CheckCleared();
         }
 
-        private void SpawnEnemy(EnemyDefinition definition)
+        private void SpawnEnemy(EnemyDefinition definition, float startDistance = 0f)
         {
             Enemy enemy = Instantiate(definition.Prefab, transform);
             enemy.name = definition.name;
-            enemy.Initialize(definition, path);
+            enemy.Initialize(definition, path, goal, startDistance);
             enemy.Finished += OnEnemyFinished;
+            enemy.SummonRequested += OnSummonRequested;
             AliveCount++;
+        }
+
+        // 부하는 부른 적의 조금 뒤에 한 마리씩 간격을 두고 나타난다
+        private void OnSummonRequested(Enemy summoner, EnemyDefinition definition, int count)
+        {
+            if (definition.Prefab == null) return;
+
+            for (int i = 0; i < count; i++)
+            {
+                float distance = Mathf.Max(summoner.DistanceTravelled - 1f - 0.8f * i, 0f);
+                SpawnEnemy(definition, distance);
+            }
         }
 
         private void OnEnemyFinished(Enemy enemy, EnemyOutcome outcome)
         {
             enemy.Finished -= OnEnemyFinished;
+            enemy.SummonRequested -= OnSummonRequested;
             AliveCount--;
             if (outcome == EnemyOutcome.Killed)
             {
                 KilledCount++;
                 EnemyKilled?.Invoke(enemy);
-            }
-            else if (outcome == EnemyOutcome.ReachedGoal)
-            {
-                ReachedGoalCount++;
-                EnemyReachedGoal?.Invoke(enemy);
             }
             CheckCleared();
         }
