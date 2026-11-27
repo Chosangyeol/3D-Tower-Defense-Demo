@@ -70,5 +70,10 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 323ffae786904f54d8ea2a8f90bb4b13, type: 2}
   - {fileID: 11400000, guid: baae072205b004847a7aee408157ba93, type: 2}
   - {fileID: 11400000, guid: 4e6d150cc60cf0b45879a86a2ee3d04d, type: 2}
+  - {fileID: 11400000, guid: 38c09231f5003e9449e2010bb5c38479, type: 2}
+  - {fileID: 11400000, guid: 8569edb3b6f7d054cb62a668b523efed, type: 2}
+  - {fileID: 11400000, guid: 062ef44d3c558d64e901fb5a5e3933a6, type: 2}
+  - {fileID: 11400000, guid: 522e420e6ccc210499095526ef654f42, type: 2}
+  - {fileID: 11400000, guid: b701bbf1370c1b745b2f2a951dcc0228, type: 2}
   augmentChoices: 3
   augmentRerolls: 2

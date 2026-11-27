@@ -8,6 +8,8 @@ namespace TowerDefense.Magic
     /// <summary>
     /// 플레이어의 마법 투사체. 조준한 방향으로 직선 비행하며, 처음 부딪힌 적에게 피해를 준다.
     /// 관통 효과가 있으면 그 수만큼 적을 더 뚫고 지나가며 같은 적은 한 번만 맞힌다. 지면과 타워는 뚫지 못한다.
+    /// 폭발 효과가 있으면 적이나 지면·타워에 맞을 때마다 그 주변의 적에게 추가 피해를 준다.
+    /// 직접 맞은 적은 그 폭발의 피해를 받지 않는다.
     /// 판정은 조준선을 따라가고, 보이는 모형만 손 위치에서 출발해 조준선으로 모인다.
     /// </summary>
     public class SpellProjectile : MonoBehaviour
@@ -15,6 +17,8 @@ namespace TowerDefense.Magic
         [SerializeField] private Transform visual;
         [SerializeField] private Vector3 visualStartOffset = new Vector3(0.35f, -0.3f, 1.1f);
         [SerializeField, Min(0.01f)] private float visualBlendTime = 0.2f;
+        [Tooltip("폭발 범위를 보여주는 표시")]
+        [SerializeField] private SplashFlash splashFlash;
 
         private static readonly RaycastHit[] hits = new RaycastHit[32];
         private static readonly IComparer<RaycastHit> ByDistance =
@@ -24,18 +28,18 @@ namespace TowerDefense.Magic
 
         private Transform caster;
         private SpellDefinition spell;
-        private float damage;
+        private SpellStats stats;
         private int pierceLeft;
         private float travelled;
         private float age;
 
-        /// <param name="extraPierce">처음 맞힌 적 뒤로 더 맞힐 수 있는 적의 수</param>
-        public void Initialize(Transform casterRoot, SpellDefinition definition, float hitDamage, int extraPierce)
+        /// <param name="castStats">시전하는 순간의 마법 수치</param>
+        public void Initialize(Transform casterRoot, SpellDefinition definition, SpellStats castStats)
         {
             caster = casterRoot;
             spell = definition;
-            damage = hitDamage;
-            pierceLeft = Math.Max(extraPierce, 0);
+            stats = castStats;
+            pierceLeft = Math.Max(castStats.ExtraPierce, 0);
             UpdateVisual();
         }
 
@@ -81,17 +85,45 @@ namespace TowerDefense.Magic
                 {
                     if (!target.IsAlive || !struck.Add(target)) continue;
 
-                    target.TakeDamage(damage);
+                    target.TakeDamage(stats.Damage);
+                    Explode(PointAt(hits[i].distance), target);
                     if (pierceLeft <= 0) return true;
 
                     pierceLeft--;
                 }
                 else if (!candidate.isTrigger)
                 {
+                    Explode(PointAt(hits[i].distance), null);
                     return true;
                 }
             }
             return false;
+        }
+
+        // 부딪힌 순간의 투사체 중심
+        private Vector3 PointAt(float distance)
+        {
+            return transform.position + transform.forward * distance;
+        }
+
+        /// <param name="direct">직접 맞아서 폭발 피해에서 빼는 대상. 지면에 맞았으면 null</param>
+        private void Explode(Vector3 center, IDamageable direct)
+        {
+            float damage = stats.Damage * stats.SplashRatio;
+            if (stats.SplashRadius <= 0f || damage <= 0f) return;
+
+            // 기지 앞에 많은 적이 겹쳐 설 수 있어 개수를 제한하지 않는다
+            Collider[] reached = Physics.OverlapSphere(center, stats.SplashRadius, Physics.AllLayers,
+                QueryTriggerInteraction.Collide);
+            var damaged = new HashSet<IDamageable>();
+            foreach (Collider candidate in reached)
+            {
+                IDamageable target = candidate.GetComponentInParent<IDamageable>();
+                if (target == null || target == direct || target.Team != Team.Invaders) continue;
+                if (target.IsAlive && damaged.Add(target)) target.TakeDamage(damage);
+            }
+
+            if (splashFlash != null) Instantiate(splashFlash, center, Quaternion.identity).Show(stats.SplashRadius);
         }
 
         private void UpdateVisual()

@@ -56,6 +56,14 @@ namespace TowerDefense.Combat
             damageReductions.Remove(Mathf.Clamp01(reduction));
         }
 
+        /// <summary>최대 체력까지 회복한다. 이미 0이 된 대상은 되살리지 않는다.</summary>
+        public void Heal(float amount)
+        {
+            if (!IsAlive || amount <= 0f) return;
+
+            Current = Mathf.Min(Current + amount, max);
+        }
+
         public void TakeDamage(float amount)
         {
             if (!IsAlive || amount <= 0f) return;

@@ -2301,6 +2301,7 @@ MonoBehaviour:
   setup: {fileID: 265141010}
   modifiers: {fileID: 265141014}
   path: {fileID: 868717938}
+  waveSpawner: {fileID: 640471811}
 --- !u!23 &1981162856
 MeshRenderer:
   m_ObjectHideFlags: 0

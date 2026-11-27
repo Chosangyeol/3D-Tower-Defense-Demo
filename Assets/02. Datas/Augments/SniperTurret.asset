@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a175c92759b436047ba458fd7ae121f5, type: 3}
+  m_Name: SniperTurret
+  m_EditorClassIdentifier: Assembly-CSharp::TowerDefense.Augments.AugmentDefinition
+  displayName: "\uC800\uACA9 \uD3EC\uD0D1"
+  description: "\uD0C0\uC6CC \uC0AC\uAC70\uB9AC +3, \uACF5\uACA9\uB825 +40%\n\uBC1C\uC0AC
+    \uAC04\uACA9 +30%"
+  tier: 1
+  maxStacks: 1
+  effects:
+  - {fileID: 11400000, guid: a357178baa66f4a499e025ad35c19a39, type: 2}
+  - {fileID: 11400000, guid: 874a733f793c74748b2dd31fc3081aca, type: 2}
+  - {fileID: 11400000, guid: ff4ce2341ac3a8a48bd81b8c4661c520, type: 2}

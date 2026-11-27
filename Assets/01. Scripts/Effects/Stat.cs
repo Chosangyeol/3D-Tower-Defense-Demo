@@ -24,6 +24,8 @@ namespace TowerDefense.Effects
         [InspectorName("마법/마나 소모")] SpellManaCost = 21,
         [InspectorName("마법/시전 간격")] SpellCastInterval = 22,
         [InspectorName("마법/추가 관통 수")] SpellPierce = 23,
+        [InspectorName("마법/폭발 반경")] SpellSplashRadius = 24,
+        [InspectorName("마법/폭발 피해 비율")] SpellSplashRatio = 25,
 
         [InspectorName("적/수 (보스 제외)")] EnemyCount = 30,
         [InspectorName("적/체력")] EnemyHealth = 31,
@@ -37,6 +39,7 @@ namespace TowerDefense.Effects
 
         [InspectorName("게임/준비 시간")] PrepSeconds = 50,
         [InspectorName("게임/시작 자원")] StartResources = 51,
-        [InspectorName("게임/기지 체력")] BaseHealth = 52
+        [InspectorName("게임/기지 체력")] BaseHealth = 52,
+        [InspectorName("게임/웨이브 완료 시 기지 회복")] BaseHealPerWave = 53
     }
 }

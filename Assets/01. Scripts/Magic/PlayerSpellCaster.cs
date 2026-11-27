@@ -40,13 +40,12 @@ namespace TowerDefense.Magic
         public bool TryCast()
         {
             if (spell == null || spell.ProjectilePrefab == null) return false;
-            float cost = modifiers.Get(Stat.SpellManaCost, spell.ManaCost, spell);
-            if (Time.time < nextCastTime || !mana.TrySpend(cost)) return false;
+            SpellStats stats = SpellStats.From(spell, modifiers);
+            if (Time.time < nextCastTime || !mana.TrySpend(stats.ManaCost)) return false;
 
-            nextCastTime = Time.time + modifiers.Get(Stat.SpellCastInterval, spell.CastInterval, spell);
+            nextCastTime = Time.time + stats.CastInterval;
             SpellProjectile projectile = Instantiate(spell.ProjectilePrefab, head.position, head.rotation);
-            projectile.Initialize(transform, spell, modifiers.Get(Stat.SpellDamage, spell.Damage, spell),
-                modifiers.GetInt(Stat.SpellPierce, 0f, spell));
+            projectile.Initialize(transform, spell, stats);
             return true;
         }
     }
