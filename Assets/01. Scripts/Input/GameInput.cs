@@ -45,6 +45,7 @@ namespace TowerDefense.Controls
         public InputAction Jump { get; private set; }
         public InputAction Sprint { get; private set; }
         public InputAction Cast { get; private set; }
+        public InputAction Interact { get; private set; }
 
         /// <summary>타워 선택 칸. index는 0부터 SlotCount - 1까지.</summary>
         public InputAction Slot(int index)
@@ -78,6 +79,7 @@ namespace TowerDefense.Controls
             Jump = combatMap.FindAction("Jump", true);
             Sprint = combatMap.FindAction("Sprint", true);
             Cast = combatMap.FindAction("Cast", true);
+            Interact = combatMap.FindAction("Interact", true);
 
             LoadBindings();
         }

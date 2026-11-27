@@ -3,6 +3,7 @@ using TowerDefense.Economy;
 using TowerDefense.Game;
 using TowerDefense.Magic;
 using TowerDefense.Placement;
+using TowerDefense.Player;
 using TowerDefense.Towers;
 using TowerDefense.Waves;
 using UnityEngine;
@@ -21,6 +22,29 @@ namespace TowerDefense.UI
         [SerializeField] private MatchController match;
         [SerializeField] private ResourceWallet wallet;
         [SerializeField] private TowerSelection selection;
+        [SerializeField] private PlayerGatherer gatherer;
+
+        // 조준한 자원 노드의 안내와 채집 진행도
+        private void DrawGathering()
+        {
+            ResourceNode node = gatherer.Target;
+            if (node == null) return;
+
+            string resource = node.Definition.Resource.DisplayName;
+            string message = node.IsAvailable
+                ? $"E 길게: {resource} 채집 (남은 양 {node.Remaining})"
+                : $"{resource} 고갈 · {Mathf.CeilToInt(node.TimeUntilRespawn)}초 뒤 재생";
+
+            var area = new Rect(Screen.width * 0.5f - 140f, Screen.height * 0.5f + 30f, 280f, 24f);
+            GUI.Box(area, message);
+            if (gatherer.Progress > 0f)
+            {
+                Color previous = GUI.color;
+                GUI.color = node.Definition.Resource.Color;
+                GUI.DrawTexture(new Rect(area.x, area.yMax + 2f, area.width * gatherer.Progress, 6f), Texture2D.whiteTexture);
+                GUI.color = previous;
+            }
+        }
 
         private string DescribeResources()
         {
@@ -87,7 +111,7 @@ namespace TowerDefense.UI
             bool build = modeController.CurrentMode == GameMode.Build;
             string text = build
                 ? "[배치 모드]\nWASD/화면 가장자리: 이동 · 휠: 줌 · Q/E: 회전\n좌클릭: 설치 · 우클릭: 제거 · 1~9: 타워 선택\nTab: 전투 모드"
-                : "[전투 모드]\nWASD: 이동 · Shift: 달리기 · Space: 점프 · 마우스: 시점\n좌클릭: 마법 · Tab: 배치 모드";
+                : "[전투 모드]\nWASD: 이동 · Shift: 달리기 · Space: 점프 · 마우스: 시점\n좌클릭: 마법 · E: 채집 · Tab: 배치 모드";
 
             if (waveSpawner != null) text += "\n" + DescribeWave();
             if (wallet != null) text += "\n" + DescribeResources();
@@ -112,6 +136,7 @@ namespace TowerDefense.UI
                 // 조준점
                 GUI.Label(new Rect(Screen.width * 0.5f - 4f, Screen.height * 0.5f - 11f, 20f, 20f), "+");
                 if (playerMana != null) DrawMana();
+                if (gatherer != null) DrawGathering();
             }
         }
     }
