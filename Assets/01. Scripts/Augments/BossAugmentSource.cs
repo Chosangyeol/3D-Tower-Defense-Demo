@@ -23,7 +23,7 @@ namespace TowerDefense.Augments
 
             public override void OnEnemyKilled(Enemy enemy)
             {
-                if (enemy.Definition.IsBoss && !System.IsFinalWave) System.RequestOffer(data.Tier);
+                if (enemy.Definition.IsBoss && !System.IsFinalWave) System.RequestOffer(data.TierChances);
             }
         }
     }

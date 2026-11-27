@@ -29,7 +29,7 @@ namespace TowerDefense.Augments
 
             public override void OnWaveCleared(int wave)
             {
-                if (!System.IsFinalWave && Array.IndexOf(data.waves, wave) >= 0) System.RequestOffer(data.Tier);
+                if (!System.IsFinalWave && Array.IndexOf(data.waves, wave) >= 0) System.RequestOffer(data.TierChances);
             }
         }
     }

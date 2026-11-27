@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using TowerDefense.Data;
 using TowerDefense.Enemies;
 using UnityEngine;
@@ -11,10 +12,10 @@ namespace TowerDefense.Augments
     [GameDataCategory("증강 획득 방식", "AugmentSources", 57)]
     public abstract class AugmentSource : GameData
     {
-        [Tooltip("이 방식으로 나오는 증강의 등급")]
-        [SerializeField] private AugmentTier tier;
+        [Tooltip("이 방식으로 증강이 나올 때 각 등급의 확률 비중. 한 번의 후보는 모두 같은 등급이다")]
+        [SerializeField] private AugmentTierWeight[] tierChances = new AugmentTierWeight[0];
 
-        public AugmentTier Tier => tier;
+        public IReadOnlyList<AugmentTierWeight> TierChances => tierChances;
 
         public abstract AugmentSourceRuntime CreateRuntime(AugmentSystem system);
     }

@@ -13,7 +13,11 @@ MonoBehaviour:
   m_Name: AltarAugments
   m_EditorClassIdentifier: Assembly-CSharp::TowerDefense.Augments.AltarAugmentSource
   displayName: "\uC81C\uB2E8 \uAD6C\uB9E4"
-  tier: 0
+  tierChances:
+  - tier: 0
+    weight: 80
+  - tier: 1
+    weight: 20
   cost:
   - resource: {fileID: 11400000, guid: 5ab033ae4dbaa964ea3767365abd5a59, type: 2}
     amount: 3

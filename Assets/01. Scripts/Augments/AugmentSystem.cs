@@ -11,7 +11,8 @@ using Random = UnityEngine.Random;
 namespace TowerDefense.Augments
 {
     /// <summary>
-    /// 이번 판의 증강. 획득 방식이 요청하면 후보를 뽑아 게임을 멈추고, 고른 증강의 효과를 RunModifiers에 더한다.
+    /// 이번 판의 증강. 획득 방식이 요청하면 등급을 무작위로 정해 그 등급의 후보를 뽑아 게임을 멈추고,
+    /// 고른 증강의 효과를 RunModifiers에 더한다.
     /// 요청이 여러 개면 하나씩 이어서 처리한다. 화면 표시와 입력은 다루지 않는다.
     /// </summary>
     public class AugmentSystem : MonoBehaviour
@@ -24,7 +25,8 @@ namespace TowerDefense.Augments
         [SerializeField] private GamePause pause;
 
         private readonly List<AugmentSourceRuntime> sources = new List<AugmentSourceRuntime>();
-        private readonly Queue<AugmentTier> pending = new Queue<AugmentTier>();
+        // 기다리는 선택마다 그 요청의 등급 확률을 보관한다
+        private readonly Queue<IReadOnlyList<AugmentTierWeight>> pending = new Queue<IReadOnlyList<AugmentTierWeight>>();
         private readonly List<AugmentDefinition> choices = new List<AugmentDefinition>();
         private readonly List<AugmentDefinition> acquired = new List<AugmentDefinition>();
         private readonly Dictionary<AugmentDefinition, int> stacks = new Dictionary<AugmentDefinition, int>();
@@ -43,8 +45,12 @@ namespace TowerDefense.Augments
         public bool HasWaitingOffer => IsOffering || pending.Count > 0;
         public AugmentTier OfferTier { get; private set; }
         public int RerollsLeft { get; private set; }
-        /// <summary>다시 뽑기가 남아 있고, 지금 후보와 다른 증강이 있어야 다시 뽑을 수 있다.</summary>
-        public bool CanReroll => IsOffering && RerollsLeft > 0 && GetEligible(OfferTier).Count > choices.Count;
+        /// <summary>
+        /// 다시 뽑기가 남아 있고, 지금 후보를 빼고도 같은 등급의 새 후보를 모두 채울 수 있어야 다시 뽑을 수 있다.
+        /// </summary>
+        public bool CanReroll =>
+            IsOffering && RerollsLeft > 0
+            && GetEligible(OfferTier).Count - choices.Count >= setup.Campaign.AugmentChoices;
 
         /// <summary>얻은 증강. 처음 고른 순서이며 중복은 없다.</summary>
         public IReadOnlyList<AugmentDefinition> Acquired => acquired;
@@ -64,17 +70,23 @@ namespace TowerDefense.Augments
             return null;
         }
 
-        public bool HasEligible(AugmentTier tier)
+        /// <summary>확률이 있는 등급 중에 고를 수 있는 증강이 남아 있는지 여부.</summary>
+        public bool HasEligible(IReadOnlyList<AugmentTierWeight> chances)
         {
-            return GetEligible(tier).Count > 0;
+            foreach (AugmentTierWeight chance in chances)
+            {
+                if (chance.weight > 0f && GetEligible(chance.tier).Count > 0) return true;
+            }
+            return false;
         }
 
         /// <summary>증강 선택을 요청한다. 다음 LateUpdate에 화면이 열린다. 남은 증강이 없으면 false.</summary>
-        public bool RequestOffer(AugmentTier tier)
+        /// <param name="chances">등급별 확률 비중</param>
+        public bool RequestOffer(IReadOnlyList<AugmentTierWeight> chances)
         {
-            if (match.Result != MatchResult.InProgress || !HasEligible(tier)) return false;
+            if (match.Result != MatchResult.InProgress || !HasEligible(chances)) return false;
 
-            pending.Enqueue(tier);
+            pending.Enqueue(chances);
             return true;
         }
 
@@ -94,7 +106,7 @@ namespace TowerDefense.Augments
             return true;
         }
 
-        /// <summary>후보를 모두 바꾼다. 다른 증강이 모자라면 남는 자리만 이전 후보로 채운다.</summary>
+        /// <summary>같은 등급에서 지금 후보를 뺀 증강으로 후보를 모두 바꾼다.</summary>
         public bool Reroll()
         {
             if (!CanReroll) return false;
@@ -139,8 +151,11 @@ namespace TowerDefense.Augments
         {
             while (!IsOffering && pending.Count > 0)
             {
-                OfferTier = pending.Dequeue();
-                Roll(OfferTier, null);
+                // 등급은 화면을 여는 순간에 남은 증강을 보고 정한다
+                if (!TryPickTier(pending.Dequeue(), out AugmentTier tier)) continue;
+
+                OfferTier = tier;
+                Roll(tier, null);
             }
             if (!IsOffering) return;
 
@@ -170,26 +185,38 @@ namespace TowerDefense.Augments
             return result;
         }
 
-        // 피하고 싶은 증강은 다른 후보가 모자랄 때만 넣는다
-        private void Roll(AugmentTier tier, List<AugmentDefinition> avoid)
+        // 고를 수 있는 증강이 남은 등급 중에서 비중에 따라 하나를 뽑는다
+        private bool TryPickTier(IReadOnlyList<AugmentTierWeight> chances, out AugmentTier picked)
         {
-            List<AugmentDefinition> fresh = GetEligible(tier);
-            var fallback = new List<AugmentDefinition>();
-            if (avoid != null)
+            var open = new List<AugmentTierWeight>();
+            float total = 0f;
+            foreach (AugmentTierWeight chance in chances)
             {
-                fallback = fresh.FindAll(avoid.Contains);
-                fresh.RemoveAll(avoid.Contains);
+                if (chance.weight <= 0f || GetEligible(chance.tier).Count == 0) continue;
+
+                open.Add(chance);
+                total += chance.weight;
             }
 
-            choices.Clear();
-            int count = setup.Campaign.AugmentChoices;
-            TakeRandom(fresh, count);
-            TakeRandom(fallback, count);
+            picked = default;
+            float roll = Random.value * total;
+            foreach (AugmentTierWeight chance in open)
+            {
+                picked = chance.tier;
+                roll -= chance.weight;
+                if (roll < 0f) break;
+            }
+            return open.Count > 0;
         }
 
-        private void TakeRandom(List<AugmentDefinition> from, int count)
+        /// <param name="exclude">이번 후보에서 뺄 증강. 없으면 null</param>
+        private void Roll(AugmentTier tier, List<AugmentDefinition> exclude)
         {
-            while (choices.Count < count && from.Count > 0)
+            List<AugmentDefinition> from = GetEligible(tier);
+            if (exclude != null) from.RemoveAll(exclude.Contains);
+
+            choices.Clear();
+            while (choices.Count < setup.Campaign.AugmentChoices && from.Count > 0)
             {
                 int index = Random.Range(0, from.Count);
                 choices.Add(from[index]);

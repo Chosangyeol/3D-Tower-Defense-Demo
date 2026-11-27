@@ -13,4 +13,8 @@ MonoBehaviour:
   m_Name: BossAugments
   m_EditorClassIdentifier: Assembly-CSharp::TowerDefense.Augments.BossAugmentSource
   displayName: "\uBCF4\uC2A4 \uCC98\uCE58"
-  tier: 1
+  tierChances:
+  - tier: 0
+    weight: 30
+  - tier: 1
+    weight: 70

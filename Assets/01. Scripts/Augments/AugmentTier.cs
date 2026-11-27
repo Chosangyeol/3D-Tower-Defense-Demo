@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace TowerDefense.Augments
@@ -7,6 +8,14 @@ namespace TowerDefense.Augments
     {
         [InspectorName("일반")] Common = 0,
         [InspectorName("상위")] Superior = 1
+    }
+
+    /// <summary>등급 하나가 나올 확률의 비중. 한 목록 안의 비중끼리 비교한다.</summary>
+    [Serializable]
+    public struct AugmentTierWeight
+    {
+        public AugmentTier tier;
+        [Min(0f)] public float weight;
     }
 
     public static class AugmentTierNames

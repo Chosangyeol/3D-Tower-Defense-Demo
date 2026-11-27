@@ -41,7 +41,7 @@ namespace TowerDefense.Augments
         public int Purchases { get; private set; }
         public float HoldSeconds => data.HoldSeconds;
         /// <summary>고를 수 있는 증강이 남아 있는지 여부.</summary>
-        public bool HasStock => System.HasEligible(data.Tier);
+        public bool HasStock => System.HasEligible(data.TierChances);
         public bool CanPurchase => HasStock && !System.HasWaitingOffer && System.Wallet.CanAfford(GetCost());
 
         /// <summary>지금 사는 데 드는 비용.</summary>
@@ -64,7 +64,7 @@ namespace TowerDefense.Augments
             if (!CanPurchase || !System.Wallet.TrySpend(GetCost())) return false;
 
             Purchases++;
-            return System.RequestOffer(data.Tier);
+            return System.RequestOffer(data.TierChances);
         }
     }
 }
