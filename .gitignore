@@ -58,3 +58,6 @@ sysinfo.txt
 .DS_Store
 Thumbs.db
 *.log
+
+# ===== MCP (PC별 경로 포함) =====
+.mcp.json
