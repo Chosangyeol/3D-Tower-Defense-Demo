@@ -78,11 +78,15 @@
 | 플레이어 능력치 | `PlayerStatsDefinition` | 이동, 마나 |
 | 웨이브 | `WaveDefinition` | 스테이지 |
 | 스테이지 | `StageDefinition` | `StageController`를 통해 웨이브, 경로, 기지 |
-| 업그레이드 / 효과 | `UpgradeDefinition` / `UpgradeEffect` | `ResearchState` |
+| 업그레이드 / 효과 | `UpgradeDefinition` / `UpgradeEffect` | `ResearchState`, 연구 화면 (목록은 스테이지 데이터) |
+| 자원 | `ResourceDefinition` | `ResourceWallet` |
+| 자원 노드 | `ResourceNodeDefinition` | `ResourceNode`, `PlayerGatherer` |
 
 - 실행 중에는 데이터 에셋의 값을 바꾸지 않는다. 강화·연구 결과는 `AttackSpec`처럼 따로 계산해서 보관한다.
 - 연구는 타워 종류 전체에 적용한다. 특수 기능은 `UpgradeEffect`를 상속하고 `AttackSpec`에 항목을 추가한다.
 - 개인 설정(시점 감도 등)은 게임 데이터에 넣지 않는다.
+- 비용과 보상은 `ResourceAmount` 목록으로 적고, 자원은 `ResourceWallet`을 통해서만 늘리고 줄인다.
+- `Resources`는 Unity의 특수 폴더 이름이라 폴더 이름으로 쓰지 않는다. (자원 코드는 `Economy`, 데이터는 `ResourceTypes`)
 
 ## Git
 - 커밋 메시지는 한국어로 작성한다.

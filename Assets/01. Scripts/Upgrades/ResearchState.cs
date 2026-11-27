@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using TowerDefense.Combat;
+using TowerDefense.Economy;
 using TowerDefense.Towers;
 using UnityEngine;
 
@@ -11,6 +12,8 @@ namespace TowerDefense.Upgrades
     /// </summary>
     public class ResearchState : MonoBehaviour
     {
+        [SerializeField] private ResourceWallet wallet;
+
         private readonly List<UpgradeDefinition> completed = new List<UpgradeDefinition>();
         private readonly Dictionary<TowerDefinition, AttackSpec> specs = new Dictionary<TowerDefinition, AttackSpec>();
 
@@ -34,6 +37,15 @@ namespace TowerDefense.Upgrades
             return true;
         }
 
+        /// <summary>비용을 내고 연구한다.</summary>
+        public bool TryResearch(UpgradeDefinition upgrade)
+        {
+            if (!CanComplete(upgrade) || !wallet.TrySpend(upgrade.Cost)) return false;
+
+            return TryComplete(upgrade);
+        }
+
+        /// <summary>비용 없이 완료 처리한다. 보상으로 주는 연구 등에 사용한다.</summary>
         public bool TryComplete(UpgradeDefinition upgrade)
         {
             if (!CanComplete(upgrade)) return false;

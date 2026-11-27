@@ -2,6 +2,7 @@ using TowerDefense.Controls;
 using TowerDefense.Game;
 using TowerDefense.Grid;
 using TowerDefense.Towers;
+using TowerDefense.UI;
 using UnityEngine;
 
 namespace TowerDefense.Placement
@@ -18,6 +19,7 @@ namespace TowerDefense.Placement
         [SerializeField] private TowerSelection selection;
         [SerializeField] private TowerBuilder builder;
         [SerializeField] private PlacementPreview preview;
+        [SerializeField] private ResearchPanel researchPanel;
 
         private void OnDisable()
         {
@@ -26,7 +28,9 @@ namespace TowerDefense.Placement
 
         private void Update()
         {
-            if (modeController.CurrentMode != GameMode.Build || !TryGetPointedCell(out Vector2Int cell))
+            // 연구 화면 위의 클릭이 뒤쪽 칸에 전달되지 않게 한다
+            bool overPanel = researchPanel.IsPointerOver(input.Point.ReadValue<Vector2>());
+            if (modeController.CurrentMode != GameMode.Build || overPanel || !TryGetPointedCell(out Vector2Int cell))
             {
                 preview.Hide();
                 return;

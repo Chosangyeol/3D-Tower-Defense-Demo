@@ -28,6 +28,10 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 25679506c301d5b4baed8c1cc186af5a, type: 2}
   - {fileID: 11400000, guid: 0ab269164a1f8ae429f5bd9c9bc57258, type: 2}
   - {fileID: 11400000, guid: c999bd4c9fda1a941990748fa1b26a2a, type: 2}
+  upgrades:
+  - {fileID: 11400000, guid: 4cd3b5db17859ad4ab595e8b4491be3d, type: 2}
+  - {fileID: 11400000, guid: 520125de7a99dac48bf50e7c1af49491, type: 2}
+  - {fileID: 11400000, guid: fdfb330a33b578545b058a84077bce08, type: 2}
   pathWaypoints:
   - {x: 0, y: 16}
   - {x: 15, y: 16}

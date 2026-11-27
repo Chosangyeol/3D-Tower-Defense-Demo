@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using TowerDefense.Data;
 using TowerDefense.Economy;
+using TowerDefense.Upgrades;
 using TowerDefense.Waves;
 using UnityEngine;
 
@@ -31,6 +32,9 @@ namespace TowerDefense.Game
         [Header("웨이브 (순서대로)")]
         [SerializeField] private WaveDefinition[] waves = new WaveDefinition[0];
 
+        [Header("연구 (연구 화면에 보이는 순서)")]
+        [SerializeField] private UpgradeDefinition[] upgrades = new UpgradeDefinition[0];
+
         [Header("적 경로")]
         [Tooltip("꺾이는 지점의 그리드 칸 좌표. 가로·세로 직선만 가능하고, 마지막 칸에 기지가 놓인다")]
         [SerializeField] private Vector2Int[] pathWaypoints = new Vector2Int[0];
@@ -42,5 +46,6 @@ namespace TowerDefense.Game
         public float WaveInterval => waveInterval;
         public IReadOnlyList<WaveDefinition> Waves => waves;
         public IReadOnlyList<Vector2Int> PathWaypoints => pathWaypoints;
+        public IReadOnlyList<UpgradeDefinition> Upgrades => upgrades;
     }
 }

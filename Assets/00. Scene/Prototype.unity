@@ -575,6 +575,7 @@ GameObject:
   - component: {fileID: 265141009}
   - component: {fileID: 265141011}
   - component: {fileID: 265141012}
+  - component: {fileID: 265141013}
   m_Layer: 0
   m_Name: GameSystems
   m_TagString: Untagged
@@ -621,6 +622,7 @@ MonoBehaviour:
   - {fileID: 288478766}
   - {fileID: 288478769}
   - {fileID: 1216316833}
+  - {fileID: 265141013}
 --- !u!114 &265141005
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -697,6 +699,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ba1daa8322700f4c953f617fef91911, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TowerDefense.Upgrades.ResearchState
+  wallet: {fileID: 265141011}
 --- !u!114 &265141010
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -738,6 +741,23 @@ MonoBehaviour:
   wallet: {fileID: 265141011}
   waveSpawner: {fileID: 640471811}
   stageController: {fileID: 265141010}
+--- !u!114 &265141013
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 265141002}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05073a6b1e40cd24f980807d9b406bce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TowerDefense.UI.ResearchPanel
+  input: {fileID: 265141008}
+  modeController: {fileID: 265141003}
+  stageController: {fileID: 265141010}
+  research: {fileID: 265141009}
+  wallet: {fileID: 265141011}
 --- !u!1 &281224162
 GameObject:
   m_ObjectHideFlags: 0
@@ -814,6 +834,7 @@ MonoBehaviour:
   selection: {fileID: 288478769}
   builder: {fileID: 288478770}
   preview: {fileID: 288478768}
+  researchPanel: {fileID: 265141013}
 --- !u!4 &288478767
 Transform:
   m_ObjectHideFlags: 0

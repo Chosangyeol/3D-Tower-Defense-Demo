@@ -38,6 +38,7 @@ namespace TowerDefense.Controls
         public InputAction Zoom { get; private set; }
         public InputAction Place { get; private set; }
         public InputAction Remove { get; private set; }
+        public InputAction Research { get; private set; }
 
         // 전투 모드
         public InputAction Move { get; private set; }
@@ -69,6 +70,7 @@ namespace TowerDefense.Controls
             Zoom = buildMap.FindAction("Zoom", true);
             Place = buildMap.FindAction("Place", true);
             Remove = buildMap.FindAction("Remove", true);
+            Research = buildMap.FindAction("Research", true);
             for (int i = 0; i < SlotCount; i++)
             {
                 slots[i] = buildMap.FindAction($"Slot{i + 1}", true);

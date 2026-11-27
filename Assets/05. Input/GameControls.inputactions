@@ -230,6 +230,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Research",
+                    "type": "Button",
+                    "id": "523fc8c7-fba3-44e1-9d4e-5b4974813f04",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -450,6 +459,17 @@
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "Slot9",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b9f3898f-dd00-42e4-a86d-1421c69138d5",
+                    "path": "<Keyboard>/u",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Research",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

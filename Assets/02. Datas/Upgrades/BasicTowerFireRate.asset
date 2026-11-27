@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc74a7b990b4b1c44abd69fbc47d72fe, type: 3}
+  m_Name: BasicTowerFireRate
+  m_EditorClassIdentifier: Assembly-CSharp::TowerDefense.Upgrades.UpgradeDefinition
+  displayName: "\uC5F0\uC0AC \uAC15\uD654"
+  description: "\uAE30\uBCF8 \uD3EC\uD0D1\uC758 \uBC1C\uC0AC \uAC04\uACA9 -20%"
+  target: {fileID: 11400000, guid: bbbf8aa8fc74d484ba144d293a6d756e, type: 2}
+  cost:
+  - resource: {fileID: 11400000, guid: f5dfe8f2920b394449e19444f225adbf, type: 2}
+    amount: 40
+  - resource: {fileID: 11400000, guid: 5ab033ae4dbaa964ea3767365abd5a59, type: 2}
+    amount: 3
+  prerequisites:
+  - {fileID: 11400000, guid: 4cd3b5db17859ad4ab595e8b4491be3d, type: 2}
+  effects:
+  - {fileID: 11400000, guid: 372ada9e276009a4d86f85970ccc553d, type: 2}
