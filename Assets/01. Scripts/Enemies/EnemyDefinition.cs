@@ -1,3 +1,4 @@
+using TowerDefense.Data;
 using UnityEngine;
 
 namespace TowerDefense.Enemies
@@ -5,15 +6,14 @@ namespace TowerDefense.Enemies
     /// <summary>
     /// 적 종류별 데이터. 수치는 플레이 테스트 후 조정한다.
     /// </summary>
+    [GameDataCategory("적", "Enemies", 10)]
     [CreateAssetMenu(menuName = "Tower Defense/Enemy Definition", fileName = "Enemy")]
-    public class EnemyDefinition : ScriptableObject
+    public class EnemyDefinition : GameData
     {
-        [SerializeField] private string displayName = "적";
         [SerializeField] private Enemy prefab;
         [SerializeField, Min(0.1f)] private float moveSpeed = 3f;
         [SerializeField, Min(1f)] private float maxHealth = 50f;
 
-        public string DisplayName => displayName;
         public Enemy Prefab => prefab;
         public float MoveSpeed => moveSpeed;
         public float MaxHealth => maxHealth;

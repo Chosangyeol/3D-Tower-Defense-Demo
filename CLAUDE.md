@@ -50,10 +50,13 @@
 | `06. Settings` | 렌더 파이프라인 설정 |
 
 - 하위 분류가 더 필요하면 추가한다.
-- 코드의 네임스페이스는 `TowerDefense.<기능 폴더>` (`Input` 폴더만 `TowerDefense.Controls`).
+- 코드의 네임스페이스는 `TowerDefense.<기능 폴더>` (예외: `Input` 폴더는 `TowerDefense.Controls`, `Editor` 폴더는 `TowerDefense.EditorTools`).
 - 씬과 프리팹은 에디터에서 직접 관리한다. 씬 생성 메뉴는 폐기했으며 다시 만들지 않는다.
 
 ## 코드 규칙
+- 게임 데이터 ScriptableObject는 `GameData`를 상속하고 `[GameDataCategory("이름", "폴더", 순서)]`를 붙인다.
+  - 그러면 데이터 관리 창(`Tools > Tower Defense > Data Manager`)에 자동으로 나타나고, 새 에셋은 `02. Datas/<폴더>`에 만들어진다.
+  - 에셋을 찾고 만들고 지우는 기능은 `GameDataRepository`에 둔다. 창(`DataManagerWindow`)에는 화면만 둔다.
 - 입력은 `GameInput` 한 곳에서만 받는다. 컴포넌트에서 키·마우스를 직접 읽거나 `InputAction`을 새로 만들지 않는다.
   - 키는 `Assets/05. Input/GameControls.inputactions`에서 정의한다 (`Global`, `Build`, `Combat` 맵).
   - 설정 화면에서 키를 바꿀 수 있도록 바인딩 저장·불러오기를 `GameInput`이 맡는다.
