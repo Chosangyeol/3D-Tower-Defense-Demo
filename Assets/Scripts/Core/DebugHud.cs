@@ -50,9 +50,16 @@ namespace TowerDefense.Core
             string progress = $"웨이브 {waveSpawner.StartedWaves}/{waveSpawner.WaveCount}";
             string state = waveSpawner.IsWaveRunning ? $"남은 적 {waveSpawner.AliveCount}"
                 : waveSpawner.IsAllCleared ? "모든 웨이브 종료"
-                : "Enter: 다음 웨이브 시작";
+                : "준비 시간";
             string health = baseHealth != null ? $" · 기지 체력 {baseHealth.Current}/{baseHealth.Max}" : "";
-            return $"{progress} · {state} · 처치 {waveSpawner.KilledCount}{health}";
+            string text = $"{progress} · {state} · 처치 {waveSpawner.KilledCount}{health}";
+
+            if (waveSpawner.IsPreparing)
+            {
+                int seconds = Mathf.CeilToInt(waveSpawner.TimeUntilNextWave);
+                text += $"\n다음 웨이브까지 {seconds / 60}:{seconds % 60:00} · Enter: 바로 시작";
+            }
+            return text;
         }
 
         private void OnGUI()
@@ -66,7 +73,7 @@ namespace TowerDefense.Core
 
             if (waveSpawner != null) text += "\n" + DescribeWave();
 
-            GUI.Box(new Rect(10, 10, 430, 100), text);
+            GUI.Box(new Rect(10, 10, 430, 120), text);
 
             if (match != null && match.Result != MatchResult.InProgress)
             {

@@ -12,7 +12,7 @@ namespace TowerDefense.Core
 
     /// <summary>
     /// 현재 게임 모드를 관리한다. 다른 컴포넌트는 ModeChanged 이벤트로 반응한다.
-    /// 배치 ↔ 전투 전환 주기는 아직 미정이라, 지금은 단축키로만 전환한다.
+    /// 시점은 웨이브의 시작·종료와 관계없이 플레이어가 단축키로 직접 전환한다.
     /// </summary>
     [DefaultExecutionOrder(-100)]
     public class GameModeController : MonoBehaviour
