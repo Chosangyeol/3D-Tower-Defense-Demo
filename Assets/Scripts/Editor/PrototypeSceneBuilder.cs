@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using TowerDefense.CameraSystem;
 using TowerDefense.Core;
+using TowerDefense.Enemies;
 using TowerDefense.Grid;
 using TowerDefense.Player;
 using TowerDefense.Towers;
@@ -23,6 +24,17 @@ namespace TowerDefense.EditorTools
     {
         private const string ScenePath = "Assets/Scenes/Prototype.unity";
         private const string AssetFolder = "Assets/Prototype";
+
+        // 그리드 칸 좌표. 왼쪽 위에서 시작해 오른쪽 아래의 기지에서 끝난다
+        private static readonly Vector2Int[] PathWaypoints =
+        {
+            new Vector2Int(0, 16),
+            new Vector2Int(15, 16),
+            new Vector2Int(15, 11),
+            new Vector2Int(4, 11),
+            new Vector2Int(4, 3),
+            new Vector2Int(19, 3)
+        };
 
         [MenuItem("Tools/Tower Defense/Create Prototype Scene")]
         public static void CreateFromMenu()
@@ -59,6 +71,17 @@ namespace TowerDefense.EditorTools
             Tower towerPrefab = CreateTowerPrefab(towerBody);
             TowerDefinition basicTower = CreateTowerDefinition(towerPrefab);
 
+            Material pathTile = CreateMaterial("Path", lit, new Color(0.55f, 0.45f, 0.3f));
+            Material baseBody = CreateMaterial("Base", lit, new Color(0.9f, 0.75f, 0.2f));
+            Material normalBody = CreateMaterial("EnemyNormal", lit, new Color(0.85f, 0.3f, 0.25f));
+            Material fastBody = CreateMaterial("EnemyFast", lit, new Color(0.95f, 0.55f, 0.15f));
+            Material tankBody = CreateMaterial("EnemyTank", lit, new Color(0.5f, 0.15f, 0.35f));
+
+            // 수치는 플레이 테스트 후 조정한다
+            EnemyDefinition normal = CreateEnemy("EnemyNormal", "일반", 3f, new Vector3(0.9f, 0.7f, 0.9f), normalBody);
+            EnemyDefinition fast = CreateEnemy("EnemyFast", "빠른 적", 5.5f, new Vector3(0.6f, 0.5f, 0.6f), fastBody);
+            EnemyDefinition tank = CreateEnemy("EnemyTank", "탱커", 1.8f, new Vector3(1.4f, 1f, 1.4f), tankBody);
+
             CreateLight();
 
             var systems = new GameObject("GameSystems");
@@ -81,6 +104,28 @@ namespace TowerDefense.EditorTools
             overlayObject.GetComponent<MeshRenderer>().sharedMaterial = gridLine;
             Assign(overlay, "modeController", modeController);
             Assign(overlay, "grid", grid);
+
+            // 적 경로, 기지, 웨이브
+            var pathObject = new GameObject("EnemyPath");
+            var enemyPath = pathObject.AddComponent<EnemyPath>();
+            pathObject.GetComponent<MeshRenderer>().sharedMaterial = pathTile;
+            Assign(enemyPath, "grid", grid);
+            AssignCells(enemyPath, "waypoints", PathWaypoints);
+
+            // 기지는 경로의 마지막 칸에 둔다. (체력은 승패 판정을 만들 때 추가)
+            GameObject goal = CreateVisual(PrimitiveType.Cube, "Base", null,
+                grid.CellToWorld(PathWaypoints[PathWaypoints.Length - 1]) + Vector3.up * 1.5f,
+                new Vector3(1.8f, 3f, 1.8f), baseBody);
+            Object.DestroyImmediate(goal.GetComponent<Collider>());
+
+            var spawnerObject = new GameObject("WaveSpawner");
+            var spawner = spawnerObject.AddComponent<WaveSpawner>();
+            Assign(spawner, "path", enemyPath);
+            Assign(hud, "waveSpawner", spawner);
+            AssignWaves(spawner,
+                new[] { Group(normal, 6, 1.2f) },
+                new[] { Group(normal, 6, 1f), Group(fast, 5, 0.7f) },
+                new[] { Group(normal, 8, 0.8f), Group(tank, 3, 2f), Group(fast, 6, 0.6f) });
 
             // 플레이어
             var player = new GameObject("Player");
@@ -220,6 +265,76 @@ namespace TowerDefense.EditorTools
             Assign(definition, "prefab", prefab);
             EditorUtility.SetDirty(definition);
             return definition;
+        }
+
+        private static EnemyDefinition CreateEnemy(string assetName, string displayName, float speed,
+            Vector3 size, Material material)
+        {
+            var root = new GameObject(assetName);
+            root.AddComponent<Enemy>();
+            // 캡슐의 높이는 2라서, 바닥에 닿도록 y 스케일만큼 올린다
+            GameObject body = CreateVisual(PrimitiveType.Capsule, "Body", root.transform,
+                new Vector3(0f, size.y, 0f), size, material);
+            // 진행 방향 표시
+            GameObject nose = CreateVisual(PrimitiveType.Cube, "Front", root.transform,
+                new Vector3(0f, size.y * 1.3f, size.z * 0.5f), size * 0.3f, material);
+            Object.DestroyImmediate(body.GetComponent<Collider>());
+            Object.DestroyImmediate(nose.GetComponent<Collider>());
+
+            GameObject prefabObject = PrefabUtility.SaveAsPrefabAsset(root, $"{AssetFolder}/{assetName}.prefab");
+            Object.DestroyImmediate(root);
+
+            string path = $"{AssetFolder}/{assetName}.asset";
+            var definition = AssetDatabase.LoadAssetAtPath<EnemyDefinition>(path);
+            if (definition == null)
+            {
+                definition = ScriptableObject.CreateInstance<EnemyDefinition>();
+                AssetDatabase.CreateAsset(definition, path);
+                var serialized = new SerializedObject(definition);
+                serialized.FindProperty("displayName").stringValue = displayName;
+                serialized.FindProperty("moveSpeed").floatValue = speed;
+                serialized.ApplyModifiedPropertiesWithoutUndo();
+            }
+            Assign(definition, "prefab", prefabObject.GetComponent<Enemy>());
+            EditorUtility.SetDirty(definition);
+            return definition;
+        }
+
+        private static SpawnGroup Group(EnemyDefinition enemy, int count, float interval)
+        {
+            return new SpawnGroup { enemy = enemy, count = count, interval = interval };
+        }
+
+        private static void AssignCells(Object target, string propertyName, Vector2Int[] cells)
+        {
+            var serialized = new SerializedObject(target);
+            SerializedProperty property = serialized.FindProperty(propertyName);
+            property.arraySize = cells.Length;
+            for (int i = 0; i < cells.Length; i++)
+            {
+                property.GetArrayElementAtIndex(i).vector2IntValue = cells[i];
+            }
+            serialized.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        private static void AssignWaves(WaveSpawner spawner, params SpawnGroup[][] waves)
+        {
+            var serialized = new SerializedObject(spawner);
+            SerializedProperty waveArray = serialized.FindProperty("waves");
+            waveArray.arraySize = waves.Length;
+            for (int w = 0; w < waves.Length; w++)
+            {
+                SerializedProperty groups = waveArray.GetArrayElementAtIndex(w).FindPropertyRelative("groups");
+                groups.arraySize = waves[w].Length;
+                for (int g = 0; g < waves[w].Length; g++)
+                {
+                    SerializedProperty group = groups.GetArrayElementAtIndex(g);
+                    group.FindPropertyRelative("enemy").objectReferenceValue = waves[w][g].enemy;
+                    group.FindPropertyRelative("count").intValue = waves[w][g].count;
+                    group.FindPropertyRelative("interval").floatValue = waves[w][g].interval;
+                }
+            }
+            serialized.ApplyModifiedPropertiesWithoutUndo();
         }
 
         private static void CreateLight()

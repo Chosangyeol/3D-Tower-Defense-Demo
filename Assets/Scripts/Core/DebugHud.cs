@@ -1,3 +1,4 @@
+using TowerDefense.Enemies;
 using UnityEngine;
 
 namespace TowerDefense.Core
@@ -8,6 +9,16 @@ namespace TowerDefense.Core
     public class DebugHud : MonoBehaviour
     {
         [SerializeField] private GameModeController modeController;
+        [SerializeField] private WaveSpawner waveSpawner;
+
+        private string DescribeWave()
+        {
+            string progress = $"웨이브 {waveSpawner.StartedWaves}/{waveSpawner.WaveCount}";
+            string state = waveSpawner.IsWaveRunning ? $"남은 적 {waveSpawner.AliveCount}"
+                : waveSpawner.IsAllCleared ? "모든 웨이브 종료"
+                : "Enter: 다음 웨이브 시작";
+            return $"{progress} · {state} · 기지 도달 {waveSpawner.ReachedGoalCount}";
+        }
 
         private void OnGUI()
         {
@@ -18,7 +29,9 @@ namespace TowerDefense.Core
                 ? "[배치 모드]\nWASD/화면 가장자리: 이동 · 휠: 줌 · Q/E: 회전\n좌클릭: 설치 · 우클릭: 제거 · 1~9: 타워 선택\nTab: 전투 모드"
                 : "[전투 모드]\nWASD: 이동 · Shift: 달리기 · Space: 점프 · 마우스: 시점\nTab: 배치 모드";
 
-            GUI.Box(new Rect(10, 10, 430, 80), text);
+            if (waveSpawner != null) text += "\n" + DescribeWave();
+
+            GUI.Box(new Rect(10, 10, 430, 100), text);
 
             if (!build)
             {

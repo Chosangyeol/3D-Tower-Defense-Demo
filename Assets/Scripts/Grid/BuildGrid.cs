@@ -5,7 +5,7 @@ namespace TowerDefense.Grid
 {
     /// <summary>
     /// XZ 평면의 건설 그리드. 이 오브젝트의 위치가 그리드 중심이다. (회전·스케일은 지원하지 않음)
-    /// 적 경로 방식이 미정이라 칸의 점유 여부만 관리한다.
+    /// 칸은 비어 있거나, 건물이 점유했거나, 건설 금지(적 경로 등) 상태다.
     /// </summary>
     public class BuildGrid : MonoBehaviour
     {
@@ -14,6 +14,8 @@ namespace TowerDefense.Grid
         [SerializeField, Min(0.1f)] private float cellSize = 2f;
 
         private readonly Dictionary<Vector2Int, GameObject> occupants = new Dictionary<Vector2Int, GameObject>();
+
+        private readonly HashSet<Vector2Int> blocked = new HashSet<Vector2Int>();
 
         public int Width => width;
         public int Height => height;
@@ -41,7 +43,13 @@ namespace TowerDefense.Grid
 
         public bool IsFree(Vector2Int cell)
         {
-            return Contains(cell) && !occupants.ContainsKey(cell);
+            return Contains(cell) && !occupants.ContainsKey(cell) && !blocked.Contains(cell);
+        }
+
+        /// <summary>빈 칸을 건설 금지 칸으로 만든다.</summary>
+        public bool Block(Vector2Int cell)
+        {
+            return IsFree(cell) && blocked.Add(cell);
         }
 
         public bool TryOccupy(Vector2Int cell, GameObject occupant)
