@@ -23,3 +23,8 @@ MonoBehaviour:
   - enemy: {fileID: 11400000, guid: dd4b9787204602b4e972a1c3bfe2bb0b, type: 2}
     count: 6
     interval: 0.6
+  clearReward:
+  - resource: {fileID: 11400000, guid: 0d516713d6bb672449210a3b4b90e298, type: 2}
+    amount: 40
+  - resource: {fileID: 11400000, guid: f5dfe8f2920b394449e19444f225adbf, type: 2}
+    amount: 20

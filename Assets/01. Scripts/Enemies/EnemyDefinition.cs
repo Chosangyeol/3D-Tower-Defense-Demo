@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using TowerDefense.Data;
+using TowerDefense.Economy;
 using UnityEngine;
 
 namespace TowerDefense.Enemies
@@ -15,10 +17,13 @@ namespace TowerDefense.Enemies
         [SerializeField, Min(1f)] private float maxHealth = 50f;
         [Tooltip("기지에 도달했을 때 줄이는 기지 체력")]
         [SerializeField, Min(1)] private int baseDamage = 1;
+        [Tooltip("처치했을 때 얻는 자원")]
+        [SerializeField] private ResourceAmount[] reward = new ResourceAmount[0];
 
         public Enemy Prefab => prefab;
         public float MoveSpeed => moveSpeed;
         public float MaxHealth => maxHealth;
         public int BaseDamage => baseDamage;
+        public IReadOnlyList<ResourceAmount> Reward => reward;
     }
 }

@@ -40,6 +40,7 @@ namespace TowerDefense.Waves
         public event Action<int> WaveStarted;
         public event Action<int> WaveCleared;
         public event Action<Enemy> EnemyReachedGoal;
+        public event Action<Enemy> EnemyKilled;
 
         private void Awake()
         {
@@ -127,6 +128,7 @@ namespace TowerDefense.Waves
             if (outcome == EnemyOutcome.Killed)
             {
                 KilledCount++;
+                EnemyKilled?.Invoke(enemy);
             }
             else if (outcome == EnemyOutcome.ReachedGoal)
             {

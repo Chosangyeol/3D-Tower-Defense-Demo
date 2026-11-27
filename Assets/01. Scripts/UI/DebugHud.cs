@@ -1,6 +1,9 @@
 using TowerDefense.Combat;
+using TowerDefense.Economy;
 using TowerDefense.Game;
 using TowerDefense.Magic;
+using TowerDefense.Placement;
+using TowerDefense.Towers;
 using TowerDefense.Waves;
 using UnityEngine;
 
@@ -16,6 +19,19 @@ namespace TowerDefense.UI
         [SerializeField] private PlayerMana playerMana;
         [SerializeField] private Health baseHealth;
         [SerializeField] private MatchController match;
+        [SerializeField] private ResourceWallet wallet;
+        [SerializeField] private TowerSelection selection;
+
+        private string DescribeResources()
+        {
+            string text = "";
+            foreach (ResourceDefinition kind in wallet.Kinds)
+            {
+                if (text.Length > 0) text += " · ";
+                text += $"{kind.DisplayName} {wallet.GetAmount(kind)}";
+            }
+            return text;
+        }
 
         private void DrawResult()
         {
@@ -74,8 +90,16 @@ namespace TowerDefense.UI
                 : "[전투 모드]\nWASD: 이동 · Shift: 달리기 · Space: 점프 · 마우스: 시점\n좌클릭: 마법 · Tab: 배치 모드";
 
             if (waveSpawner != null) text += "\n" + DescribeWave();
+            if (wallet != null) text += "\n" + DescribeResources();
+            if (build && selection != null && selection.Selected != null)
+            {
+                TowerDefinition tower = selection.Selected;
+                text += $"\n선택: {tower.DisplayName} ({ResourceAmount.Describe(tower.Cost)})";
+            }
 
-            GUI.Box(new Rect(10, 10, 430, 120), text);
+            // 줄 수에 맞춰 상자 높이를 정한다
+            float height = GUI.skin.box.CalcHeight(new GUIContent(text), 460f);
+            GUI.Box(new Rect(10, 10, 460f, height + 4f), text);
 
             if (match != null && match.Result != MatchResult.InProgress)
             {

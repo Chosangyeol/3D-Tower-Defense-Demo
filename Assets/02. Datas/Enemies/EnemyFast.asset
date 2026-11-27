@@ -17,3 +17,6 @@ MonoBehaviour:
   moveSpeed: 5.5
   maxHealth: 30
   baseDamage: 1
+  reward:
+  - resource: {fileID: 11400000, guid: 0d516713d6bb672449210a3b4b90e298, type: 2}
+    amount: 2

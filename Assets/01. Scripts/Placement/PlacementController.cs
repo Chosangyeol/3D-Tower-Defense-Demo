@@ -46,7 +46,8 @@ namespace TowerDefense.Placement
                 return;
             }
 
-            preview.ShowGhost(definition, grid.CellToWorld(cell), builder.CanPlace(cell), builder.GetSpec(definition).Range);
+            bool buildable = builder.CanPlace(cell) && builder.CanAfford(definition);
+            preview.ShowGhost(definition, grid.CellToWorld(cell), buildable, builder.GetSpec(definition).Range);
             if (input.Place.WasPressedThisFrame()) builder.TryPlace(definition, cell);
         }
 

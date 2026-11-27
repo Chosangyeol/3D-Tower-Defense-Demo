@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using TowerDefense.Data;
+using TowerDefense.Economy;
 using TowerDefense.Waves;
 using UnityEngine;
 
@@ -15,6 +16,12 @@ namespace TowerDefense.Game
         [Header("기지")]
         [SerializeField, Min(1)] private int baseHealth = 10;
 
+        [Header("자원")]
+        [Tooltip("시작할 때 지급. 여기 적은 순서대로 화면에 표시한다 (0개도 표시)")]
+        [SerializeField] private ResourceAmount[] startResources = new ResourceAmount[0];
+        [Tooltip("웨이브 진행 중에 타워를 제거하면 돌려받는 비율. 준비 시간에는 전액")]
+        [SerializeField, Range(0f, 1f)] private float combatRefundRate = 0.5f;
+
         [Header("준비 시간(초)")]
         [Tooltip("게임 시작부터 첫 웨이브까지. 마을·타워 배치를 고려해 넉넉하게 둔다")]
         [SerializeField, Min(1f)] private float firstWaveDelay = 180f;
@@ -29,6 +36,8 @@ namespace TowerDefense.Game
         [SerializeField] private Vector2Int[] pathWaypoints = new Vector2Int[0];
 
         public int BaseHealth => baseHealth;
+        public IReadOnlyList<ResourceAmount> StartResources => startResources;
+        public float CombatRefundRate => combatRefundRate;
         public float FirstWaveDelay => firstWaveDelay;
         public float WaveInterval => waveInterval;
         public IReadOnlyList<WaveDefinition> Waves => waves;

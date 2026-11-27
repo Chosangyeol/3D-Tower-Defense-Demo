@@ -14,6 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TowerDefense.Game.StageDefinition
   displayName: "\uC2A4\uD14C\uC774\uC9C0 1"
   baseHealth: 10
+  startResources:
+  - resource: {fileID: 11400000, guid: 0d516713d6bb672449210a3b4b90e298, type: 2}
+    amount: 100
+  - resource: {fileID: 11400000, guid: f5dfe8f2920b394449e19444f225adbf, type: 2}
+    amount: 50
+  - resource: {fileID: 11400000, guid: 5ab033ae4dbaa964ea3767365abd5a59, type: 2}
+    amount: 0
+  combatRefundRate: 0.5
   firstWaveDelay: 180
   waveInterval: 60
   waves:

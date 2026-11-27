@@ -1,5 +1,7 @@
 using TowerDefense.Combat;
+using System.Collections.Generic;
 using TowerDefense.Data;
+using TowerDefense.Economy;
 using UnityEngine;
 
 namespace TowerDefense.Towers
@@ -14,6 +16,9 @@ namespace TowerDefense.Towers
         [SerializeField] private Tower prefab;
         [SerializeField, Min(0f)] private float range = 6f;
 
+        [Tooltip("설치 비용")]
+        [SerializeField] private ResourceAmount[] cost = new ResourceAmount[0];
+
         [Header("공격")]
         [SerializeField] private Projectile projectilePrefab;
         [SerializeField, Min(0f)] private float damage = 10f;
@@ -22,6 +27,7 @@ namespace TowerDefense.Towers
 
         public Tower Prefab => prefab;
         public float Range => range;
+        public IReadOnlyList<ResourceAmount> Cost => cost;
         public Projectile ProjectilePrefab => projectilePrefab;
         public float Damage => damage;
         public float FireInterval => fireInterval;

@@ -573,6 +573,8 @@ GameObject:
   - component: {fileID: 265141008}
   - component: {fileID: 265141010}
   - component: {fileID: 265141009}
+  - component: {fileID: 265141011}
+  - component: {fileID: 265141012}
   m_Layer: 0
   m_Name: GameSystems
   m_TagString: Untagged
@@ -650,6 +652,8 @@ MonoBehaviour:
   playerMana: {fileID: 1216316830}
   baseHealth: {fileID: 1981162859}
   match: {fileID: 265141004}
+  wallet: {fileID: 265141011}
+  selection: {fileID: 288478769}
 --- !u!4 &265141007
 Transform:
   m_ObjectHideFlags: 0
@@ -704,6 +708,34 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TowerDefense.Game.StageController
   stage: {fileID: 11400000, guid: 3d23add24b5281e44ba6cb695d0a891a, type: 2}
+--- !u!114 &265141011
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 265141002}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3b6cc223813035489cc798e9b9f5f4b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TowerDefense.Economy.ResourceWallet
+  stageController: {fileID: 265141010}
+--- !u!114 &265141012
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 265141002}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c44978bf42502d64ea6235bbaf37c303, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TowerDefense.Economy.RewardDispenser
+  wallet: {fileID: 265141011}
+  waveSpawner: {fileID: 640471811}
+  stageController: {fileID: 265141010}
 --- !u!1 &288478765
 GameObject:
   m_ObjectHideFlags: 0
@@ -803,6 +835,9 @@ MonoBehaviour:
   grid: {fileID: 3070564}
   player: {fileID: 1216316828}
   research: {fileID: 265141009}
+  wallet: {fileID: 265141011}
+  waveSpawner: {fileID: 640471811}
+  stageController: {fileID: 265141010}
 --- !u!1 &405721700
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using TowerDefense.Data;
+using TowerDefense.Economy;
 using TowerDefense.Enemies;
 using UnityEngine;
 
@@ -24,6 +25,10 @@ namespace TowerDefense.Waves
     {
         [SerializeField] private SpawnGroup[] groups = new SpawnGroup[0];
 
+        [Tooltip("웨이브를 막았을 때 얻는 자원")]
+        [SerializeField] private ResourceAmount[] clearReward = new ResourceAmount[0];
+
         public IReadOnlyList<SpawnGroup> Groups => groups;
+        public IReadOnlyList<ResourceAmount> ClearReward => clearReward;
     }
 }
