@@ -99,7 +99,7 @@ namespace TowerDefense.Augments
             choices.Clear();
             if (!stacks.ContainsKey(augment)) acquired.Add(augment);
             stacks[augment] = GetStacks(augment) + 1;
-            modifiers.Apply(augment.Effects);
+            modifiers.Apply(augment.Effects, augment.Target);
 
             ShowNext();
             if (!IsOffering) pause.SetPaused(false);

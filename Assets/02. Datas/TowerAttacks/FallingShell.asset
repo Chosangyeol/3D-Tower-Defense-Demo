@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2364f23ab5ed53947b3331ef860b3bbf, type: 3}
+  m_Name: FallingShell
+  m_EditorClassIdentifier: Assembly-CSharp::TowerDefense.Towers.ShellAttack
+  displayName: "\uB099\uD558 \uD3EC\uD0C4"
+  shellPrefab: {fileID: 4145158322171922970, guid: 49c6a4101eee31840b61ff7ef9407d6e, type: 3}
+  explosionPrefab: {fileID: 5458256449342208448, guid: 0af182a92168de446b539d6c94198e66, type: 3}
+  arcHeight: 2.5

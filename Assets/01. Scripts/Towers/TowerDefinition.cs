@@ -19,17 +19,29 @@ namespace TowerDefense.Towers
         [SerializeField] private ResourceAmount[] cost = new ResourceAmount[0];
 
         [Header("공격")]
-        [SerializeField] private Projectile projectilePrefab;
+        [SerializeField] private TowerAttack attack;
         [SerializeField, Min(0f)] private float damage = 10f;
         [SerializeField, Min(0.05f)] private float fireInterval = 0.5f;
+        [Tooltip("탄이 날아가는 속도")]
         [SerializeField, Min(1f)] private float projectileSpeed = 25f;
+
+        [Header("특수 (쓰지 않으면 0)")]
+        [Tooltip("착탄한 곳에서 피해가 닿는 반경")]
+        [SerializeField, Min(0f)] private float splashRadius;
+        [Tooltip("맞은 적의 이동 속도를 줄이는 비율. 0.5는 절반")]
+        [SerializeField, Range(0f, 0.9f)] private float slowRatio;
+        [Tooltip("감속이 이어지는 시간(초)")]
+        [SerializeField, Min(0f)] private float slowSeconds;
 
         public Tower Prefab => prefab;
         public float Range => range;
         public IReadOnlyList<ResourceAmount> Cost => cost;
-        public Projectile ProjectilePrefab => projectilePrefab;
+        public TowerAttack Attack => attack;
         public float Damage => damage;
         public float FireInterval => fireInterval;
         public float ProjectileSpeed => projectileSpeed;
+        public float SplashRadius => splashRadius;
+        public float SlowRatio => slowRatio;
+        public float SlowSeconds => slowSeconds;
     }
 }

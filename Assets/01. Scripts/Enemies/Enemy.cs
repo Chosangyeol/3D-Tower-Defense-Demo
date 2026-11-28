@@ -57,6 +57,7 @@ namespace TowerDefense.Enemies
         /// <summary>능력의 속도 변화와 감속을 반영한 이동 속도.</summary>
         public float MoveSpeed =>
             Stats.MoveSpeed * Mathf.Max(1f + speedBonus, 0f) * (IsSlowed ? 1f - slowRatio : 1f);
+        public float BodyRadius => bodyRadius;
         /// <summary>투사체가 향하는 위치.</summary>
         public Vector3 AimPosition => aimPoint != null ? aimPoint.position : transform.position;
 

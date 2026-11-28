@@ -125,13 +125,22 @@ namespace TowerDefense.UI
                 GUI.Label(new Rect(card.x + 8f, card.y + 12f, card.width - 16f, 28f), augment.DisplayName, title);
                 GUI.Label(new Rect(card.x + 12f, card.y + 52f, card.width - 24f, 20f),
                     $"보유 {augments.GetStacks(augment)}/{augment.MaxStacks}", body);
-                GUI.Label(new Rect(card.x + 12f, card.y + 82f, card.width - 24f, card.height - 130f), augment.Description, body);
+                GUI.Label(new Rect(card.x + 12f, card.y + 72f, card.width - 24f, 20f), DescribeScope(augment), body);
+                GUI.Label(new Rect(card.x + 12f, card.y + 102f, card.width - 24f, card.height - 148f), augment.Description, body);
                 GUI.Box(new Rect(card.x + 40f, card.yMax - 40f, card.width - 80f, 28f), "선택", GUI.skin.button);
             }
 
             GUI.enabled = IsReady && augments.CanReroll;
             GUI.Box(GetRerollRect(), $"다시 뽑기 (남은 횟수 {augments.RerollsLeft})", GUI.skin.button);
             GUI.enabled = enabled;
+        }
+
+        // 타워에 관한 증강만 어느 타워에 적용되는지 보여준다
+        private static string DescribeScope(AugmentDefinition augment)
+        {
+            if (!augment.AffectsTowers) return "";
+
+            return augment.Target != null ? $"[{augment.Target.DisplayName} 전용]" : "[모든 타워]";
         }
 
         private void EnsureStyles()

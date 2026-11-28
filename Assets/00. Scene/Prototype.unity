@@ -989,6 +989,8 @@ MonoBehaviour:
   input: {fileID: 265141008}
   towers:
   - {fileID: 11400000, guid: bbbf8aa8fc74d484ba144d293a6d756e, type: 2}
+  - {fileID: 11400000, guid: 7f7360d1b5856e746bcb8d216987febc, type: 2}
+  - {fileID: 11400000, guid: 71138426a1c974749b80aa11b96841fc, type: 2}
 --- !u!114 &288478770
 MonoBehaviour:
   m_ObjectHideFlags: 0

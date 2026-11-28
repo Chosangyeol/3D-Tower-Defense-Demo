@@ -13,10 +13,11 @@ MonoBehaviour:
   m_Name: SniperTurret
   m_EditorClassIdentifier: Assembly-CSharp::TowerDefense.Augments.AugmentDefinition
   displayName: "\uC800\uACA9 \uD3EC\uD0D1"
-  description: "\uD0C0\uC6CC \uC0AC\uAC70\uB9AC +3, \uACF5\uACA9\uB825 +40%\n\uBC1C\uC0AC
-    \uAC04\uACA9 +30%"
+  description: "\uC0AC\uAC70\uB9AC +3, \uACF5\uACA9\uB825 +40%\n\uBC1C\uC0AC \uAC04\uACA9
+    +30%"
   tier: 1
   maxStacks: 1
+  target: {fileID: 11400000, guid: bbbf8aa8fc74d484ba144d293a6d756e, type: 2}
   effects:
   - {fileID: 11400000, guid: a357178baa66f4a499e025ad35c19a39, type: 2}
   - {fileID: 11400000, guid: 874a733f793c74748b2dd31fc3081aca, type: 2}

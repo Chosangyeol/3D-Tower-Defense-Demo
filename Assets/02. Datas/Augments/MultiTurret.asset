@@ -13,10 +13,11 @@ MonoBehaviour:
   m_Name: MultiTurret
   m_EditorClassIdentifier: Assembly-CSharp::TowerDefense.Augments.AugmentDefinition
   displayName: "\uB2E4\uC5F0\uC7A5 \uD3EC\uD0D1"
-  description: "\uD0C0\uC6CC\uAC00 \uC801 3\uB9C8\uB9AC\uB97C \uB3D9\uC2DC\uC5D0
-    \uACF5\uACA9\n\uBC1C\uB2F9 \uD53C\uD574 -30%"
+  description: "\uC801 3\uB9C8\uB9AC\uB97C \uB3D9\uC2DC\uC5D0 \uACF5\uACA9\n\uBC1C\uB2F9
+    \uD53C\uD574 -30%"
   tier: 1
   maxStacks: 1
+  target: {fileID: 11400000, guid: bbbf8aa8fc74d484ba144d293a6d756e, type: 2}
   effects:
   - {fileID: 11400000, guid: 38a36bba2dfec434686edf0c017659d6, type: 2}
   - {fileID: 11400000, guid: ea130712da7947a44abc8321e6979373, type: 2}

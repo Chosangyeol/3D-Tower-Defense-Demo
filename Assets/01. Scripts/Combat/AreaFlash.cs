@@ -1,11 +1,12 @@
 using UnityEngine;
 
-namespace TowerDefense.Magic
+namespace TowerDefense.Combat
 {
     /// <summary>
-    /// 폭발이 닿은 범위를 잠깐 보여주는 표시. 지름 1짜리 구를 폭발 크기까지 키운 뒤 사라진다. 판정에는 관여하지 않는다.
+    /// 폭발이나 파동이 닿은 범위를 잠깐 보여주는 표시. 지름 1짜리 모형을 범위 크기까지 키운 뒤 사라진다.
+    /// 판정에는 관여하지 않는다.
     /// </summary>
-    public class SplashFlash : MonoBehaviour
+    public class AreaFlash : MonoBehaviour
     {
         private const float StartRatio = 0.3f;
 

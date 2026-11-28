@@ -9,6 +9,9 @@ namespace TowerDefense.Effects
     [GameDataCategory("효과", "Effects", 70)]
     public abstract class GameEffect : GameData
     {
+        /// <summary>타워의 수치를 바꾸는 효과인지 여부. 화면에 적용 대상을 보여줄 때 쓴다.</summary>
+        public virtual bool AffectsTowers => false;
+
         /// <param name="modifiers">이번 판의 수치 변화를 모으는 곳</param>
         /// <param name="defaultTarget">효과를 준 쪽의 대상 (예: 연구의 대상 타워). 없으면 null</param>
         public abstract void Apply(RunModifiers modifiers, GameData defaultTarget);

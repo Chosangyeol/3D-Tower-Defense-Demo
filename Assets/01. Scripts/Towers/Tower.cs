@@ -7,7 +7,7 @@ using UnityEngine;
 namespace TowerDefense.Towers
 {
     /// <summary>
-    /// 설치된 타워. 사거리 안에서 가장 앞선 적을 골라 포탑을 돌리고 투사체를 쏜다. 효과에 따라 여러 적을 함께 쏜다.
+    /// 설치된 타워. 사거리 안에서 앞선 적을 골라 타워 데이터의 공격 방식으로 공격한다.
     /// 배치·전투 모드와 관계없이 동작한다. 적의 능력으로 잠시 멈출 수 있다.
     /// </summary>
     public class Tower : MonoBehaviour
@@ -38,6 +38,8 @@ namespace TowerDefense.Towers
         public IReadOnlyList<ResourceAmount> PaidCost { get; private set; }
         /// <summary>이번 판의 효과를 적용한 지금의 공격 수치.</summary>
         public TowerStats Stats => TowerStats.From(Definition, modifiers);
+        /// <summary>탄이 나가는 위치.</summary>
+        public Vector3 MuzzlePosition => muzzle != null ? muzzle.position : transform.position;
 
         public void Initialize(TowerDefinition definition, Vector2Int cell, RunModifiers runModifiers,
             IReadOnlyList<ResourceAmount> paidCost)
@@ -97,15 +99,18 @@ namespace TowerDefense.Towers
             }
 
             cooldown = Mathf.Max(cooldown - Time.deltaTime, 0f);
+            TowerAttack attack = Definition.Attack;
+            if (attack == null) return;
+
             TowerStats stats = Stats;
-            FindTargets(stats.Range, 1 + stats.ExtraTargets);
+            FindTargets(stats.Range, attack.GetTargetCount(stats));
             Target = targets.Count > 0 ? targets[0] : null;
             if (Target == null) return;
 
-            Aim(Target.AimPosition);
+            if (attack.AimsTurret) Aim(Target.AimPosition);
             if (cooldown > 0f) return;
 
-            foreach (Enemy enemy in targets) Fire(enemy, stats);
+            attack.Fire(this, targets, stats);
             cooldown = stats.FireInterval;
         }
 
@@ -140,15 +145,6 @@ namespace TowerDefense.Towers
             Vector3 direction = position - turret.position;
             direction.y = 0f;
             if (direction.sqrMagnitude > 0.0001f) turret.rotation = Quaternion.LookRotation(direction);
-        }
-
-        private void Fire(Enemy target, TowerStats stats)
-        {
-            if (Definition.ProjectilePrefab == null) return;
-
-            Vector3 origin = muzzle != null ? muzzle.position : transform.position;
-            Projectile projectile = Instantiate(Definition.ProjectilePrefab, origin, Quaternion.identity);
-            projectile.Initialize(target, stats);
         }
     }
 }

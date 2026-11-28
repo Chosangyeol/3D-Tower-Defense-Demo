@@ -18,7 +18,7 @@ namespace TowerDefense.Magic
         [SerializeField] private Vector3 visualStartOffset = new Vector3(0.35f, -0.3f, 1.1f);
         [SerializeField, Min(0.01f)] private float visualBlendTime = 0.2f;
         [Tooltip("폭발 범위를 보여주는 표시")]
-        [SerializeField] private SplashFlash splashFlash;
+        [SerializeField] private AreaFlash splashFlash;
 
         private static readonly RaycastHit[] hits = new RaycastHit[32];
         private static readonly IComparer<RaycastHit> ByDistance =

@@ -13,9 +13,10 @@ MonoBehaviour:
   m_Name: FrostRounds
   m_EditorClassIdentifier: Assembly-CSharp::TowerDefense.Augments.AugmentDefinition
   displayName: "\uC11C\uB9AC \uD0C4\uD658"
-  description: "\uD0C0\uC6CC\uC5D0 \uB9DE\uC740 \uC801\uC774 2\uCD08\uAC04 30% \uB290\uB824\uC9D0"
+  description: "\uB9DE\uC740 \uC801\uC774 2\uCD08\uAC04 30% \uB290\uB824\uC9D0"
   tier: 1
   maxStacks: 1
+  target: {fileID: 11400000, guid: bbbf8aa8fc74d484ba144d293a6d756e, type: 2}
   effects:
   - {fileID: 11400000, guid: 7fd9eda38ce53b54f81a848ce8d2e5f8, type: 2}
   - {fileID: 11400000, guid: 3af57f67a987e53469a7c61ae63ba5ff, type: 2}

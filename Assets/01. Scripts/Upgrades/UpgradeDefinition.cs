@@ -8,7 +8,7 @@ using UnityEngine;
 namespace TowerDefense.Upgrades
 {
     /// <summary>
-    /// 연구 하나. 자원을 써서 완료하면 대상 타워 종류 전체에 효과가 적용된다.
+    /// 연구 하나. 자원을 써서 완료하면 대상 타워 종류 전체에 효과가 적용된다. 대상을 비우면 모든 타워에 적용된다.
     /// </summary>
     [GameDataCategory("업그레이드", "Upgrades", 60)]
     [CreateAssetMenu(menuName = "Tower Defense/Upgrade Definition", fileName = "Upgrade")]

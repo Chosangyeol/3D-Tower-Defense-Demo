@@ -19,16 +19,17 @@ namespace TowerDefense.Effects
         [Tooltip("특정 타워·적에게만 적용할 때 지정. 비우면 효과를 준 쪽의 대상, 그것도 없으면 전체")]
         [SerializeField] private GameData onlyFor;
 
+        public override bool AffectsTowers => IsTowerStat(stat);
+
         public override void Apply(RunModifiers modifiers, GameData defaultTarget)
         {
             GameData target = onlyFor != null ? onlyFor : Accepts(defaultTarget) ? defaultTarget : null;
             modifiers.Add(stat, flat, percent, target);
         }
 
-        // 타워 수치는 타워를, 적 수치와 처치 보상은 적을 대상으로 좁힐 수 있다
-        private bool Accepts(GameData target)
+        private static bool IsTowerStat(Stat value)
         {
-            switch (stat)
+            switch (value)
             {
                 case Stat.TowerDamage:
                 case Stat.TowerRange:
@@ -38,7 +39,20 @@ namespace TowerDefense.Effects
                 case Stat.TowerExtraTargets:
                 case Stat.TowerSlowRatio:
                 case Stat.TowerSlowSeconds:
-                    return target is TowerDefinition;
+                case Stat.TowerSplashRadius:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        // 타워 수치는 타워를, 적 수치와 처치 보상은 적을 대상으로 좁힐 수 있다
+        private bool Accepts(GameData target)
+        {
+            if (IsTowerStat(stat)) return target is TowerDefinition;
+
+            switch (stat)
+            {
                 case Stat.EnemyCount:
                 case Stat.EnemyHealth:
                 case Stat.EnemyAttackDamage:

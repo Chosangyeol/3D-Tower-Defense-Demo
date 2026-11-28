@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using TowerDefense.Controls;
 using TowerDefense.Towers;
 using UnityEngine;
@@ -15,6 +16,9 @@ namespace TowerDefense.Placement
 
         private int selectedIndex;
 
+        /// <summary>설치할 수 있는 타워. 순서가 선택 칸 번호다.</summary>
+        public IReadOnlyList<TowerDefinition> Towers => towers;
+        public int SelectedIndex => selectedIndex;
         public TowerDefinition Selected => selectedIndex < towers.Length ? towers[selectedIndex] : null;
 
         private void OnEnable()

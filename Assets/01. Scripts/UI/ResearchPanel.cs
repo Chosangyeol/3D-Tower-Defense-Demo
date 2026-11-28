@@ -111,7 +111,7 @@ namespace TowerDefense.UI
                 Rect entry = GetEntryRect(i);
                 GUI.Box(entry, GUIContent.none);
                 var line = new Rect(entry.x + 8f, entry.y + 4f, entry.width - 16f, 20f);
-                string target = upgrade.Target != null ? upgrade.Target.DisplayName : "?";
+                string target = upgrade.Target != null ? upgrade.Target.DisplayName : "모든 타워";
                 GUI.Label(line, $"{upgrade.DisplayName}  [{target}]");
                 line.y += 20f;
                 GUI.Label(line, upgrade.Description);

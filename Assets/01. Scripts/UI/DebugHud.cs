@@ -72,6 +72,21 @@ namespace TowerDefense.UI
             GUI.color = previous;
         }
 
+        // 선택 칸 번호와 타워 이름. 고른 타워는 괄호로 표시한다
+        private string DescribeTowers()
+        {
+            string text = "타워:";
+            for (int i = 0; i < selection.Towers.Count; i++)
+            {
+                TowerDefinition tower = selection.Towers[i];
+                if (tower == null) continue;
+
+                string item = $"{i + 1} {tower.DisplayName}";
+                text += i == selection.SelectedIndex ? $"  [{item}]" : $"  {item}";
+            }
+            return text;
+        }
+
         private string DescribeAugments()
         {
             string text = "";
@@ -189,7 +204,7 @@ namespace TowerDefense.UI
             if (build && selection != null && selection.Selected != null)
             {
                 TowerDefinition tower = selection.Selected;
-                text += $"\n선택: {tower.DisplayName} ({ResourceAmount.Describe(builder.GetCost(tower))})";
+                text += $"\n{DescribeTowers()}\n비용: {ResourceAmount.Describe(builder.GetCost(tower))}";
             }
 
             if (augments.Acquired.Count > 0) text += "\n" + DescribeAugments();
