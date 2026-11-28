@@ -13,11 +13,12 @@ namespace TowerDefense.UI
         None,       // 막대 밖 (맵)
         Background, // 막대 위의 누를 것이 없는 곳
         Slot,       // 설치 목록의 한 칸
-        Remove      // 선택한 설치물의 제거 버튼
+        Remove,     // 선택한 설치물의 제거 버튼
+        Speed       // 배속 버튼
     }
 
     /// <summary>
-    /// 프로토타입용 임시 하단 설치 막대와 선택한 설치물의 정보. 화면만 그리며,
+    /// 프로토타입용 임시 하단 설치 막대, 배속 버튼, 선택한 설치물의 정보. 화면만 그리며,
     /// 클릭은 PlacementController가 GetTarget으로 확인해 처리한다. 정식 UI가 생기면 교체한다.
     /// </summary>
     public class BuildBar : MonoBehaviour
@@ -31,6 +32,7 @@ namespace TowerDefense.UI
         private const float InfoWidth = 440f;
         private const float InfoHeight = 104f;
         private const float HintHeight = 24f;
+        private const float SpeedWidth = 90f;
 
         [SerializeField] private GameModeController modeController;
         [SerializeField] private BuildMenu menu;
@@ -38,6 +40,7 @@ namespace TowerDefense.UI
         [SerializeField] private PlacementController placement;
         [SerializeField] private ResearchPanel researchPanel;
         [SerializeField] private ConstraintPanel constraintPanel;
+        [SerializeField] private GameSpeed speed;
 
         private GUIStyle title;
         private GUIStyle small;
@@ -46,9 +49,10 @@ namespace TowerDefense.UI
         public bool IsVisible =>
             modeController.CurrentMode == GameMode.Build && !researchPanel.IsOpen && !constraintPanel.IsOpen;
 
-        // 칸이 많으면 화면 폭에 맞춰 좁힌다
+        // 칸이 많으면 오른쪽의 배속 버튼 자리를 남기고 화면 폭에 맞춰 좁힌다
         private float Width =>
-            Mathf.Min(SlotWidth, (Screen.width - Margin * 2f - Padding * 2f) / Mathf.Max(menu.Entries.Count, 1) - Gap);
+            Mathf.Min(SlotWidth, (Screen.width - (Margin + SpeedWidth + Gap) * 2f - Padding * 2f)
+                                 / Mathf.Max(menu.Entries.Count, 1) - Gap);
 
         private Rect BarRect
         {
@@ -70,6 +74,13 @@ namespace TowerDefense.UI
             Rect bar = BarRect;
             float width = Width;
             return new Rect(bar.x + Padding + (width + Gap) * index, bar.y + Padding, width, SlotHeight);
+        }
+
+        /// <summary>배속 버튼 영역. GUI 좌표.</summary>
+        public Rect GetSpeedRect()
+        {
+            Rect bar = BarRect;
+            return new Rect(bar.xMax + Gap, bar.y, SpeedWidth, bar.height);
         }
 
         /// <summary>제거 버튼 영역. GUI 좌표.</summary>
@@ -95,6 +106,7 @@ namespace TowerDefense.UI
                 return BuildBarTarget.Slot;
             }
             if (BarRect.Contains(point)) return BuildBarTarget.Background;
+            if (GetSpeedRect().Contains(point)) return BuildBarTarget.Speed;
             if (placement.Selected == null || !InfoRect.Contains(point)) return BuildBarTarget.None;
 
             return GetRemoveRect().Contains(point) ? BuildBarTarget.Remove : BuildBarTarget.Background;
@@ -110,6 +122,8 @@ namespace TowerDefense.UI
             {
                 DrawSlot(i, menu.Entries[i]);
             }
+
+            DrawSpeed();
 
             if (placement.Selected != null)
             {
@@ -143,6 +157,14 @@ namespace TowerDefense.UI
             if (unlocked && !builder.CanAfford(definition)) GUI.color = new Color(1f, 0.45f, 0.4f);
             GUI.Label(new Rect(slot.x + 6f, slot.y + 28f, slot.width - 12f, 20f), detail, small);
             GUI.color = previous;
+        }
+
+        private void DrawSpeed()
+        {
+            Rect area = GetSpeedRect();
+            if (speed.IsFast) Fill(area, new Color(1f, 0.75f, 0.2f, 0.6f));
+            GUI.Box(area, GUIContent.none);
+            GUI.Label(area, speed.IsFast ? "▶▶ 2배속\n(F)" : "▶ 1배속\n(F)", hint);
         }
 
         private void DrawInfo(Structure structure)

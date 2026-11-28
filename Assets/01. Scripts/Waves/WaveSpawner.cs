@@ -93,6 +93,8 @@ namespace TowerDefense.Waves
             if (wave == null) Debug.LogError($"웨이브 {StartedWaves}의 데이터가 비어 있습니다.", this);
 
             int groupCount = wave != null ? wave.Groups.Count : 0;
+            // 다음 적까지 남은 시간. 프레임 때문에 늦어진 만큼은 다음 간격에서 빼서, 배속에도 간격이 같다
+            float delay = 0f;
             for (int g = 0; g < groupCount; g++)
             {
                 SpawnGroup group = wave.Groups[g];
@@ -106,7 +108,13 @@ namespace TowerDefense.Waves
                 for (int i = 0; i < count; i++)
                 {
                     SpawnEnemy(group.enemy);
-                    yield return new WaitForSeconds(group.interval);
+                    delay += group.interval;
+                    do
+                    {
+                        yield return null;
+                        delay -= Time.deltaTime;
+                    } while (delay > 0f);
+                    delay = Mathf.Max(delay, -Time.deltaTime);
                 }
             }
 

@@ -583,6 +583,7 @@ GameObject:
   - component: {fileID: 265141017}
   - component: {fileID: 265141019}
   - component: {fileID: 265141020}
+  - component: {fileID: 265141021}
   m_Layer: 0
   m_Name: GameSystems
   m_TagString: Untagged
@@ -883,6 +884,23 @@ MonoBehaviour:
   placement: {fileID: 288478766}
   researchPanel: {fileID: 265141013}
   constraintPanel: {fileID: 265141015}
+  speed: {fileID: 265141021}
+--- !u!114 &265141021
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 265141002}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af13a578c4e02a44f8cd3cc6fcb9c297, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TowerDefense.Game.GameSpeed
+  input: {fileID: 265141008}
+  modeController: {fileID: 265141003}
+  pause: {fileID: 265141018}
+  match: {fileID: 265141004}
 --- !u!1 &281224162
 GameObject:
   m_ObjectHideFlags: 0
@@ -962,6 +980,7 @@ MonoBehaviour:
   bar: {fileID: 265141020}
   researchPanel: {fileID: 265141013}
   constraintPanel: {fileID: 265141015}
+  speed: {fileID: 265141021}
 --- !u!4 &288478767
 Transform:
   m_ObjectHideFlags: 0
@@ -2245,7 +2264,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineBrain
   ShowDebugText: 0
   ShowCameraFrustum: 1
-  IgnoreTimeScale: 0
+  IgnoreTimeScale: 1
   WorldUpOverride: {fileID: 0}
   ChannelMask: -1
   UpdateMethod: 2

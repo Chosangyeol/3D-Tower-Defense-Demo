@@ -47,6 +47,7 @@ namespace TowerDefense.Controls
         /// <summary>누른 채 설치하면 설치 모드를 유지한다.</summary>
         public InputAction KeepPlacing { get; private set; }
         public InputAction Research { get; private set; }
+        public InputAction ToggleSpeed { get; private set; }
 
         // 전투 모드
         public InputAction Move { get; private set; }
@@ -82,6 +83,7 @@ namespace TowerDefense.Controls
             Cancel = buildMap.FindAction("Cancel", true);
             KeepPlacing = buildMap.FindAction("KeepPlacing", true);
             Research = buildMap.FindAction("Research", true);
+            ToggleSpeed = buildMap.FindAction("ToggleSpeed", true);
             for (int i = 0; i < SlotCount; i++)
             {
                 slots[i] = buildMap.FindAction($"Slot{i + 1}", true);

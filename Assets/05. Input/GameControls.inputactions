@@ -288,6 +288,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "ToggleSpeed",
+                    "type": "Button",
+                    "id": "10d0fdf7-c670-4c57-9b59-47fa7573ab35",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -552,6 +561,17 @@
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "Research",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "41143ebe-877b-45d3-9c2e-f8843cf9e825",
+                    "path": "<Keyboard>/f",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "ToggleSpeed",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

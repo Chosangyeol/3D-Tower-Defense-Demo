@@ -25,6 +25,7 @@ namespace TowerDefense.Placement
         [SerializeField] private BuildBar bar;
         [SerializeField] private ResearchPanel researchPanel;
         [SerializeField] private ConstraintPanel constraintPanel;
+        [SerializeField] private GameSpeed speed;
 
         /// <summary>설치하려고 고른 것. 설치 모드가 아니면 null.</summary>
         public StructureDefinition Placing { get; private set; }
@@ -138,6 +139,7 @@ namespace TowerDefense.Placement
         {
             if (target == BuildBarTarget.Slot) TogglePlacing(menu.Entries[slot]);
             else if (target == BuildBarTarget.Remove) RemoveSelected();
+            else if (target == BuildBarTarget.Speed) speed.Toggle();
         }
 
         private void UpdatePlacing(bool onGrid, Vector2Int cell, bool pressed)

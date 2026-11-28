@@ -176,7 +176,7 @@ namespace TowerDefense.UI
 
             bool build = modeController.CurrentMode == GameMode.Build;
             string text = build
-                ? "[배치 모드]\nWASD/화면 가장자리: 이동 · 휠: 줌 · Q/E: 회전\n하단 버튼·1~9: 설치 · Shift+클릭: 연속 설치 · 우클릭/ESC: 취소\n타워 클릭: 선택 · U: 연구 · Tab: 전투 모드"
+                ? "[배치 모드]\nWASD/화면 가장자리: 이동 · 휠: 줌 · Q/E: 회전\n하단 버튼·1~9: 설치 · Shift+클릭: 연속 설치 · 우클릭/ESC: 취소\n타워 클릭: 선택 · U: 연구 · F: 2배속 · Tab: 전투 모드"
                 : "[전투 모드]\nWASD: 이동 · Shift: 달리기 · Space: 점프 · 마우스: 시점\n좌클릭: 마법 · E: 채집 · Tab: 배치 모드";
 
             if (waveSpawner != null) text += "\n" + DescribeWave();

@@ -104,20 +104,26 @@ namespace TowerDefense.Towers
                 Tint(false);
             }
 
-            cooldown = Mathf.Max(cooldown - Time.deltaTime, 0f);
+            cooldown -= Time.deltaTime;
             TowerAttack attack = Definition.Attack;
             if (attack == null) return;
 
             TowerStats stats = Stats;
             FindTargets(stats.Range, attack.GetTargetCount(stats));
             Target = targets.Count > 0 ? targets[0] : null;
-            if (Target == null) return;
+            if (Target == null)
+            {
+                // 기다리는 동안 지난 시간은 쌓아 두지 않는다
+                cooldown = Mathf.Max(cooldown, 0f);
+                return;
+            }
 
             if (attack.AimsTurret) Aim(Target.AimPosition);
             if (cooldown > 0f) return;
 
             attack.Fire(this, targets, stats);
-            cooldown = stats.FireInterval;
+            // 프레임 때문에 늦게 쏜 만큼은 다음 간격에서 뺀다. 배속이나 프레임 속도가 달라도 발사 횟수가 같다
+            cooldown = Mathf.Max(cooldown, -Time.deltaTime) + stats.FireInterval;
         }
 
         // 사거리 안의 적을 앞선 순서로 최대 수만큼 고른다
