@@ -42,7 +42,10 @@ namespace TowerDefense.Controls
         public InputAction Rotate { get; private set; }
         public InputAction Zoom { get; private set; }
         public InputAction Place { get; private set; }
-        public InputAction Remove { get; private set; }
+        /// <summary>설치 모드나 선택을 취소한다.</summary>
+        public InputAction Cancel { get; private set; }
+        /// <summary>누른 채 설치하면 설치 모드를 유지한다.</summary>
+        public InputAction KeepPlacing { get; private set; }
         public InputAction Research { get; private set; }
 
         // 전투 모드
@@ -53,7 +56,7 @@ namespace TowerDefense.Controls
         public InputAction Cast { get; private set; }
         public InputAction Interact { get; private set; }
 
-        /// <summary>타워 선택 칸. index는 0부터 SlotCount - 1까지.</summary>
+        /// <summary>설치물 선택 칸. index는 0부터 SlotCount - 1까지.</summary>
         public InputAction Slot(int index)
         {
             return slots[index];
@@ -76,7 +79,8 @@ namespace TowerDefense.Controls
             Rotate = buildMap.FindAction("Rotate", true);
             Zoom = buildMap.FindAction("Zoom", true);
             Place = buildMap.FindAction("Place", true);
-            Remove = buildMap.FindAction("Remove", true);
+            Cancel = buildMap.FindAction("Cancel", true);
+            KeepPlacing = buildMap.FindAction("KeepPlacing", true);
             Research = buildMap.FindAction("Research", true);
             for (int i = 0; i < SlotCount; i++)
             {

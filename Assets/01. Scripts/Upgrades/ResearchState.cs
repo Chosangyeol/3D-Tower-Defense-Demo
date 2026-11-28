@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using TowerDefense.Economy;
 using TowerDefense.Effects;
 using TowerDefense.Game;
-using TowerDefense.Towers;
+using TowerDefense.Structures;
 using UnityEngine;
 
 namespace TowerDefense.Upgrades
@@ -19,7 +19,7 @@ namespace TowerDefense.Upgrades
     }
 
     /// <summary>
-    /// 이번 판에서 완료한 연구와 그에 따라 해금된 타워. 완료하면 효과를 RunModifiers에 더해
+    /// 이번 판에서 완료한 연구와 그에 따라 해금된 설치물. 완료하면 효과를 RunModifiers에 더해
     /// 설치된 타워와 새 타워에 함께 적용한다.
     /// </summary>
     public class ResearchState : MonoBehaviour
@@ -41,18 +41,18 @@ namespace TowerDefense.Upgrades
             return completed.Contains(upgrade);
         }
 
-        /// <summary>타워를 설치할 수 있는지 여부. 해금 연구가 없는 타워는 처음부터 열려 있다.</summary>
-        public bool IsUnlocked(TowerDefinition tower)
+        /// <summary>설치할 수 있는지 여부. 해금 연구가 없는 설치물은 처음부터 열려 있다.</summary>
+        public bool IsUnlocked(StructureDefinition structure)
         {
-            if (tower == null) return false;
+            if (structure == null) return false;
 
             foreach (UpgradeDefinition upgrade in completed)
             {
-                if (upgrade.Unlocks(tower)) return true;
+                if (upgrade.Unlocks(structure)) return true;
             }
             foreach (UpgradeDefinition upgrade in All)
             {
-                if (upgrade != null && upgrade.Unlocks(tower)) return false;
+                if (upgrade != null && upgrade.Unlocks(structure)) return false;
             }
             return true;
         }

@@ -67,15 +67,6 @@ namespace TowerDefense.UI
             Tab = tab;
         }
 
-        /// <summary>화면 좌표(왼쪽 아래 기준)가 열린 연구 화면 위에 있는지 확인한다.</summary>
-        public bool IsPointerOver(Vector2 screenPoint)
-        {
-            if (!IsOpen) return false;
-
-            Vector2 size = GetPanelSize();
-            return new Rect(Vector2.zero, size).Contains(ToPanel(screenPoint, size));
-        }
-
         /// <summary>탭 버튼의 화면 영역. GUI 좌표(왼쪽 위 기준).</summary>
         public Rect GetTabRect(ResearchTab tab)
         {
@@ -192,8 +183,7 @@ namespace TowerDefense.UI
             return height;
         }
 
-        // 탭을 바꿔도 크기가 그대로이도록 모든 탭 중 가장 큰 크기를 쓴다.
-        // 크기가 줄면 탭을 누른 클릭이 뒤쪽 칸에 전달될 수 있다
+        // 탭을 바꿔도 크기가 그대로이도록 모든 탭 중 가장 큰 크기를 쓴다
         private Vector2 GetPanelSize()
         {
             int columnCount = MinColumns;

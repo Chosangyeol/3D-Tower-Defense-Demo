@@ -182,9 +182,18 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Remove",
+                    "name": "Cancel",
                     "type": "Button",
                     "id": "e5b5f787-9374-4a6c-9465-8675ccefdedd",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "KeepPlacing",
+                    "type": "Button",
+                    "id": "9850306a-b3e2-48c7-a2fc-5bf95bb0017b",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -399,7 +408,40 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
-                    "action": "Remove",
+                    "action": "Cancel",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "084bf8bc-4807-4b6f-b478-969e629b8e16",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Cancel",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b5909ecc-1163-40ee-a6bb-2152dc9413b2",
+                    "path": "<Keyboard>/leftShift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "KeepPlacing",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9c000451-1150-4405-8508-11ab7aa7b540",
+                    "path": "<Keyboard>/rightShift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "KeepPlacing",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

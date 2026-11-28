@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using TowerDefense.Data;
 using TowerDefense.Economy;
 using TowerDefense.Effects;
+using TowerDefense.Structures;
 using TowerDefense.Towers;
 using UnityEngine;
 
@@ -39,11 +40,11 @@ namespace TowerDefense.Upgrades
         public IReadOnlyList<GameEffect> Effects => effects;
         public IReadOnlyList<TowerDefinition> UnlockTowers => unlockTowers;
 
-        public bool Unlocks(TowerDefinition tower)
+        public bool Unlocks(StructureDefinition structure)
         {
             foreach (TowerDefinition unlocked in unlockTowers)
             {
-                if (unlocked != null && unlocked == tower) return true;
+                if (unlocked != null && unlocked == structure) return true;
             }
             return false;
         }

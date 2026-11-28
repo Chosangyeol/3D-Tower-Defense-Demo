@@ -4,9 +4,7 @@ using TowerDefense.Economy;
 using TowerDefense.Enemies;
 using TowerDefense.Game;
 using TowerDefense.Magic;
-using TowerDefense.Placement;
 using TowerDefense.Player;
-using TowerDefense.Towers;
 using TowerDefense.Waves;
 using UnityEngine;
 
@@ -23,8 +21,6 @@ namespace TowerDefense.UI
         [SerializeField] private Health baseHealth;
         [SerializeField] private MatchController match;
         [SerializeField] private ResourceWallet wallet;
-        [SerializeField] private TowerSelection selection;
-        [SerializeField] private TowerBuilder builder;
         [SerializeField] private GameSetup setup;
         [SerializeField] private RunConstraints constraints;
         [SerializeField] private ConstraintPanel constraintPanel;
@@ -70,22 +66,6 @@ namespace TowerDefense.UI
             GUI.color = barColor;
             GUI.DrawTexture(new Rect(area.x, area.yMax + 2f, area.width * progress, 6f), Texture2D.whiteTexture);
             GUI.color = previous;
-        }
-
-        // 선택 칸 번호와 타워 이름. 고른 타워는 괄호로 표시한다
-        private string DescribeTowers()
-        {
-            string text = "타워:";
-            for (int i = 0; i < selection.Towers.Count; i++)
-            {
-                TowerDefinition tower = selection.Towers[i];
-                if (tower == null) continue;
-
-                string item = $"{i + 1} {tower.DisplayName}";
-                if (!builder.IsUnlocked(tower)) item += " (잠김)";
-                text += tower == selection.Selected ? $"  [{item}]" : $"  {item}";
-            }
-            return text;
         }
 
         private string DescribeAugments()
@@ -196,20 +176,13 @@ namespace TowerDefense.UI
 
             bool build = modeController.CurrentMode == GameMode.Build;
             string text = build
-                ? "[배치 모드]\nWASD/화면 가장자리: 이동 · 휠: 줌 · Q/E: 회전\n좌클릭: 설치 · 우클릭: 제거 · 1~9: 타워 선택\nU: 연구 · Tab: 전투 모드"
+                ? "[배치 모드]\nWASD/화면 가장자리: 이동 · 휠: 줌 · Q/E: 회전\n하단 버튼·1~9: 설치 · Shift+클릭: 연속 설치 · 우클릭/ESC: 취소\n타워 클릭: 선택 · U: 연구 · Tab: 전투 모드"
                 : "[전투 모드]\nWASD: 이동 · Shift: 달리기 · Space: 점프 · 마우스: 시점\n좌클릭: 마법 · E: 채집 · Tab: 배치 모드";
 
             if (waveSpawner != null) text += "\n" + DescribeWave();
             if (constraints.Active.Count > 0) text += $"\n제약 {constraints.Active.Count}개 · 난이도 {constraints.Score}";
             if (waveSpawner.StartedWaves == 0 && constraintPanel.CanOpen) text += "\nC: 제약 선택";
             if (wallet != null) text += "\n" + DescribeResources();
-            if (build && selection != null)
-            {
-                text += $"\n{DescribeTowers()}";
-                TowerDefinition tower = selection.Selected;
-                if (tower != null) text += $"\n비용: {ResourceAmount.Describe(builder.GetCost(tower))}";
-            }
-
             if (augments.Acquired.Count > 0) text += "\n" + DescribeAugments();
 
             // 줄 수에 맞춰 상자 높이를 정한다

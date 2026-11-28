@@ -582,6 +582,7 @@ GameObject:
   - component: {fileID: 265141018}
   - component: {fileID: 265141017}
   - component: {fileID: 265141019}
+  - component: {fileID: 265141020}
   m_Layer: 0
   m_Name: GameSystems
   m_TagString: Untagged
@@ -666,8 +667,6 @@ MonoBehaviour:
   baseHealth: {fileID: 1981162859}
   match: {fileID: 265141004}
   wallet: {fileID: 265141011}
-  selection: {fileID: 288478769}
-  builder: {fileID: 288478770}
   setup: {fileID: 265141010}
   constraints: {fileID: 265141016}
   constraintPanel: {fileID: 265141015}
@@ -866,6 +865,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TowerDefense.UI.AugmentPanel
   input: {fileID: 265141008}
   augments: {fileID: 265141017}
+--- !u!114 &265141020
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 265141002}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8bfe14c6e42de34cbd6ebb107fca0cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TowerDefense.UI.BuildBar
+  modeController: {fileID: 265141003}
+  menu: {fileID: 288478769}
+  builder: {fileID: 288478770}
+  placement: {fileID: 288478766}
+  researchPanel: {fileID: 265141013}
+  constraintPanel: {fileID: 265141015}
 --- !u!1 &281224162
 GameObject:
   m_ObjectHideFlags: 0
@@ -939,9 +956,10 @@ MonoBehaviour:
   modeController: {fileID: 265141003}
   grid: {fileID: 3070564}
   viewCamera: {fileID: 1602437872}
-  selection: {fileID: 288478769}
+  menu: {fileID: 288478769}
   builder: {fileID: 288478770}
   preview: {fileID: 288478768}
+  bar: {fileID: 265141020}
   researchPanel: {fileID: 265141013}
   constraintPanel: {fileID: 265141015}
 --- !u!4 &288478767
@@ -986,12 +1004,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58be4200fa5d7704aa66c7a6bbc6bfe8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TowerDefense.Placement.TowerSelection
-  input: {fileID: 265141008}
-  towers:
+  entries:
   - {fileID: 11400000, guid: bbbf8aa8fc74d484ba144d293a6d756e, type: 2}
   - {fileID: 11400000, guid: 7f7360d1b5856e746bcb8d216987febc, type: 2}
   - {fileID: 11400000, guid: 71138426a1c974749b80aa11b96841fc, type: 2}
-  research: {fileID: 265141009}
 --- !u!114 &288478770
 MonoBehaviour:
   m_ObjectHideFlags: 0

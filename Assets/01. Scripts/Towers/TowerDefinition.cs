@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using TowerDefense.Data;
 using TowerDefense.Economy;
+using TowerDefense.Effects;
+using TowerDefense.Structures;
 using UnityEngine;
 
 namespace TowerDefense.Towers
@@ -10,13 +12,10 @@ namespace TowerDefense.Towers
     /// </summary>
     [GameDataCategory("타워", "Towers", 0)]
     [CreateAssetMenu(menuName = "Tower Defense/Tower Definition", fileName = "Tower")]
-    public class TowerDefinition : GameData
+    public class TowerDefinition : StructureDefinition
     {
         [SerializeField] private Tower prefab;
         [SerializeField, Min(0f)] private float range = 6f;
-
-        [Tooltip("설치 비용")]
-        [SerializeField] private ResourceAmount[] cost = new ResourceAmount[0];
 
         [Header("공격")]
         [SerializeField] private TowerAttack attack;
@@ -33,9 +32,8 @@ namespace TowerDefense.Towers
         [Tooltip("감속이 이어지는 시간(초)")]
         [SerializeField, Min(0f)] private float slowSeconds;
 
-        public Tower Prefab => prefab;
+        public override Structure Prefab => prefab;
         public float Range => range;
-        public IReadOnlyList<ResourceAmount> Cost => cost;
         public TowerAttack Attack => attack;
         public float Damage => damage;
         public float FireInterval => fireInterval;
@@ -43,5 +41,15 @@ namespace TowerDefense.Towers
         public float SplashRadius => splashRadius;
         public float SlowRatio => slowRatio;
         public float SlowSeconds => slowSeconds;
+
+        public override List<ResourceAmount> GetCost(RunModifiers modifiers)
+        {
+            return modifiers.Scale(Cost, Stat.TowerCost, 1f, this);
+        }
+
+        public override float GetRange(RunModifiers modifiers)
+        {
+            return modifiers.Get(Stat.TowerRange, range, this);
+        }
     }
 }

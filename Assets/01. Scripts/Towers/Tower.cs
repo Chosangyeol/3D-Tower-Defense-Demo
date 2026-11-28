@@ -1,7 +1,6 @@
 using System.Collections.Generic;
-using TowerDefense.Economy;
-using TowerDefense.Effects;
 using TowerDefense.Enemies;
+using TowerDefense.Structures;
 using UnityEngine;
 
 namespace TowerDefense.Towers
@@ -10,7 +9,7 @@ namespace TowerDefense.Towers
     /// 설치된 타워. 사거리 안에서 앞선 적을 골라 타워 데이터의 공격 방식으로 공격한다.
     /// 배치·전투 모드와 관계없이 동작한다. 적의 능력으로 잠시 멈출 수 있다.
     /// </summary>
-    public class Tower : MonoBehaviour
+    public class Tower : Structure
     {
         private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
         private static readonly Color DisabledColor = new Color(0.25f, 0.3f, 0.6f);
@@ -22,7 +21,6 @@ namespace TowerDefense.Towers
         private readonly List<Enemy> targets = new List<Enemy>();
 
         private float cooldown;
-        private RunModifiers modifiers;
         private float disabledRemaining;
 
         /// <summary>씬에 설치된 타워 목록. 배치 미리보기는 포함하지 않는다.</summary>
@@ -30,24 +28,32 @@ namespace TowerDefense.Towers
 
         public bool IsDisabled => disabledRemaining > 0f;
 
-        public TowerDefinition Definition { get; private set; }
-        public Vector2Int Cell { get; private set; }
+        public new TowerDefinition Definition => base.Definition as TowerDefinition;
         public Enemy Target { get; private set; }
 
-        /// <summary>설치할 때 낸 비용. 환급은 이 값을 기준으로 한다.</summary>
-        public IReadOnlyList<ResourceAmount> PaidCost { get; private set; }
         /// <summary>이번 판의 효과를 적용한 지금의 공격 수치.</summary>
-        public TowerStats Stats => TowerStats.From(Definition, modifiers);
+        public TowerStats Stats => TowerStats.From(Definition, Modifiers);
+        public override float Range => Definition != null ? Stats.Range : 0f;
         /// <summary>탄이 나가는 위치.</summary>
         public Vector3 MuzzlePosition => muzzle != null ? muzzle.position : transform.position;
 
-        public void Initialize(TowerDefinition definition, Vector2Int cell, RunModifiers runModifiers,
-            IReadOnlyList<ResourceAmount> paidCost)
+        /// <summary>지금의 공격 수치. 쓰지 않는 항목은 적지 않는다.</summary>
+        public override string Describe()
         {
-            Definition = definition;
-            Cell = cell;
-            modifiers = runModifiers;
-            PaidCost = paidCost;
+            if (Definition == null) return "";
+
+            TowerStats stats = Stats;
+            string text = $"사거리 {stats.Range:0.##} · 공격 간격 {stats.FireInterval:0.##}초";
+            if (stats.Damage > 0f) text += $" · 공격력 {stats.Damage:0.##}";
+            if (stats.ExtraTargets > 0) text += $" · 추가 대상 {stats.ExtraTargets}";
+            if (stats.SplashRadius > 0f) text += $" · 폭발 반경 {stats.SplashRadius:0.##}";
+            if (stats.SlowRatio > 0f && stats.SlowSeconds > 0f)
+            {
+                text += $" · 감속 {stats.SlowRatio * 100f:0.#}% {stats.SlowSeconds:0.##}초";
+                if (stats.SlowedDamageTaken > 0f) text += $" · 받는 피해 +{stats.SlowedDamageTaken * 100f:0.#}%";
+            }
+            if (IsDisabled) text += " · 정지됨";
+            return text;
         }
 
         /// <summary>정해진 시간 동안 공격을 멈춘다. 이미 멈춰 있으면 더 긴 쪽을 따른다.</summary>

@@ -1,11 +1,11 @@
-using TowerDefense.Towers;
+using TowerDefense.Structures;
 using UnityEngine;
 using UnityEngine.Rendering;
 
 namespace TowerDefense.Placement
 {
     /// <summary>
-    /// 배치할 때 보이는 것: 설치 전 고스트(가능·불가 색상)와 사거리 원.
+    /// 배치할 때 보이는 것: 설치 전 고스트(가능·불가 색상)와 범위 원.
     /// </summary>
     public class PlacementPreview : MonoBehaviour
     {
@@ -13,25 +13,25 @@ namespace TowerDefense.Placement
         [SerializeField] private Material validMaterial;
         [SerializeField] private Material invalidMaterial;
 
-        private Tower ghost;
-        private TowerDefinition ghostDefinition;
+        private Structure ghost;
+        private StructureDefinition ghostDefinition;
         private Renderer[] ghostRenderers;
 
-        /// <summary>빈 칸에 고스트와 사거리를 보여준다.</summary>
-        public void ShowGhost(TowerDefinition definition, Vector3 position, bool canPlace, float range)
+        /// <summary>빈 칸에 고스트와 범위를 보여준다.</summary>
+        public void ShowGhost(StructureDefinition definition, Vector3 position, bool canPlace, float range)
         {
             EnsureGhost(definition);
             ghost.transform.position = position;
             ghost.gameObject.SetActive(true);
             SetGhostMaterial(canPlace ? validMaterial : invalidMaterial);
-            rangeIndicator.Show(position, range);
+            ShowIndicator(position, range);
         }
 
-        /// <summary>설치된 타워의 사거리만 보여준다.</summary>
+        /// <summary>설치된 것의 범위만 보여준다.</summary>
         public void ShowRange(Vector3 position, float range)
         {
             HideGhost();
-            rangeIndicator.Show(position, range);
+            ShowIndicator(position, range);
         }
 
         public void Hide()
@@ -40,12 +40,18 @@ namespace TowerDefense.Placement
             if (rangeIndicator != null) rangeIndicator.Hide();
         }
 
+        private void ShowIndicator(Vector3 position, float range)
+        {
+            if (range > 0f) rangeIndicator.Show(position, range);
+            else rangeIndicator.Hide();
+        }
+
         private void HideGhost()
         {
             if (ghost != null) ghost.gameObject.SetActive(false);
         }
 
-        private void EnsureGhost(TowerDefinition definition)
+        private void EnsureGhost(StructureDefinition definition)
         {
             if (ghost != null && ghostDefinition == definition) return;
 

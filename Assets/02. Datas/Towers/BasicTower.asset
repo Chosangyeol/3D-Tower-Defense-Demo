@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: BasicTower
   m_EditorClassIdentifier: Assembly-CSharp::TowerDefense.Towers.TowerDefinition
   displayName: "\uAE30\uBCF8 \uD3EC\uD0D1"
-  prefab: {fileID: 2451113975357622870, guid: 49adefacfabc20843a767971f23b009d, type: 3}
-  range: 6
   cost:
   - resource: {fileID: 11400000, guid: 0d516713d6bb672449210a3b4b90e298, type: 2}
     amount: 30
   - resource: {fileID: 11400000, guid: f5dfe8f2920b394449e19444f225adbf, type: 2}
     amount: 10
+  prefab: {fileID: 2451113975357622870, guid: 49adefacfabc20843a767971f23b009d, type: 3}
+  range: 6
   attack: {fileID: 11400000, guid: 1a328d4ef268674489ae3c715e45b917, type: 2}
   damage: 10
   fireInterval: 0.5

@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: CannonTower
   m_EditorClassIdentifier: Assembly-CSharp::TowerDefense.Towers.TowerDefinition
   displayName: "\uB300\uD3EC"
-  prefab: {fileID: 7286982645624467633, guid: 6a7f9b762ad86bb428251bed4cfda783, type: 3}
-  range: 7
   cost:
   - resource: {fileID: 11400000, guid: 0d516713d6bb672449210a3b4b90e298, type: 2}
     amount: 30
   - resource: {fileID: 11400000, guid: f5dfe8f2920b394449e19444f225adbf, type: 2}
     amount: 40
+  prefab: {fileID: 7286982645624467633, guid: 6a7f9b762ad86bb428251bed4cfda783, type: 3}
+  range: 7
   attack: {fileID: 11400000, guid: 467fc16f2827b364d92b22e4061e7a7a, type: 2}
   damage: 30
   fireInterval: 2
