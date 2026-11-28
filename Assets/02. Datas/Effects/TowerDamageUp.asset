@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f783f0ff8f957df498e17830ad39fb80, type: 3}
   m_Name: TowerDamageUp
   m_EditorClassIdentifier: Assembly-CSharp::TowerDefense.Upgrades.StatEffect
-  displayName: "\uACF5\uACA9\uB825 +25%"
+  displayName: "\uC5F0\uAD6C \uACF5\uACA9\uB825 \uAC15\uD654 \xB7 \uACF5\uACA9\uB825"
   stat: 0
   flat: 0
   percent: 0.25
+  onlyFor: {fileID: 0}

@@ -82,7 +82,8 @@ namespace TowerDefense.UI
                 if (tower == null) continue;
 
                 string item = $"{i + 1} {tower.DisplayName}";
-                text += i == selection.SelectedIndex ? $"  [{item}]" : $"  {item}";
+                if (!builder.IsUnlocked(tower)) item += " (잠김)";
+                text += tower == selection.Selected ? $"  [{item}]" : $"  {item}";
             }
             return text;
         }
@@ -175,6 +176,7 @@ namespace TowerDefense.UI
                 GUI.Box(area, GUIContent.none);
                 string state = enemy.Health.DamageMultiplier < 1f ? "  [보호막]" : "";
                 if (enemy.IsSlowed) state += "  [감속]";
+                if (enemy.Health.DamageBonus > 0f) state += "  [취약]";
                 if (enemy.IsAttacking) state += "  [기지 공격 중]";
                 GUI.Label(new Rect(area.x + 8f, area.y + 2f, area.width, 20f),
                     $"{enemy.Definition.DisplayName}  {Mathf.CeilToInt(enemy.Health.Current)}/{enemy.Health.Max}{state}");
@@ -201,10 +203,11 @@ namespace TowerDefense.UI
             if (constraints.Active.Count > 0) text += $"\n제약 {constraints.Active.Count}개 · 난이도 {constraints.Score}";
             if (waveSpawner.StartedWaves == 0 && constraintPanel.CanOpen) text += "\nC: 제약 선택";
             if (wallet != null) text += "\n" + DescribeResources();
-            if (build && selection != null && selection.Selected != null)
+            if (build && selection != null)
             {
+                text += $"\n{DescribeTowers()}";
                 TowerDefinition tower = selection.Selected;
-                text += $"\n{DescribeTowers()}\n비용: {ResourceAmount.Describe(builder.GetCost(tower))}";
+                if (tower != null) text += $"\n비용: {ResourceAmount.Describe(builder.GetCost(tower))}";
             }
 
             if (augments.Acquired.Count > 0) text += "\n" + DescribeAugments();

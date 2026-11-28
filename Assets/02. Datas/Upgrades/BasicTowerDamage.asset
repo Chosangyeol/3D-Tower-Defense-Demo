@@ -13,15 +13,17 @@ MonoBehaviour:
   m_Name: BasicTowerDamage
   m_EditorClassIdentifier: Assembly-CSharp::TowerDefense.Upgrades.UpgradeDefinition
   displayName: "\uACF5\uACA9\uB825 \uAC15\uD654"
-  description: "\uAE30\uBCF8 \uD3EC\uD0D1\uC758 \uACF5\uACA9\uB825 +25%"
-  target: {fileID: 11400000, guid: bbbf8aa8fc74d484ba144d293a6d756e, type: 2}
+  description: 
+  branch: {fileID: 11400000, guid: 8ab0f5774bedd5d4ebd9f217c51c852f, type: 2}
   cost:
   - resource: {fileID: 11400000, guid: 0d516713d6bb672449210a3b4b90e298, type: 2}
     amount: 40
   - resource: {fileID: 11400000, guid: f5dfe8f2920b394449e19444f225adbf, type: 2}
     amount: 20
   - resource: {fileID: 11400000, guid: 5ab033ae4dbaa964ea3767365abd5a59, type: 2}
-    amount: 2
+    amount: 1
   prerequisites: []
+  choiceGroup: 
   effects:
   - {fileID: 11400000, guid: ba2a080f9b9e1f34e8071e093b53b04e, type: 2}
+  unlockTowers: []

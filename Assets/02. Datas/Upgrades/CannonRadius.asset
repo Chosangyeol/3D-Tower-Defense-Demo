@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc74a7b990b4b1c44abd69fbc47d72fe, type: 3}
+  m_Name: CannonRadius
+  m_EditorClassIdentifier: Assembly-CSharp::TowerDefense.Upgrades.UpgradeDefinition
+  displayName: "\uD30C\uD3B8 \uD655\uC0B0"
+  description: 
+  branch: {fileID: 11400000, guid: acc998276a556774581175eec249ef79, type: 2}
+  cost:
+  - resource: {fileID: 11400000, guid: 0d516713d6bb672449210a3b4b90e298, type: 2}
+    amount: 60
+  - resource: {fileID: 11400000, guid: f5dfe8f2920b394449e19444f225adbf, type: 2}
+    amount: 40
+  - resource: {fileID: 11400000, guid: 5ab033ae4dbaa964ea3767365abd5a59, type: 2}
+    amount: 2
+  prerequisites:
+  - {fileID: 11400000, guid: 93b8d2095f12a354da02ceafb0af5325, type: 2}
+  - {fileID: 11400000, guid: e5304ddb7b375484fb38e73cee0cfd77, type: 2}
+  choiceGroup: 
+  effects:
+  - {fileID: 11400000, guid: ab5e34f4fb571624a8b64c88067f0e9c, type: 2}
+  unlockTowers: []

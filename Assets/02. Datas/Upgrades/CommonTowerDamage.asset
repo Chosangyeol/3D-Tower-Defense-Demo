@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc74a7b990b4b1c44abd69fbc47d72fe, type: 3}
+  m_Name: CommonTowerDamage
+  m_EditorClassIdentifier: Assembly-CSharp::TowerDefense.Upgrades.UpgradeDefinition
+  displayName: "\uD654\uB825 \uAC1C\uC120"
+  description: 
+  branch: {fileID: 11400000, guid: a4601f7f42d25ab46abcdcbda6db7b73, type: 2}
+  cost:
+  - resource: {fileID: 11400000, guid: 0d516713d6bb672449210a3b4b90e298, type: 2}
+    amount: 60
+  - resource: {fileID: 11400000, guid: f5dfe8f2920b394449e19444f225adbf, type: 2}
+    amount: 40
+  - resource: {fileID: 11400000, guid: 5ab033ae4dbaa964ea3767365abd5a59, type: 2}
+    amount: 2
+  prerequisites:
+  - {fileID: 11400000, guid: fe4dab0915fe033448480a2538bd8320, type: 2}
+  choiceGroup: 
+  effects:
+  - {fileID: 11400000, guid: b7e054aee5b878141a1a2708191759ee, type: 2}
+  unlockTowers: []

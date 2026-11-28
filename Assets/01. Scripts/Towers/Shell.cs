@@ -56,7 +56,7 @@ namespace TowerDefense.Towers
                 if (offset.magnitude > stats.SplashRadius + enemy.BodyRadius) continue;
 
                 enemy.Health.TakeDamage(stats.Damage);
-                enemy.ApplySlow(stats.SlowRatio, stats.SlowSeconds);
+                enemy.ApplySlow(stats.SlowRatio, stats.SlowSeconds, stats.SlowedDamageTaken);
             }
 
             if (explosion != null) Instantiate(explosion, landing, Quaternion.identity).Show(stats.SplashRadius);

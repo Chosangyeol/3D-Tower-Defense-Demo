@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc74a7b990b4b1c44abd69fbc47d72fe, type: 3}
+  m_Name: BasicTowerSniper
+  m_EditorClassIdentifier: Assembly-CSharp::TowerDefense.Upgrades.UpgradeDefinition
+  displayName: "\uC800\uACA9"
+  description: 
+  branch: {fileID: 11400000, guid: 8ab0f5774bedd5d4ebd9f217c51c852f, type: 2}
+  cost:
+  - resource: {fileID: 11400000, guid: 0d516713d6bb672449210a3b4b90e298, type: 2}
+    amount: 60
+  - resource: {fileID: 11400000, guid: f5dfe8f2920b394449e19444f225adbf, type: 2}
+    amount: 60
+  - resource: {fileID: 11400000, guid: 5ab033ae4dbaa964ea3767365abd5a59, type: 2}
+    amount: 4
+  prerequisites:
+  - {fileID: 11400000, guid: fdfb330a33b578545b058a84077bce08, type: 2}
+  choiceGroup: "\uD2B9\uC218"
+  effects:
+  - {fileID: 11400000, guid: 09f3587c533758b41b88ac3286379c10, type: 2}
+  - {fileID: 11400000, guid: ffaf149c654254f48891836035878741, type: 2}
+  - {fileID: 11400000, guid: 8aba2e36f2797f84ba244680cd7ef8c2, type: 2}
+  unlockTowers: []

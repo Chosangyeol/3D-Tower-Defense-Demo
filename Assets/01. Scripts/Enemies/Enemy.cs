@@ -40,6 +40,7 @@ namespace TowerDefense.Enemies
         private float speedBonus;
         private float slowRatio;
         private float slowRemaining;
+        private float vulnerableRemaining;
         private bool finished;
 
         /// <summary>씬에 있는 적 목록. 타겟을 고를 때 사용한다.</summary>
@@ -100,10 +101,12 @@ namespace TowerDefense.Enemies
         /// 정해진 시간 동안 이동 속도를 줄인다. 감속은 겹쳐 쌓이지 않고 가장 강한 것을 따르며,
         /// 같은 세기면 남은 시간을 늘린다. 공격 속도에는 영향이 없다.
         /// </summary>
-        public void ApplySlow(float ratio, float seconds)
+        /// <param name="damageTaken">이 감속이 이어지는 동안 받는 피해가 늘어나는 비율. 감속과 따로 겨룬다</param>
+        public void ApplySlow(float ratio, float seconds, float damageTaken = 0f)
         {
             if (!IsAlive || ratio <= 0f || seconds <= 0f) return;
 
+            ApplyVulnerability(damageTaken, seconds);
             ratio = Mathf.Min(ratio, MaxSlowRatio);
             if (!IsSlowed || ratio > slowRatio)
             {
@@ -114,6 +117,22 @@ namespace TowerDefense.Enemies
             else if (Mathf.Approximately(ratio, slowRatio))
             {
                 slowRemaining = Mathf.Max(slowRemaining, seconds);
+            }
+        }
+
+        // 감속과 마찬가지로 겹쳐 쌓이지 않고 가장 강한 것을 따른다
+        private void ApplyVulnerability(float bonus, float seconds)
+        {
+            if (bonus <= 0f) return;
+
+            if (vulnerableRemaining <= 0f || bonus > Health.DamageBonus)
+            {
+                Health.SetDamageBonus(bonus);
+                vulnerableRemaining = seconds;
+            }
+            else if (Mathf.Approximately(bonus, Health.DamageBonus))
+            {
+                vulnerableRemaining = Mathf.Max(vulnerableRemaining, seconds);
             }
         }
 
@@ -144,6 +163,7 @@ namespace TowerDefense.Enemies
 
             UpdateAbilities(Time.deltaTime);
             UpdateSlow(Time.deltaTime);
+            UpdateVulnerability(Time.deltaTime);
             if (IsAttacking) Attack(Time.deltaTime);
             else Move(MoveSpeed * Time.deltaTime);
         }
@@ -169,6 +189,14 @@ namespace TowerDefense.Enemies
 
             slowRemaining -= deltaTime;
             if (!IsSlowed) Tint(false);
+        }
+
+        private void UpdateVulnerability(float deltaTime)
+        {
+            if (vulnerableRemaining <= 0f) return;
+
+            vulnerableRemaining -= deltaTime;
+            if (vulnerableRemaining <= 0f) Health.SetDamageBonus(0f);
         }
 
         // 감속된 적은 파랗게 보여준다. 머티리얼 에셋은 바꾸지 않는다

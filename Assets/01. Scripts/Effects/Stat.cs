@@ -16,6 +16,7 @@ namespace TowerDefense.Effects
         [InspectorName("타워/명중 시 감속 비율")] TowerSlowRatio = 6,
         [InspectorName("타워/감속 시간")] TowerSlowSeconds = 7,
         [InspectorName("타워/폭발 반경")] TowerSplashRadius = 8,
+        [InspectorName("타워/감속 중 받는 피해")] TowerSlowedDamageTaken = 9,
 
         [InspectorName("플레이어/이동 속도")] PlayerMoveSpeed = 10,
         [InspectorName("플레이어/최대 마나")] PlayerMaxMana = 11,

@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace TowerDefense.Towers
 {
-    /// <summary>사거리 안의 모든 적을 잠시 느리게 만드는 파동. 피해는 주지 않는다.</summary>
+    /// <summary>사거리 안의 모든 적을 잠시 느리게 만드는 파동. 공격력이 있으면 피해도 준다.</summary>
     [CreateAssetMenu(menuName = "Tower Defense/Tower Attack/Slow Pulse", fileName = "SlowPulseAttack")]
     public class SlowPulseAttack : TowerAttack
     {
@@ -24,7 +24,8 @@ namespace TowerDefense.Towers
         {
             foreach (Enemy target in targets)
             {
-                target.ApplySlow(stats.SlowRatio, stats.SlowSeconds);
+                target.ApplySlow(stats.SlowRatio, stats.SlowSeconds, stats.SlowedDamageTaken);
+                target.Health.TakeDamage(stats.Damage);
             }
 
             if (pulsePrefab == null) return;

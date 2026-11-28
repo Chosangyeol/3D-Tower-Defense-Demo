@@ -4,6 +4,7 @@ using TowerDefense.Effects;
 using TowerDefense.Game;
 using TowerDefense.Grid;
 using TowerDefense.Towers;
+using TowerDefense.Upgrades;
 using TowerDefense.Waves;
 using UnityEngine;
 
@@ -21,6 +22,7 @@ namespace TowerDefense.Placement
         [SerializeField] private WaveSpawner waveSpawner;
         [SerializeField] private GameSetup setup;
         [SerializeField] private RunModifiers modifiers;
+        [SerializeField] private ResearchState research;
 
         /// <summary>지금 설치하면 적용될 공격 수치.</summary>
         public TowerStats GetStats(TowerDefinition definition)
@@ -32,6 +34,12 @@ namespace TowerDefense.Placement
         public List<ResourceAmount> GetCost(TowerDefinition definition)
         {
             return modifiers.Scale(definition.Cost, Stat.TowerCost, 1f, definition);
+        }
+
+        /// <summary>연구로 해금해야 하는 타워인데 아직 하지 않았으면 false.</summary>
+        public bool IsUnlocked(TowerDefinition definition)
+        {
+            return research.IsUnlocked(definition);
         }
 
         public bool CanAfford(TowerDefinition definition)
@@ -63,7 +71,7 @@ namespace TowerDefense.Placement
 
         public bool TryPlace(TowerDefinition definition, Vector2Int cell)
         {
-            if (definition == null || definition.Prefab == null || !CanPlace(cell)) return false;
+            if (definition == null || definition.Prefab == null || !IsUnlocked(definition) || !CanPlace(cell)) return false;
             List<ResourceAmount> cost = GetCost(definition);
             if (!wallet.TrySpend(cost)) return false;
 

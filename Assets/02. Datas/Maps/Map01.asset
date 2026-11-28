@@ -23,9 +23,40 @@ MonoBehaviour:
     amount: 0
   combatRefundRate: 0.5
   upgrades:
+  - {fileID: 11400000, guid: fe4dab0915fe033448480a2538bd8320, type: 2}
+  - {fileID: 11400000, guid: ada04d06a14c65443ab068e717a24275, type: 2}
   - {fileID: 11400000, guid: 4cd3b5db17859ad4ab595e8b4491be3d, type: 2}
   - {fileID: 11400000, guid: 520125de7a99dac48bf50e7c1af49491, type: 2}
   - {fileID: 11400000, guid: fdfb330a33b578545b058a84077bce08, type: 2}
+  - {fileID: 11400000, guid: 30e52c2472eb8ff48bfb2aeadec82b3b, type: 2}
+  - {fileID: 11400000, guid: 55b57936dc9299f4fb8cd9bdc53433bc, type: 2}
+  - {fileID: 11400000, guid: 2fbc627f40d66b5458621d7fd9e1335b, type: 2}
+  - {fileID: 11400000, guid: 93b8d2095f12a354da02ceafb0af5325, type: 2}
+  - {fileID: 11400000, guid: e5304ddb7b375484fb38e73cee0cfd77, type: 2}
+  - {fileID: 11400000, guid: 3772cebc98258584faa820e7451dcfbb, type: 2}
+  - {fileID: 11400000, guid: 6243b543c5749da4985938890d8d359c, type: 2}
+  - {fileID: 11400000, guid: 84e2602e2bd942a4fbabd2f1f5a65114, type: 2}
+  - {fileID: 11400000, guid: 6cc12f762b1d4514eb6065d03e7a1c0f, type: 2}
+  - {fileID: 11400000, guid: e000f2ecf353f7b4885f4f1ff236400a, type: 2}
+  - {fileID: 11400000, guid: 034ddb5ec26843948adaf687abcdb219, type: 2}
+  - {fileID: 11400000, guid: 08c60e6f5a5cedd4fb4cfe34f2a99f89, type: 2}
+  - {fileID: 11400000, guid: 4dcda75063c026d4e8b22f11b55a1f30, type: 2}
+  - {fileID: 11400000, guid: fba75cc4dfed13341b86e6fdf062a215, type: 2}
+  - {fileID: 11400000, guid: 466be964e50c02147bc1d82fcfb4f07c, type: 2}
+  - {fileID: 11400000, guid: f4a0f0b11f98fa645b77e3a85c07f842, type: 2}
+  - {fileID: 11400000, guid: 69dd4879c89f5134198946182f9831ac, type: 2}
+  - {fileID: 11400000, guid: 8b9e6ad20801c124eb0dad5da6cc5b84, type: 2}
+  - {fileID: 11400000, guid: 001ab258e3362694cbd031d5ea227e97, type: 2}
+  - {fileID: 11400000, guid: 2cee561570f11494597902bacc3cf537, type: 2}
+  - {fileID: 11400000, guid: d7e12c492d6182649bfc42c38672b4b3, type: 2}
+  - {fileID: 11400000, guid: dcbb2b8d6e73c57458154e35b21f5070, type: 2}
+  - {fileID: 11400000, guid: 32b4ce074cfd6b546b863fab871b95c2, type: 2}
+  - {fileID: 11400000, guid: a332b1bf639901e49b593d0f6dbd2edf, type: 2}
+  - {fileID: 11400000, guid: 9ecc2136a05c5a646a664dc3294279e6, type: 2}
+  - {fileID: 11400000, guid: 3ba6a30100ef71a458fdcc7d98e1ce82, type: 2}
+  - {fileID: 11400000, guid: 2fbefbbcc945b864db0a0987b4216e47, type: 2}
+  - {fileID: 11400000, guid: a6c2f6ea89453c94880e3edcc8d8f197, type: 2}
+  - {fileID: 11400000, guid: 66dd8f479fea4ad44b757e8d751f47b6, type: 2}
   pathWaypoints:
   - {x: 0, y: 16}
   - {x: 15, y: 16}

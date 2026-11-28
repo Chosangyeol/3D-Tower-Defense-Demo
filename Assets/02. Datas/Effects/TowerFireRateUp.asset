@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f783f0ff8f957df498e17830ad39fb80, type: 3}
   m_Name: TowerFireRateUp
   m_EditorClassIdentifier: Assembly-CSharp::TowerDefense.Upgrades.StatEffect
-  displayName: "\uBC1C\uC0AC \uAC04\uACA9 -20%"
+  displayName: "\uC5F0\uAD6C \uC5F0\uC0AC \uAC15\uD654 \xB7 \uBC1C\uC0AC \uAC04\uACA9"
   stat: 2
   flat: 0
   percent: -0.2
+  onlyFor: {fileID: 0}

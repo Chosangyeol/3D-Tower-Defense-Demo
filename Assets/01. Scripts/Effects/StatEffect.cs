@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using System.Globalization;
+using System.Reflection;
 using TowerDefense.Data;
 using TowerDefense.Enemies;
 using TowerDefense.Towers;
@@ -27,6 +30,61 @@ namespace TowerDefense.Effects
             modifiers.Add(stat, flat, percent, target);
         }
 
+        /// <summary>"공격력 +25%"처럼 수치의 이름과 바뀌는 양.</summary>
+        public override string Describe()
+        {
+            string label = GetLabel(stat);
+            if (onlyFor != null) label = $"{onlyFor.DisplayName} {label}";
+
+            var parts = new List<string>();
+            if (flat != 0f)
+            {
+                // 비율인 수치에 더하는 값은 퍼센트로 보여준다
+                string amount = stat == Stat.TowerSlowedDamageTaken ? Signed(flat * 100f) + "%"
+                    : IsRatio(stat) ? Signed(flat * 100f) + "%p"
+                    : IsSeconds(stat) ? Signed(flat) + "초"
+                    : Signed(flat);
+                parts.Add($"{label} {amount}");
+            }
+            if (percent != 0f) parts.Add($"{label} {Signed(percent * 100f)}%");
+            return string.Join(", ", parts);
+        }
+
+        private static string Signed(float value)
+        {
+            return value.ToString("+0.##;-0.##;0", CultureInfo.InvariantCulture);
+        }
+
+        // 인스펙터에 보이는 "분류/이름"에서 이름만 쓴다
+        private static string GetLabel(Stat value)
+        {
+            FieldInfo field = typeof(Stat).GetField(value.ToString());
+            InspectorNameAttribute label = field?.GetCustomAttribute<InspectorNameAttribute>();
+            if (label == null) return value.ToString();
+
+            return label.displayName.Substring(label.displayName.IndexOf('/') + 1);
+        }
+
+        private static bool IsRatio(Stat value)
+        {
+            return value == Stat.TowerSlowRatio || value == Stat.SpellSplashRatio;
+        }
+
+        private static bool IsSeconds(Stat value)
+        {
+            switch (value)
+            {
+                case Stat.TowerFireInterval:
+                case Stat.TowerSlowSeconds:
+                case Stat.SpellCastInterval:
+                case Stat.GatherSeconds:
+                case Stat.PrepSeconds:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
         private static bool IsTowerStat(Stat value)
         {
             switch (value)
@@ -40,6 +98,7 @@ namespace TowerDefense.Effects
                 case Stat.TowerSlowRatio:
                 case Stat.TowerSlowSeconds:
                 case Stat.TowerSplashRadius:
+                case Stat.TowerSlowedDamageTaken:
                     return true;
                 default:
                     return false;

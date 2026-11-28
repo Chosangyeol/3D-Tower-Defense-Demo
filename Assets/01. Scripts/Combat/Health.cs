@@ -30,6 +30,9 @@ namespace TowerDefense.Combat
             }
         }
 
+        /// <summary>받는 피해가 늘어나는 비율. 0.2는 +20%. 줄이는 효과와 곱해서 적용한다.</summary>
+        public float DamageBonus { get; private set; }
+
         /// <summary>체력이 0이 되는 순간 한 번 호출된다.</summary>
         public event Action<Health> Died;
 
@@ -43,6 +46,7 @@ namespace TowerDefense.Combat
         {
             max = Mathf.Max(maxHealth, 1f);
             Current = max;
+            DamageBonus = 0f;
         }
 
         /// <summary>받는 피해를 비율만큼 줄인다. 여러 개는 곱해서 적용한다.</summary>
@@ -54,6 +58,11 @@ namespace TowerDefense.Combat
         public void RemoveDamageReduction(float reduction)
         {
             damageReductions.Remove(Mathf.Clamp01(reduction));
+        }
+
+        public void SetDamageBonus(float bonus)
+        {
+            DamageBonus = Mathf.Max(bonus, 0f);
         }
 
         /// <summary>최대 체력까지 회복한다. 이미 0이 된 대상은 되살리지 않는다.</summary>
@@ -68,7 +77,7 @@ namespace TowerDefense.Combat
         {
             if (!IsAlive || amount <= 0f) return;
 
-            Current = Mathf.Max(Current - amount * DamageMultiplier, 0f);
+            Current = Mathf.Max(Current - amount * DamageMultiplier * (1f + DamageBonus), 0f);
             if (!IsAlive) Died?.Invoke(this);
         }
     }

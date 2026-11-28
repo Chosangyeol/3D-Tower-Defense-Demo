@@ -6,7 +6,7 @@ namespace TowerDefense.Towers
     public readonly struct TowerStats
     {
         public TowerStats(float damage, float range, float fireInterval, float projectileSpeed,
-            int extraTargets, float splashRadius, float slowRatio, float slowSeconds)
+            int extraTargets, float splashRadius, float slowRatio, float slowSeconds, float slowedDamageTaken)
         {
             Damage = damage;
             Range = range;
@@ -16,6 +16,7 @@ namespace TowerDefense.Towers
             SplashRadius = splashRadius;
             SlowRatio = slowRatio;
             SlowSeconds = slowSeconds;
+            SlowedDamageTaken = slowedDamageTaken;
         }
 
         public float Damage { get; }
@@ -30,6 +31,8 @@ namespace TowerDefense.Towers
         public float SlowRatio { get; }
         /// <summary>감속이 이어지는 시간(초).</summary>
         public float SlowSeconds { get; }
+        /// <summary>감속이 이어지는 동안 적이 받는 피해가 늘어나는 비율. 효과가 없으면 0.</summary>
+        public float SlowedDamageTaken { get; }
 
         public static TowerStats From(TowerDefinition tower, RunModifiers modifiers)
         {
@@ -42,7 +45,9 @@ namespace TowerDefense.Towers
                 modifiers.GetInt(Stat.TowerExtraTargets, 0f, tower),
                 modifiers.Get(Stat.TowerSplashRadius, tower.SplashRadius, tower),
                 modifiers.Get(Stat.TowerSlowRatio, tower.SlowRatio, tower),
-                modifiers.Get(Stat.TowerSlowSeconds, tower.SlowSeconds, tower));
+                modifiers.Get(Stat.TowerSlowSeconds, tower.SlowSeconds, tower),
+                // 타워 데이터에 기본값이 없고 효과로만 생긴다
+                modifiers.Get(Stat.TowerSlowedDamageTaken, 0f, tower));
         }
     }
 }

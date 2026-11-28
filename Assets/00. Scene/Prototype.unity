@@ -715,6 +715,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ba1daa8322700f4c953f617fef91911, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TowerDefense.Upgrades.ResearchState
+  setup: {fileID: 265141010}
   wallet: {fileID: 265141011}
   modifiers: {fileID: 265141014}
 --- !u!114 &265141010
@@ -775,7 +776,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TowerDefense.UI.ResearchPanel
   input: {fileID: 265141008}
   modeController: {fileID: 265141003}
-  setup: {fileID: 265141010}
   research: {fileID: 265141009}
   wallet: {fileID: 265141011}
 --- !u!114 &265141014
@@ -991,6 +991,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: bbbf8aa8fc74d484ba144d293a6d756e, type: 2}
   - {fileID: 11400000, guid: 7f7360d1b5856e746bcb8d216987febc, type: 2}
   - {fileID: 11400000, guid: 71138426a1c974749b80aa11b96841fc, type: 2}
+  research: {fileID: 265141009}
 --- !u!114 &288478770
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1009,6 +1010,7 @@ MonoBehaviour:
   waveSpawner: {fileID: 640471811}
   setup: {fileID: 265141010}
   modifiers: {fileID: 265141014}
+  research: {fileID: 265141009}
 --- !u!1 &405721700
 GameObject:
   m_ObjectHideFlags: 0
